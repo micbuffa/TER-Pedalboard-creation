@@ -134,8 +134,11 @@
       **/
       setSwitchListener() {
         this.$.switch1.addEventListener('change',(e)=>{
-          if (this.isOn) this.bypass();
-          else this.reactivate();
+          if (this.isOn) {
+            this.bypass();
+            console.log("bypass");
+          }
+          else{ this.reactivate();}
 
           this.isOn = !this.isOn;
         });
@@ -148,6 +151,7 @@
       **/
       setPedalActive(active) {
         if (active == undefined || active == false) {
+          //console.log(isOn);
           this.isOn = false;
           this.bypass();
           this.$.switch1.value = 0;

@@ -93,13 +93,13 @@
         this.$.knob1.addEventListener('change', (e) => this.effect.time = e.target.value / 100);
         this.$.knob2.addEventListener('change', (e) => this.effect.decay = e.target.value / 100);
         this.$.knob3.addEventListener('change', (e) => this.effect.mix = e.target.value / 100);
+
         //this.$.switch2.addEventListener('click',(e) => this.effect.reverse = !this.effect.reverse)
       }
       getDefaultButtonsValues() {
         return {
-          decay: 50,
           time: 30,
-          //reverse: false,
+          decay: 50,
           mix: 60
         };
       }
@@ -108,16 +108,19 @@
       }
       /* Ici on utilise la fonction getCurrentKnobsValues pour avoir une memoire des boutons en allumant et éteignant*/
       reactivate() {
-      
        var currentValues = this.getCurrentKnobsValues();
-       this.effect.mix= currentValues.mix;
-       this.$.knob3.value = currentValues.mix;
-
+       console.log("getcurrentvaluemix reactivate "+currentValues.mix);
+       
+       
+       console.log("mix : "+this.effect.mix);
        this.effect.decay= currentValues.decay;
        this.$.knob2.value = currentValues.decay;
 
        this.effect.time= currentValues.time;
        this.$.knob1.value = currentValues.time;
+       
+       this.effect.mix= currentValues.mix;
+       this.$.knob3.value = currentValues.mix;
       }
     }
     // Register the x-custom element with the browser
