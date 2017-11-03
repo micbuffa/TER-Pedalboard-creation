@@ -7,6 +7,7 @@
 <link rel="import" href="./pedals/pedal-in.html">
 <link rel="import" href="./pedals/pedal-out.html">
 <link rel="import" href="./pedals/pedal-delay.html">
+<link rel="import" href="./pedals/pedal-reverb.html">
 <link rel="import" href="./pedals/pedal-flanger.html">
 <link rel="import" href="./pedals/pedal-lowpass.html">
 <link rel="import" href="./pedals/pedal-quadrafuzz.html">
@@ -151,6 +152,13 @@
         height: 159px;
         background-image: url("../../img/delay.png");
       }
+        /*changer l'image de la pédale */
+      #reverb {
+        width: 88px;
+        height: 160px;
+        background-image: url("../../img/reverb.png");
+      }
+
 
       #quadrafuzz {
         width: 90px;
@@ -243,7 +251,9 @@
       .div_app_tabs #tab-2:checked~.div_container #content-2,
       .div_app_tabs #tab-3:checked~.div_container #content-3,
       .div_app_tabs #tab-4:checked~.div_container #content-4,
-      .div_app_tabs #tab-5:checked~.div_container #content-5 {
+      .div_app_tabs #tab-5:checked~.div_container #content-5, 
+      .div_app_tabs #tab-6:checked~.div_container #content-6
+      {
         display: flex;
       }
 
@@ -396,10 +406,11 @@
     <div id="div_app_tabs" class="div_app_tabs">
       <div class="div_tabs" id="div_tabs">
         <input id="tab-1" type="radio" name="input-tab" checked><label for="tab-1">delay</label>
-        <input id="tab-2" type="radio" name="input-tab"><label for="tab-2">lowpass</label>
-        <input id="tab-3" type="radio" name="input-tab"><label for="tab-3">quadrafuzz</label>
-        <input id="tab-4" type="radio" name="input-tab"><label for="tab-4">flanger</label>
-        <input id="tab-5" type="radio" name="input-tab"><label for="tab-5">ampsim</label>
+        <input id="tab-2" type="radio" name="input-tab"><label for="tab-2">reverb</label>
+        <input id="tab-3" type="radio" name="input-tab"><label for="tab-3">lowpass</label>
+        <input id="tab-4" type="radio" name="input-tab"><label for="tab-4">quadrafuzz</label>
+        <input id="tab-5" type="radio" name="input-tab"><label for="tab-5">flanger</label>
+        <input id="tab-6" type="radio" name="input-tab"><label for="tab-6">ampsim</label>
 
         <button id="bt_hide_tabs"><iron-icon icon="expand-more"></iron-icon></button>
         <div class="div_container">
@@ -413,26 +424,33 @@
 
           <div id="content-2">
             <div class="pedals">
+              <div id="reverb" class="pedal" draggable="true"></div>
+              <span>reverb</span>
+            </div>
+          </div>
+
+          <div id="content-3">
+            <div class="pedals">
               <div id="lowpass" class="pedal" draggable="true"></div>
               <span>lowpass</span>
             </div>
           </div>
 
-          <div id="content-3">
+          <div id="content-4">
             <div class="pedals">
               <div id="quadrafuzz" class="pedal" draggable="true"></div>
               <span>quadrafuzz</span>
             </div>
           </div>
 
-          <div id="content-4">
+          <div id="content-5">
             <div class="pedals">
               <div id="flanger" class="pedal" draggable="true"></div>
               <span>flanger</span>
             </div>
           </div>
 
-          <div id="content-5">
+          <div id="content-6">
             <div class="pedals">
               <div id="ampsim" class="pedal" draggable="true">
               </div>
@@ -1340,7 +1358,7 @@
         let _id;
         // ICI GENERER UN ID UNIQUE !!! il peut y avoir plusieurs instances
         // de la même pédale
-        if (id == "delay" || id == "flanger" || id == "lowpass" || id == "quadrafuzz") {
+        if (id == "delay" || id=="reverb" || id == "flanger" || id == "lowpass" || id == "quadrafuzz") {
           _id = "pedal-" + id;
         } else if (id == "ampsim") {
           _id = "amp-sim";
