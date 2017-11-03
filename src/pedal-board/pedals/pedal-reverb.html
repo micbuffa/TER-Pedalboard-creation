@@ -106,13 +106,18 @@
       bypass() {
         this.effect.bypass();
       }
+      /* Ici on utilise la fonction getCurrentKnobsValues pour avoir une memoire des boutons en allumant et éteignant*/
       reactivate() {
-       //this.effect.reactivate();
-       this.effect.mix= this.getDefaultButtonsValues().mix;
-       console.log(this.getDefaultButtonsValues().mix);
-       
-       this.$.knob3.value = this.getDefaultButtonsValues().mix;
-       console.log(this.$.knob3.value);
+      
+       var currentValues = this.getCurrentKnobsValues();
+       this.effect.mix= currentValues.mix;
+       this.$.knob3.value = currentValues.mix;
+
+       this.effect.decay= currentValues.decay;
+       this.$.knob2.value = currentValues.decay;
+
+       this.effect.time= currentValues.time;
+       this.$.knob1.value = currentValues.time;
       }
     }
     // Register the x-custom element with the browser

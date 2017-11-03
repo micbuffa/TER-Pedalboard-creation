@@ -163,6 +163,9 @@
       * @param options : the values that must be set, if it undefined the default values are used
       **/
       setValuesToKnobs(options) {
+        console.log("setvaluestoKnobs");
+        console.log(options);
+
         var defaultValues = options ==undefined ? this.getDefaultButtonsValues() : options;
         for (var key in defaultValues) {
           this.shadowRoot.querySelector("[data-role='"+key+"']").value = defaultValues[key];
@@ -176,7 +179,7 @@
       **/
       getCurrentKnobsValues() {
         var values = {};
-        var knobs = this.getElementsByTagName("webaudio-knob");
+        var knobs = this.shadowRoot.querySelectorAll("webaudio-knob");
         var i , l = knobs.length;
         for (i=0;i< l;i++) {
           if (knobs[i].dataset.role)

@@ -246,7 +246,7 @@
       .div_app_tabs [id^="content-"] {
         display: none;
       }
-
+      /*TODO add here your new pedal as a new content*/
       .div_app_tabs #tab-1:checked~.div_container #content-1,
       .div_app_tabs #tab-2:checked~.div_container #content-2,
       .div_app_tabs #tab-3:checked~.div_container #content-3,
@@ -402,7 +402,7 @@
     <!--
     <slot id="slot" ondragover="[[dragPedalHandler]]" ondrop="[[dropPedalHandler]]"></slot>
     -->
-
+<!-- TODO: add here the name will be displayed in tabs for your new pedal-->
     <div id="div_app_tabs" class="div_app_tabs">
       <div class="div_tabs" id="div_tabs">
         <input id="tab-1" type="radio" name="input-tab" checked><label for="tab-1">delay</label>
@@ -457,6 +457,8 @@
               <span>ampsim</span>
             </div>
           </div>
+          <!-- TODO: add here your new pedal as a content in the tab-->
+
 
         </div>
       </div>
@@ -1356,8 +1358,9 @@
       dropPedalHandler(e) {
         let id = e.dataTransfer.getData("pedalId");
         let _id;
-        // ICI GENERER UN ID UNIQUE !!! il peut y avoir plusieurs instances
+        // TODO: ICI GENERER UN ID UNIQUE !!! il peut y avoir plusieurs instances
         // de la même pédale
+        
         if (id == "delay" || id=="reverb" || id == "flanger" || id == "lowpass" || id == "quadrafuzz") {
           _id = "pedal-" + id;
         } else if (id == "ampsim") {
