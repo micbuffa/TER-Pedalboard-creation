@@ -109,17 +109,12 @@
       /* Ici on utilise la fonction getCurrentKnobsValues pour avoir une memoire des boutons en allumant et éteignant*/
       reactivate() {
        var currentValues = this.getCurrentKnobsValues();
-       console.log("getcurrentvaluemix reactivate "+currentValues.mix);
-       
-       
-       console.log("mix : "+this.effect.mix);
-       this.effect.decay= currentValues.decay;
+       this.effect.decay= currentValues.decay / 100;
        this.$.knob2.value = currentValues.decay;
 
-       this.effect.time= currentValues.time;
+       this.effect.time= currentValues.time / 100;
        this.$.knob1.value = currentValues.time;
-       
-       this.effect.mix= currentValues.mix;
+       this.effect.mix= currentValues.mix / 100;
        this.$.knob3.value = currentValues.mix;
       }
     }
