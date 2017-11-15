@@ -1,0 +1,284 @@
+<script>
+  
+  class EffectTemplate {
+
+    constructor(nom, version) {
+      this.params = null;
+      this.nom = nom;
+      this.version = version;
+      this.AudioContext = window.AudioContext || window.webkitAudioContext;
+      this.context; 
+      this.audioPlayer; 
+      this.source; 
+
+      
+      /*this.gainNode = context.createGain();
+      this.audioNode = Object.getPrototypeOf(Object.getPrototypeOf(gainNode));
+      this.connect = audioNode.connect;*/
+      
+    }
+
+    setup() { 
+      this.context = new AudioContext();
+      console.log(this.context);
+      console.log(this.audioPlayer);
+      this.source =this.context.createMediaElementSource(this.audioPlayer);
+
+    }
+    createNodes() { }
+    connectNodes() { }
+    getSetupParams() { }
+
+
+    getNom() {
+      return this.nom;
+    }
+    getVersion() {
+      return this.version;
+    }
+    bypass() {
+      console.log("abstractEffect.bypass()");
+
+      if (this.params!=null){ 
+        this.save(this.params);
+        this.setMix(0.001);
+        }
+      
+    }
+    reactivate() {
+      console.log("abstractEffect.reactivate()");
+      this.setMix(this.params.mix.default);
+      this.setTime(this.params.time.default);
+      this.setFeedback(this.params.feedback.default);
+
+    }
+
+    /*
+    *
+    *Bibliothèque utile de pizzicato, surement à modifier pour affiner le son 
+    */
+    isString(arg) {
+      return toString.call(arg) === '[object String]';
+    }
+
+    isObject(arg) {
+      return toString.call(arg) === '[object Object]';
+    }
+
+    isFunction(arg) {
+      return toString.call(arg) === '[object Function]';
+    }
+
+    isNumber(arg) {
+      return toString.call(arg) === '[object Number]' && arg === +arg;
+    }
+
+    isArray(arg) {
+      return toString.call(arg) === '[object Array]';
+    }
+
+    isInRange(arg, min, max) {
+      if (!Pz.Util.isNumber(arg) || !Pz.Util.isNumber(min) || !Pz.Util.isNumber(max))
+        return false;
+
+      return arg >= min && arg <= max;
+    }
+
+    isBool(arg) {
+      return typeof (arg) === "boolean";
+    }
+
+    isOscillator(audioNode) {
+      return (audioNode && audioNode.toString() === "[object OscillatorNode]");
+    }
+
+    isAudioBufferSourceNode(audioNode) {
+      return (audioNode && audioNode.toString() === "[object AudioBufferSourceNode]");
+    }
+
+
+
+    // Takes a number from 0 to 1 and normalizes it to fit within range floor to ceiling
+    normalize(num, floor, ceil) {
+      if (!this.isNumber(num) || !this.isNumber(floor) || !this.isNumber(ceil))
+        return;
+
+      return ((ceil - floor) * num) / 1 + floor;
+    }
+
+    getDryLevel(mix) {
+      if (!Pz.Util.isNumber(mix) || mix > 1 || mix < 0)
+        return 0;
+
+      if (mix <= 0.5)
+        return 1;
+
+      return 1 - ((mix - 0.5) * 2);
+    }
+
+    getWetLevel(mix) {
+      if (!Pz.Util.isNumber(mix) || mix > 1 || mix < 0)
+        return 0;
+
+      if (mix >= 0.5)
+        return 1;
+
+      return 1 - ((0.5 - mix) * 2);
+    }
+
+
+  }
+
+  class PingPongDelay extends EffectTemplate {
+    constructor(nom, version) {
+      super(nom, version);
+      var mix, time, feedback;
+
+    }
+
+    setup() {
+      super.setup();
+      if (this.params == null) this.params = this.getSetupParamsDefault();
+      this.createNodes();
+      this.connectNodes();
+      this.linktoParams();
+    }
+
+    createNodes() {
+      this.inputNode = this.context.createGain();
+      this.outputNode = this.context.createGain();
+      this.delayNodeLeft = this.context.createDelay();
+      this.delayNodeRight = this.context.createDelay();
+      this.dryGainNode = this.context.createGain();
+      this.wetGainNode = this.context.createGain();
+      this.feedbackGainNode = this.context.createGain();
+      this.channelMerger = this.context.createChannelMerger(2);
+    }
+
+    connectNodes() {
+      this.source.connect(this.inputNode);
+      // dry mix
+      this.inputNode.connect(this.dryGainNode);
+      // dry mix out
+      this.dryGainNode.connect(this.outputNode);
+
+      // the feedback loop
+      this.delayNodeLeft.connect(this.channelMerger, 0, 0);
+      this.delayNodeRight.connect(this.channelMerger, 0, 1);
+      this.delayNodeLeft.connect(this.delayNodeRight);
+      this.feedbackGainNode.connect(this.delayNodeLeft);
+      this.delayNodeRight.connect(this.feedbackGainNode);
+
+      // wet mix
+      this.inputNode.connect(this.feedbackGainNode);
+
+      // wet out
+      this.channelMerger.connect(this.wetGainNode);
+      this.wetGainNode.connect(this.outputNode);
+      this.outputNode.connect(this.context.destination);
+
+
+    }
+    linktoParams() {
+      /*
+       * set default value for parameters and assign it to the web audio nodes
+       */
+      console.log(this.params);
+      this.setTime(this.params.time.default);
+      this.setFeedback(this.params.feedback.default);
+      this.setMix(this.params.mix.default);
+    }
+
+    getSetupParamsDefault() {
+
+      return {
+        "mix": {
+          "min": 0,
+          "max": 1,
+          "default": 0.5,
+          "type": "linear",
+          "control": "knob"
+        },
+        "time": {
+          "min": 0,
+          "max": 180,
+          "default": 90,
+          "type": "linear",
+          "control": "knob"
+        },
+        "feedback": {
+          "min": 0,
+          "max": 1,
+          "default": 0.5,
+          "type": "linear",
+          "control": "knob"
+        }
+      }
+    }
+
+    // coté pédale créer un json params ou je récupère les valeurs des boutons 
+    save(_params) {
+      this.params = {
+        "mix": {
+          "min": ((_params.mix.min) ? (_params.mix.min) : this.params.mix.min),
+          "max": ((_params.mix.max) ? (this.params.mix.max) : _params.mix.max),
+          "default": ((_params.mix.default) ? (this.params.mix.default) : _params.mix.default),
+          "type": ((_params.mix.type) ? (this.params.mix.type) : _params.mix.type),
+          "control": ((_params.mix.control) ? (this.params.mix.control) : _params.mix.control)
+        },
+        "time": {
+          "min": ((_params.time.min) ? (this.params.time.min) : _params.time.min),
+          "max": ((_params.time.max) ? (this.params.time.max) : _params.time.max),
+          "default": ((_params.time.default) ? (this.params.time.default) : _params.time.default),
+          "type": ((_params.time.type) ? (this.params.time.type) : _params.time.type),
+          "control": ((_params.time.control) ? (this.params.time.control) : _params.time.control)
+        },
+        "feedback": {
+          "min": ((_params.feedback.min) ? (this.params.feedback.min) : _params.feedback.min),
+          "max": ((_params.feedback.max) ? (this.params.feedback.max) : _params.feedback.max),
+          "default": ((_params.feedback.default) ? (this.params.feedback.default) : _params.feedback.default),
+          "type": ((_params.feedback.type) ? (this.params.feedback.type) : _params.feedback.type),
+          "control": ((_params.feedback.control) ? (this.params.feedback.control) : _params.feedback.control)
+        }
+      }
+      return params;
+
+
+    }
+
+    reactivate(){
+      super.reactivate();
+    }
+
+    bypass(){
+      super.bypass();
+    }
+
+    /*
+    * Gestion des setteurs pour chaque paramêtres de l'effet
+    */
+    setTime(_time) {
+      if (_time < this.params.time.max && _time > this.params.time.min) this.time = _time;
+      console.log(":::::::::::");
+      console.log(_time);
+      console.log("###@@@@@@@@");
+      console.log(this.delayNodeLeft);
+      this.delayNodeLeft.delayTime.value = _time;
+      this.delayNodeRight.delayTime.value = _time;
+    }
+
+    setFeedback(_feedback) {
+      if (_feedback < this.params.feedback.max && _feedback > this.params.feedback.min) this.feedback = _feedback;
+      this.feedbackGainNode.gain.value = parseFloat(this.feedback, 10);
+    }
+
+    setMix(_mix) {
+      if (_mix < this.params.mix.max && _mix > this.params.mix.min) this.mix = _mix;
+      this.dryGainNode.gain.value = Pizzicato.Util.getDryLevel(this.mix);
+      this.wetGainNode.gain.value = Pizzicato.Util.getWetLevel(this.mix);
+    }
+
+  }
+
+  // quand on désactive un effet, on va appeler setSetupParamsDefault
+</script>

@@ -90,11 +90,10 @@
         this.effect.connect(this.soundNodeOut);
       }
       setKnobsListeners() {
+        console.log('setKnobsListeners');
         this.$.knob1.addEventListener('change', (e) => this.effect.time = e.target.value / 100);
         this.$.knob2.addEventListener('change', (e) => this.effect.decay = e.target.value / 100);
-        this.$.knob3.addEventListener('change', (e) => this.effect.mix = e.target.value / 100);
-
-        //this.$.switch2.addEventListener('click',(e) => this.effect.reverse = !this.effect.reverse)
+        this.$.knob3.addEventListener('change', (e) => this.effect.mix = e.target.value / 100, true);
       }
       getDefaultButtonsValues() {
         return {
@@ -104,19 +103,23 @@
         };
       }
       bypass() {
-        this.effect.bypass();
+        this.effect.bypass();        
+        /*this.$.knob3.removeEventListener('change', (e) => this.effect.mix = e.target.value / 100,true);
+        console.log("bypass");
+        console.log(this.$.knob3);*/
       }
       /* Ici on utilise la fonction getCurrentKnobsValues pour avoir une memoire des boutons en allumant et éteignant*/
       reactivate() {
        var currentValues = this.getCurrentKnobsValues();
        this.effect.decay= currentValues.decay / 100;
        this.$.knob2.value = currentValues.decay;
-
        this.effect.time= currentValues.time / 100;
        this.$.knob1.value = currentValues.time;
        this.effect.mix= currentValues.mix / 100;
        this.$.knob3.value = currentValues.mix;
       }
+
+      
     }
     // Register the x-custom element with the browser
     customElements.define(PedalReverb.is, PedalReverb);

@@ -1,5 +1,6 @@
 <link rel="import" href="../../../bower_components/webaudio-controls/webaudio-controls.html">
 <link rel="import" href="./js/pedal-behavior.html">
+<link rel="import" href="./js/AbstractEffect.html">
 
 <dom-module id="pedal-delay">
   <template>
@@ -67,9 +68,10 @@
         };
       }
       ready() {
+
         super.ready();
         this.createAllInternNodes();
-        this.connectInternNodes();
+        //this.connectInternNodes();
         this.resetKnobs();
         this.setKnobsListeners();
         this.setValuesToKnobs();
@@ -77,30 +79,31 @@
         this.setSwitchListener();
       }
       createAllInternNodes() {
-        this.effect = new Pizzicato.Effects.Delay();
+        this.effect = /*new Pizzicato.Effects.Delay()*/new PingPongDelay();
+       // this.effect.setup();
       }
       connectInternNodes() {
         this.soundNodeIn.connect(this.effect);
         this.effect.connect(this.soundNodeOut);
       }
       setKnobsListeners() {
-        this.$.knob1.addEventListener('change', (e) => this.effect.feedback = e.target.value / 100);
-        this.$.knob2.addEventListener('change', (e) => this.effect.time = e.target.value / 100);
-        this.$.knob3.addEventListener('change', (e) => this.effect.mix = e.target.value / 100);
+        this.$.knob1.addEventListener('change', (e) => this.effect.Feedback(e.target.value / 100));
+        this.$.knob2.addEventListener('change', (e) => this.effect.Time(e.target.value / 100));
+        this.$.knob3.addEventListener('change', (e) => this.effect.Mix(e.target.value / 100));
       }
-      getDefaultButtonsValues() {
+      /*getDefaultButtonsValues() {
         return {
           feedback: 50,
           time: 30,
           mix: 50
         };
-      }
+      }*/
       bypass() {
         this.effect.bypass();
       }
       reactivate() {
         this.effect.reactivate();
-        console.log("delay mix" +this.effect.mix);
+        //console.log("delay mix" +this.effect.mix);
 
       }
     }

@@ -388,6 +388,11 @@
         <audio src="./audio/BasketCase Greenday riff DI.mp3" id="soundSample" controls loop crossorigin="anonymous"></audio>
       </div>
       <div>
+        <span>tempo</span>
+        <webaudio-knob id="tempoValue" class="knob" sprites="126" value="32" step="1" midilearn="true" src="./img/knobs/tempoValue.png"
+        width="40" height="40" data-role="tempoValue"></webaudio-knob>
+      </div>
+      <div>
         <span>MICRO</span>
         <webaudio-switch src="img/switch_toggle.png" class="id" id="mic" height="28" width="50" alt="Press to record" title="Press to record"></webaudio-switch>
       </div>
@@ -547,6 +552,8 @@
         super.ready();
 
         this.soundSample = this.$.soundSample;
+        console.log("!!!!!!");
+        console.log(this.soundSample);
         this.w = this.offsetWidth;
         this.wO = this.w;
 
@@ -1260,9 +1267,15 @@
 
       /***** SOUND *****/
       soundHandler() {
-        this.sound.pzContext = Pizzicato.context;
-        //this.sound.pzContext = new AudioContext();
-        this.sound.mediaSource = this.sound.pzContext.createMediaElementSource(this.soundSample);
+        //this.sound.pzContext = Pizzicato.context;
+//TODO: voir comment généraliser
+        let pp = new PingPongDelay();
+        pp.audioPlayer=this.soundSample;
+        pp.setup();
+        this.sound.pzContext = pp.context;
+        this.sound.mediaSource = this.sound.pzContext.source;
+        
+        // pas propre ici, on a créé un mediasource dans Abstracteffect alors on doit le récupérer pour pouvoir utiliser la methode connect
         this.sound.audioDestination = this.sound.pzContext.destination;
 
         if (navigator.mediaDevices.getUserMedia) {
@@ -1540,6 +1553,7 @@
         return this;
       }
     }
+
     window.customElements.define(PedalBoard.is, PedalBoard);
   </script>
 </dom-module>
