@@ -1258,7 +1258,7 @@
             }
           };
           navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-            this.sound.mediaSourceM = this.sound.pzContext.createMediaStreamSource(stream);
+            this.sound.mediaSourceM = this.sound.context.createMediaStreamSource(stream);
           }).catch(function (err) {
             // handle the error
             console.log(err.name + ": " + err.message);
