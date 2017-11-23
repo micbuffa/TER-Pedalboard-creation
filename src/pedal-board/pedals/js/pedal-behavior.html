@@ -1,3 +1,4 @@
+
 <script>
   /** A behavior defining the functions and properties every pedal must have **/
   MyMixin = function(superClass) {
@@ -31,11 +32,11 @@
         return {
           soundNodeIn : {
             type:Object,
-            value: function() {return Pizzicato.context.createGain();  }
+            value: function() {return GlobalContext.context.createGain();  }
           },
           soundNodeOut : {
             type:Object,
-            value: function () {return Pizzicato.context.createGain(); }
+            value: function () {return GlobalContext.context.createGain(); }
           },
           isOn: {
             type:Boolean,
@@ -134,10 +135,8 @@
       **/
       setSwitchListener() {
         this.$.switch1.addEventListener('change',(e)=>{
-          if (this.isOn) {
-            this.bypass();
-          }
-          else{ this.reactivate();}
+          if (this.isOn) this.bypass();
+          else this.reactivate();
 
           this.isOn = !this.isOn;
         });
@@ -150,7 +149,6 @@
       **/
       setPedalActive(active) {
         if (active == undefined || active == false) {
-          //console.log(isOn);
           this.isOn = false;
           this.bypass();
           this.$.switch1.value = 0;
@@ -166,9 +164,6 @@
       * @param options : the values that must be set, if it undefined the default values are used
       **/
       setValuesToKnobs(options) {
-        console.log("setvaluestoKnobs");
-        console.log(options);
-
         var defaultValues = options ==undefined ? this.getDefaultButtonsValues() : options;
         for (var key in defaultValues) {
           this.shadowRoot.querySelector("[data-role='"+key+"']").value = defaultValues[key];
@@ -182,7 +177,7 @@
       **/
       getCurrentKnobsValues() {
         var values = {};
-        var knobs = this.shadowRoot.querySelectorAll("webaudio-knob");
+        var knobs = this.getElementsByTagName("webaudio-knob");
         var i , l = knobs.length;
         for (i=0;i< l;i++) {
           if (knobs[i].dataset.role)

@@ -2,16 +2,18 @@
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 
 <link rel="import" href="./pedals/css/shared-styles.html">
-<link rel="import" href="./pedals/js/Pizzicato_2.html">
+<!-- <link rel="import" href="./pedals/js/Pizzicato_2.html"> -->
 
 <link rel="import" href="./pedals/pedal-in.html">
 <link rel="import" href="./pedals/pedal-out.html">
 <link rel="import" href="./pedals/pedal-delay.html">
-<link rel="import" href="./pedals/pedal-reverb.html">
 <link rel="import" href="./pedals/pedal-flanger.html">
 <link rel="import" href="./pedals/pedal-lowpass.html">
 <link rel="import" href="./pedals/pedal-quadrafuzz.html">
 <link rel="import" href="./amp-sim/amp-sim.html">
+<link rel="import" href="./pedals/js/GlobalContext.html">
+<link rel="import" href="./pedals/js/EffectLib.html">
+
 
 <dom-module id="pedal-board">
   <template>
@@ -152,13 +154,6 @@
         height: 159px;
         background-image: url("../../img/delay.png");
       }
-        /*changer l'image de la pédale */
-      #reverb {
-        width: 88px;
-        height: 160px;
-        background-image: url("../../img/reverb.png");
-      }
-
 
       #quadrafuzz {
         width: 90px;
@@ -246,14 +241,12 @@
       .div_app_tabs [id^="content-"] {
         display: none;
       }
-      /*TODO add here your new pedal as a new content*/
+
       .div_app_tabs #tab-1:checked~.div_container #content-1,
       .div_app_tabs #tab-2:checked~.div_container #content-2,
       .div_app_tabs #tab-3:checked~.div_container #content-3,
       .div_app_tabs #tab-4:checked~.div_container #content-4,
-      .div_app_tabs #tab-5:checked~.div_container #content-5, 
-      .div_app_tabs #tab-6:checked~.div_container #content-6
-      {
+      .div_app_tabs #tab-5:checked~.div_container #content-5 {
         display: flex;
       }
 
@@ -388,11 +381,6 @@
         <audio src="./audio/BasketCase Greenday riff DI.mp3" id="soundSample" controls loop crossorigin="anonymous"></audio>
       </div>
       <div>
-        <span>tempo</span>
-        <webaudio-knob id="tempoValue" class="knob" sprites="126" value="32" step="1" midilearn="true" src="./img/knobs/tempoValue.png"
-        width="40" height="40" data-role="tempoValue"></webaudio-knob>
-      </div>
-      <div>
         <span>MICRO</span>
         <webaudio-switch src="img/switch_toggle.png" class="id" id="mic" height="28" width="50" alt="Press to record" title="Press to record"></webaudio-switch>
       </div>
@@ -407,15 +395,14 @@
     <!--
     <slot id="slot" ondragover="[[dragPedalHandler]]" ondrop="[[dropPedalHandler]]"></slot>
     -->
-<!-- TODO: add here the name will be displayed in tabs for your new pedal-->
+
     <div id="div_app_tabs" class="div_app_tabs">
       <div class="div_tabs" id="div_tabs">
         <input id="tab-1" type="radio" name="input-tab" checked><label for="tab-1">delay</label>
-        <input id="tab-2" type="radio" name="input-tab"><label for="tab-2">reverb</label>
-        <input id="tab-3" type="radio" name="input-tab"><label for="tab-3">lowpass</label>
-        <input id="tab-4" type="radio" name="input-tab"><label for="tab-4">quadrafuzz</label>
-        <input id="tab-5" type="radio" name="input-tab"><label for="tab-5">flanger</label>
-        <input id="tab-6" type="radio" name="input-tab"><label for="tab-6">ampsim</label>
+        <input id="tab-2" type="radio" name="input-tab"><label for="tab-2">lowpass</label>
+        <input id="tab-3" type="radio" name="input-tab"><label for="tab-3">quadrafuzz</label>
+        <input id="tab-4" type="radio" name="input-tab"><label for="tab-4">flanger</label>
+        <input id="tab-5" type="radio" name="input-tab"><label for="tab-5">ampsim</label>
 
         <button id="bt_hide_tabs"><iron-icon icon="expand-more"></iron-icon></button>
         <div class="div_container">
@@ -429,41 +416,32 @@
 
           <div id="content-2">
             <div class="pedals">
-              <div id="reverb" class="pedal" draggable="true"></div>
-              <span>reverb</span>
-            </div>
-          </div>
-
-          <div id="content-3">
-            <div class="pedals">
               <div id="lowpass" class="pedal" draggable="true"></div>
               <span>lowpass</span>
             </div>
           </div>
 
-          <div id="content-4">
+          <div id="content-3">
             <div class="pedals">
               <div id="quadrafuzz" class="pedal" draggable="true"></div>
               <span>quadrafuzz</span>
             </div>
           </div>
 
-          <div id="content-5">
+          <div id="content-4">
             <div class="pedals">
               <div id="flanger" class="pedal" draggable="true"></div>
               <span>flanger</span>
             </div>
           </div>
 
-          <div id="content-6">
+          <div id="content-5">
             <div class="pedals">
               <div id="ampsim" class="pedal" draggable="true">
               </div>
               <span>ampsim</span>
             </div>
           </div>
-          <!-- TODO: add here your new pedal as a content in the tab-->
-
 
         </div>
       </div>
@@ -535,7 +513,7 @@
 
         // ===== ===== SOUND ===== ===== 
         this.sound = {
-          pzContext: null,
+          context: null,
           mediaSource: null,
           audioDestination: null,
           mediaSourceM: null,
@@ -552,8 +530,6 @@
         super.ready();
 
         this.soundSample = this.$.soundSample;
-        console.log("!!!!!!");
-        console.log(this.soundSample);
         this.w = this.offsetWidth;
         this.wO = this.w;
 
@@ -1267,16 +1243,11 @@
 
       /***** SOUND *****/
       soundHandler() {
-        //this.sound.pzContext = Pizzicato.context;
-//TODO: voir comment généraliser
-        let pp = new PingPongDelay();
-        pp.audioPlayer=this.soundSample;
-        pp.setup();
-        this.sound.pzContext = pp.context;
-        this.sound.mediaSource = this.sound.pzContext.source;
-        
-        // pas propre ici, on a créé un mediasource dans Abstracteffect alors on doit le récupérer pour pouvoir utiliser la methode connect
-        this.sound.audioDestination = this.sound.pzContext.destination;
+        //import GlobalContext from "./pedals/js/GlobalContext.js";
+        this.sound.context = GlobalContext.context;
+        console.log(typeof soundSample);
+        this.sound.mediaSource = this.sound.context.createMediaElementSource(this.soundSample);
+        this.sound.audioDestination = this.sound.context.destination;
 
         if (navigator.mediaDevices.getUserMedia) {
           var constraints = {
@@ -1371,10 +1342,9 @@
       dropPedalHandler(e) {
         let id = e.dataTransfer.getData("pedalId");
         let _id;
-        // TODO: ICI GENERER UN ID UNIQUE !!! il peut y avoir plusieurs instances
+        // ICI GENERER UN ID UNIQUE !!! il peut y avoir plusieurs instances
         // de la même pédale
-        
-        if (id == "delay" || id=="reverb" || id == "flanger" || id == "lowpass" || id == "quadrafuzz") {
+        if (id == "delay" || id == "flanger" || id == "lowpass" || id == "quadrafuzz") {
           _id = "pedal-" + id;
         } else if (id == "ampsim") {
           _id = "amp-sim";
@@ -1553,7 +1523,6 @@
         return this;
       }
     }
-
     window.customElements.define(PedalBoard.is, PedalBoard);
   </script>
 </dom-module>
