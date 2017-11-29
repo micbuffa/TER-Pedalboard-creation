@@ -1,6 +1,9 @@
 <script>
 
-  class EffectTemplate{
+
+
+  /*  ################################## main effect class ########################################  */
+  class EffectTemplate {
 
     constructor(nom, version) {
       this.params = null;
@@ -8,14 +11,15 @@
       this.version = version;
       this.context = GlobalContext.context;
 
-      this.gainNode =this.context.createGain();
-      this.audioNode = Object.getPrototypeOf(Object.getPrototypeOf(this.gainNode));
 
     }
-  
+
     setup() { }
-    createNodes() { }
-    connectNodes() { }
+    createNodes() {
+      this.inputNode = this.context.createGain();
+      this.outputNode = this.context.createGain();
+    }
+    connectNodes() {}
     getSetupParams() { }
 
 
@@ -26,18 +30,15 @@
       return this.version;
     }
     bypass() {
-      console.log("abstractEffect.bypass()");
+      this.inputNode.connect(this.outputNode);
     }
     reactivate() {
-      console.log("abstractEffect.reactivate()");
     }
 
     /*
     *
     *Bibliothèque utile de pizzicato, surement à modifier pour affiner le son 
     */
-
-
     isString(arg) {
       return toString.call(arg) === '[object String]';
     }
@@ -77,8 +78,6 @@
       return (audioNode && audioNode.toString() === "[object AudioBufferSourceNode]");
     }
 
-
-
     // Takes a number from 0 to 1 and normalizes it to fit within range floor to ceiling
     normalize(num, floor, ceil) {
       if (!this.isNumber(num) || !this.isNumber(floor) || !this.isNumber(ceil))
@@ -106,9 +105,10 @@
 
       return 1 - ((0.5 - mix) * 2);
     }
-
   }
 
+
+  /*  ################################## Delay ########################################@  */
 
   class PongPingDelay extends EffectTemplate {
     constructor(nom, version) {
@@ -128,8 +128,7 @@
 
 
     createNodes() {
-      this.inputNode = this.context.createGain();
-      this.outputNode = this.context.createGain();
+      super.createNodes();
       this.delayNodeLeft = this.context.createDelay();
       this.delayNodeRight = this.context.createDelay();
       this.dryGainNode = this.context.createGain();
@@ -137,10 +136,10 @@
       this.feedbackGainNode = this.context.createGain();
       this.channelMerger = this.context.createChannelMerger(2);
     }
-    getInputNode(){
+    getInputNode() {
       return this.inputNode;
     }
-    getOutputNode(){
+    getOutputNode() {
       return this.outputNode;
     }
 
@@ -174,7 +173,6 @@
     }
 
     getSetupParamsDefault() {
-
       return {
         "mix": {
           "min": 0,
@@ -226,25 +224,20 @@
         }
       }
       return this.params;
-      console.log(this.params);
-
     }
 
     reactivate() {
-      //super.reactivate();
-      console.log(this.params);
+      this.connectNodes();
       this.setMix(this.params.mix.default);
       this.setTime(this.params.time.default);
-
       this.setFeedback(this.params.feedback.default);
+
     }
 
     bypass() {
-      //super.bypass();
-      if (this.params != null) {
-        this.save(this.params);
-        this.setMix(0.001);
-      }
+      this.inputNode.disconnect(this.feedbackGainNode);
+      this.inputNode.disconnect(this.dryGainNode);
+      super.bypass();
     }
 
     /*
@@ -269,4 +262,6 @@
     }
 
   }
+
+
 </script>

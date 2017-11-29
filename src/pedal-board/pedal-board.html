@@ -399,10 +399,10 @@
     <div id="div_app_tabs" class="div_app_tabs">
       <div class="div_tabs" id="div_tabs">
         <input id="tab-1" type="radio" name="input-tab" checked><label for="tab-1">delay</label>
-        <input id="tab-2" type="radio" name="input-tab"><label for="tab-2">lowpass</label>
+        <!-- <input id="tab-2" type="radio" name="input-tab"><label for="tab-2">lowpass</label>
         <input id="tab-3" type="radio" name="input-tab"><label for="tab-3">quadrafuzz</label>
         <input id="tab-4" type="radio" name="input-tab"><label for="tab-4">flanger</label>
-        <input id="tab-5" type="radio" name="input-tab"><label for="tab-5">ampsim</label>
+        <input id="tab-5" type="radio" name="input-tab"><label for="tab-5">ampsim</label> -->
 
         <button id="bt_hide_tabs"><iron-icon icon="expand-more"></iron-icon></button>
         <div class="div_container">
@@ -414,7 +414,7 @@
             </div>
           </div>
 
-          <div id="content-2">
+          <!-- <div id="content-2">
             <div class="pedals">
               <div id="lowpass" class="pedal" draggable="true"></div>
               <span>lowpass</span>
@@ -441,7 +441,7 @@
               </div>
               <span>ampsim</span>
             </div>
-          </div>
+          </div> -->
 
         </div>
       </div>
@@ -1344,11 +1344,11 @@
         let _id;
         // ICI GENERER UN ID UNIQUE !!! il peut y avoir plusieurs instances
         // de la même pédale
-        if (id == "delay" || id == "flanger" || id == "lowpass" || id == "quadrafuzz") {
+        if (id == "delay" /*|| id == "flanger" || id == "lowpass" || id == "quadrafuzz"*/) {
           _id = "pedal-" + id;
-        } else if (id == "ampsim") {
+        }/* else if (id == "ampsim") {
           _id = "amp-sim";
-        }
+        }*/
         let p = document.createElement(_id);
         // if (id == "ampsim") p.showEqualizer = true;
 
