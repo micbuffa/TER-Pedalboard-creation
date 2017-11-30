@@ -13,21 +13,24 @@
 
 
     }
-
     setup() { }
     createNodes() {
       this.inputNode = this.context.createGain();
       this.outputNode = this.context.createGain();
     }
-    connectNodes() {}
+    connectNodes() { }
     getSetupParams() { }
-
-
     getNom() {
       return this.nom;
     }
     getVersion() {
       return this.version;
+    }
+    getInputNode() {
+      return this.inputNode;
+    }
+    getOutputNode() {
+      return this.outputNode;
     }
     bypass() {
       this.inputNode.connect(this.outputNode);
@@ -114,7 +117,6 @@
     constructor(nom, version) {
       super(nom, version);
       var mix, time, feedback;
-      console.log(this.context);
 
     }
 
@@ -135,12 +137,6 @@
       this.wetGainNode = this.context.createGain();
       this.feedbackGainNode = this.context.createGain();
       this.channelMerger = this.context.createChannelMerger(2);
-    }
-    getInputNode() {
-      return this.inputNode;
-    }
-    getOutputNode() {
-      return this.outputNode;
     }
 
     connectNodes() {
@@ -240,6 +236,8 @@
       super.bypass();
     }
 
+  
+
     /*
     * Gestion des setteurs pour chaque paramêtres de l'effet
     */
@@ -258,10 +256,187 @@
       if (_mix < this.params.mix.max && _mix > this.params.mix.min) this.mix = _mix;
       this.dryGainNode.gain.value = this.getDryLevel(this.mix);
       this.wetGainNode.gain.value = this.getWetLevel(this.mix);
-      console.log(this.mix);
+    }
+
+    getTime(){
+      return this.time;
+    }
+
+    getMix(){
+      return this.mix;
+    }
+    getFeedback(){
+      return this.feedback;
     }
 
   }
+
+  /*############################################ LFO ##################################################*/
+
+  class LFO extends EffectTemplate {
+    constructor(nom, version) {
+      super(nom, version);
+      var frequency, offset, oscillation, phase,phaseInc,target, bufferSize,LFONode, sampleRate;
+
+    }
+
+    setup() {
+      super.setup();
+      if (this.params == null) this.params = this.getSetupParamsDefault();
+      this.bufferSize = this.params.bufferSize.default;
+      this.sampleRate = this.params.sampleRate.default;
+      this.createNodes();
+      this.connectNodes();
+      this.linktoParams();
+    }
+
+    createNodes() {
+      super.createNodes();
+      this.LFONode = this.context.createScriptProcessor(256,1,1);
+      this.LFONode.onaudioprocess = this.onAudioProcess();
+    }
+
+    connectNodes() {
+      // dry mix
+      this.inputNode.connect(this.LFONode);
+      this.LFONode.connect(this.outputNode);
+    }
+    linktoParams() {
+      /*
+       * set default value for parameters and assign it to the web audio nodes
+       */
+       this.setFrequency(this.params.mix.default);
+       this.setOffset(this.params.time.default);
+       this.setPhase(this.params.feedback.default);
+       this.setOscillation(this.params.time.default);
+       this.setTarget(this.target);
+    }
+
+    getSetupParamsDefault() {
+      return {
+        "bufferSize":{
+          "default": 256
+        },
+        "sampleRate":{
+          "default":44100
+        },
+        "frequency": {
+          "min": 0,
+          "max": 20,
+          "default": 1,
+          "type": "linear",
+          "control": "knob"
+        },
+        "offset": {
+          "min": 0,
+          "max": 22049,
+          "default": 0.85,
+          "type": "linear",
+          "control": "knob"
+        },
+        "phase": {
+          "min": 0,
+          "max": 2 * Math.PI,
+          "default": 0,
+          "type": "linear",
+          "control": "knob"
+        },
+        "oscillation": {
+          "min": -22050,
+          "max": 22050,
+          "default": 0.3,
+          "type": "linear",
+          "control": "knob"
+        }
+      }
+    }
+
+    // coté pédale créer un json params ou je récupère les valeurs des boutons 
+    save(_params) {
+      this.params = {
+        "bufferSize":{
+          "default": 256
+        },
+        "sampleRate":{
+          "default":44100
+        },
+        "frequency": {
+          "min": ((_params.frequency.min) ? (_params.frequency.min) : this.params.frequency.min),
+          "max": ((_params.frequency.max) ? (this.params.frequency.max) : _params.frequency.max),
+          "default": ((_params.frequency.default) ? (this.params.frequency.default) : _params.frequency.default),
+          "type": ((_params.frequency.type) ? (this.params.frequency.type) : _params.frequency.type),
+          "control": ((_params.frequency.control) ? (this.params.frequency.control) : _params.frequency.control)
+        },
+        "offset": {
+          "min": ((_params.offset.min) ? (this.params.offset.min) : _params.offset.min),
+          "max": ((_params.offset.max) ? (this.params.offset.max) : _params.offset.max),
+          "default": ((_params.offset.default) ? (this.params.offset.default) : _params.offset.default),
+          "type": ((_params.offset.type) ? (this.params.offset.type) : _params.offset.type),
+          "control": ((_params.offset.control) ? (this.params.offset.control) : _params.offset.control)
+        },
+        "phase": {
+          "min": ((_params.phase.min) ? (this.params.phase.min) : _params.phase.min),
+          "max": ((_params.phase.max) ? (this.params.phase.max) : _params.phase.max),
+          "default": ((_params.phase.default) ? (this.params.phase.default) : _params.phase.default),
+          "type": ((_params.phase.type) ? (this.params.phase.type) : _params.phase.type),
+          "control": ((_params.phase.control) ? (this.params.phase.control) : _params.phase.control)
+        },
+        "oscillation": {
+          "min": ((_params.oscillation.min) ? (this.params.oscillation.min) : _params.oscillation.min),
+          "max": ((_params.oscillation.max) ? (this.params.oscillation.max) : _params.oscillation.max),
+          "default": ((_params.oscillation.default) ? (this.params.oscillation.default) : _params.oscillation.default),
+          "type": ((_params.oscillation.type) ? (this.params.oscillation.type) : _params.oscillation.type),
+          "control": ((_params.oscillation.control) ? (this.params.oscillation.control) : _params.oscillation.control)
+        }
+      }
+      return this.params;
+    }
+
+    reactivate() {
+      this.connectNodes();
+      this.setFrequency(this.params.mix.default);
+      this.setOffset(this.params.time.default);
+      this.setPhase(this.params.feedback.default);
+      this.setOscillation(this.params.time.default);
+      this.setTarget(this.target);
+
+    }
+
+    bypass() {
+      this.inputNode.disconnect(this.LFONode);
+      super.bypass();
+    }
+
+    /*
+    * Gestion des setteurs pour chaque paramêtres de l'effet
+    */
+    setFrequency(_frequency) {
+      if (_frequency < this.params.frequency.max && _frequency > this.params.frequency.min) this.frequency = _frequency;
+      this.phaseInc = 2 * Math.PI * frequency * this.bufferSize / this.sampleRate;
+      this.onAudioProcess();
+    }
+    setOffset(_offset) {
+      if (_offset < this.params.offset.max && _offset > this.params.offset.min) this.offset = _offset;
+      this.onAudioProcess();
+    }
+    setPhase(_phase) {
+      if (_phase < this.params.phase.max && _phase > this.params.phase.min) this.phase = _phase;
+      this.onAudioProcess();
+    }
+    setOscillation(_oscillation) {
+      if (_oscillation < this.params.oscillation.max && _oscillation > this.params.oscillation.min) this.oscillation = _oscillation;
+      this.onAudioProcess();
+    }
+    setTarget(_target){
+      this.target = _target;
+    }
+    onAudioProcess(){
+      if (this.phaseInc> 2 * Math.PI) this.phase = 0;
+      return (this.target, this.offset + this.oscillation * Math.sin(this.phase));
+    }
+
+  }
+
 
 
 </script>
