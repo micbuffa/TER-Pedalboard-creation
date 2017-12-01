@@ -271,7 +271,7 @@
 
   }
 
-  /*############################################ LFO ##################################################*/
+  /*############################################ LFO ##################################################
 
   class LFO extends EffectTemplate {
     constructor(nom, version) {
@@ -294,22 +294,22 @@
       super.createNodes();
       this.LFONode = this.context.createScriptProcessor(256,1,1);
       this.LFONode.onaudioprocess = this.onAudioProcess();
+      console.log(this.LFONode);
     }
 
     connectNodes() {
       // dry mix
       this.inputNode.connect(this.LFONode);
-      this.LFONode.connect(this.outputNode);
+      this.LFONode.connect(this.target);// connect on the target directly ?
     }
     linktoParams() {
       /*
        * set default value for parameters and assign it to the web audio nodes
-       */
-       this.setFrequency(this.params.mix.default);
-       this.setOffset(this.params.time.default);
-       this.setPhase(this.params.feedback.default);
-       this.setOscillation(this.params.time.default);
-       this.setTarget(this.target);
+       
+       this.setFrequency(this.params.frequency.default);
+       this.setOffset(this.params.offset.default);
+       this.setPhase(this.params.phase.default);
+       this.setOscillation(this.params.oscillation.default);
     }
 
     getSetupParamsDefault() {
@@ -344,7 +344,7 @@
         "oscillation": {
           "min": -22050,
           "max": 22050,
-          "default": 0.3,
+          "default": 2000,
           "type": "linear",
           "control": "knob"
         }
@@ -394,11 +394,12 @@
 
     reactivate() {
       this.connectNodes();
-      this.setFrequency(this.params.mix.default);
-      this.setOffset(this.params.time.default);
-      this.setPhase(this.params.feedback.default);
-      this.setOscillation(this.params.time.default);
+      this.setFrequency(this.params.frequency.default);
+      this.setOffset(this.params.offset.default);
+      this.setPhase(this.params.phase.default);
+      this.setOscillation(this.params.oscillation.default);
       this.setTarget(this.target);
+      
 
     }
 
@@ -409,23 +410,23 @@
 
     /*
     * Gestion des setteurs pour chaque paramêtres de l'effet
-    */
+    
     setFrequency(_frequency) {
       if (_frequency < this.params.frequency.max && _frequency > this.params.frequency.min) this.frequency = _frequency;
-      this.phaseInc = 2 * Math.PI * frequency * this.bufferSize / this.sampleRate;
-      this.onAudioProcess();
+      this.phaseInc = 2 * Math.PI * this.frequency * this.bufferSize / this.sampleRate;
+      //this.onAudioProcess();
     }
     setOffset(_offset) {
       if (_offset < this.params.offset.max && _offset > this.params.offset.min) this.offset = _offset;
-      this.onAudioProcess();
+     // this.onAudioProcess();
     }
     setPhase(_phase) {
       if (_phase < this.params.phase.max && _phase > this.params.phase.min) this.phase = _phase;
-      this.onAudioProcess();
+      //this.onAudioProcess();
     }
     setOscillation(_oscillation) {
       if (_oscillation < this.params.oscillation.max && _oscillation > this.params.oscillation.min) this.oscillation = _oscillation;
-      this.onAudioProcess();
+      //this.onAudioProcess();
     }
     setTarget(_target){
       this.target = _target;
@@ -434,6 +435,198 @@
       if (this.phaseInc> 2 * Math.PI) this.phase = 0;
       return (this.target, this.offset + this.oscillation * Math.sin(this.phase));
     }
+
+  }*/
+
+  /*  ################################## Chorus ########################################@  */
+
+  class Chorus extends EffectTemplate {
+    constructor(nom, version) {
+      super(nom, version);
+      var speed,delay, depth, osc, mix;
+
+    }
+
+    setup() {
+      super.setup();
+      if (this.params == null) this.params = this.getSetupParamsDefault();
+      this.createNodes();
+      this.connectNodes();
+      this.linktoParams();
+    }
+
+
+    createNodes() {
+      super.createNodes();
+      this.osc = this.context.createOscillator();
+      this.osc.type = 'triangle';
+      this.dryGainNode = this.context.createGain();
+      this.wetGainNode = this.context.createGain();
+      this.channelSplitter = this.context.createChannelSplitter(2);
+      this.delayNodeLeft = this.context.createDelay();
+      this.delayNodeRight = this.context.createDelay();
+      this.scldepth = this.context.createGain();
+      this.scrdepth = this.context.createGain();
+      this.merger = this.context.createChannelMerger(2);
+
+    }
+
+    connectNodes() {
+      this.inputNode.connect(this.channelSplitter);
+      this.inputNode.connect(this.dryGainNode);
+      this.inputNode.connect(this.wetGainNode);
+      this.dryGainNode.connect(this.outputNode);
+      this.channelSplitter.connect(this.delayNodeLeft, 0);
+      this.channelSplitter.connect(this.delayNodeRight, 1);
+      this.osc.connect(this.scldepth);
+      this.osc.connect(this.scrdepth);
+      this.scldepth.connect(this.delayNodeLeft.delayTime);
+      this.scrdepth.connect(this.delayNodeRight.delayTime);
+      this.delayNodeLeft.connect(this.merger,0,0);
+      this.delayNodeRight.connect(this.merger,0,1);
+      this.merger.connect(this.wetGainNode);
+      this.wetGainNode.connect(this.outputNode);
+
+
+    }
+    linktoParams() {
+      /*
+       * set default value for parameters and assign it to the web audio nodes
+       */
+      this.setMix(this.params.mix.default);
+      this.setDelay(this.params.delay.default);
+      this.setDepth(this.params.depth.default);
+      this.setSpeed(this.params.speed.default);
+      this.osc.start(0);
+    }
+
+    getSetupParamsDefault() {
+      return {
+        "delay": {
+          "min": 0,
+          "max": 1,
+          "default": 0.04,
+          "type": "linear",
+          "control": "knob"
+        },
+        "depth": {
+          "min": 0,
+          "max": 0.004,
+          "default": 0.0018,
+          "type": "linear",
+          "control": "knob"
+        },
+        "mix": {
+          "min": 0,
+          "max": 1,
+          "default": 0.8,
+          "type": "linear",
+          "control": "knob"
+        },
+        "speed": {
+          "min": 0,
+          "max": 8,
+          "default": 2.5,
+          "type": "linear",
+          "control": "knob"
+        }
+      }
+    }
+
+
+    save(_params) {
+      this.params = {
+        "mix": {
+          "min": ((_params.mix.min) ? (_params.mix.min) : this.params.mix.min),
+          "max": ((_params.mix.max) ? (this.params.mix.max) : _params.mix.max),
+          "default": ((_params.mix.default) ? (this.params.mix.default) : _params.mix.default),
+          "type": ((_params.mix.type) ? (this.params.mix.type) : _params.mix.type),
+          "control": ((_params.mix.control) ? (this.params.mix.control) : _params.mix.control)
+        },
+        "delay": {
+          "min": ((_params.delay.min) ? (this.params.delay.min) : _params.delay.min),
+          "max": ((_params.delay.max) ? (this.params.delay.max) : _params.delay.max),
+          "default": ((_params.delay.default) ? (this.params.delay.default) : _params.delay.default),
+          "type": ((_params.delay.type) ? (this.params.delay.type) : _params.delay.type),
+          "control": ((_params.delay.control) ? (this.params.delay.control) : _params.delay.control)
+        },
+        "depth": {
+          "min": ((_params.depth.min) ? (this.params.depth.min) : _params.depth.min),
+          "max": ((_params.depth.max) ? (this.params.depth.max) : _params.depth.max),
+          "default": ((_params.depth.default) ? (this.params.depth.default) : _params.depth.default),
+          "type": ((_params.depth.type) ? (this.params.depth.type) : _params.depth.type),
+          "control": ((_params.depth.control) ? (this.params.depth.control) : _params.depth.control)
+        },
+        "speed": {
+          "min": ((_params.speed.min) ? (this.params.speed.min) : _params.speed.min),
+          "max": ((_params.speed.max) ? (this.params.speed.max) : _params.speed.max),
+          "default": ((_params.speed.default) ? (this.params.speed.default) : _params.speed.default),
+          "type": ((_params.speed.type) ? (this.params.speed.type) : _params.speed.type),
+          "control": ((_params.speed.control) ? (this.params.speed.control) : _params.speed.control)
+        }
+      }
+      return this.params;
+    }
+
+    reactivate() {
+      this.connectNodes();
+      this.setMix(this.params.mix.default);
+      this.setDelay(this.params.delay.default);
+      this.setDepth(this.params.depth.default);
+      this.setSpeed(this.params.speed.default);
+
+    }
+
+    bypass() {
+      this.inputNode.disconnect(this.channelSplitter);
+      this.inputNode.disconnect(this.dryGainNode);
+      this.inputNode.disconnect(this.wetGainNode);
+      super.bypass();
+    }
+
+  
+
+    /*
+    * Gestion des setteurs pour chaque paramêtres de l'effet
+    */
+    setDelay(_delay) {
+      if (_delay < this.params.delay.max && _delay > this.params.delay.min) this.delay = _delay;
+      this.delayNodeLeft.delayTime.value = this.delay * 0.05;
+      this.delayNodeRight.delayTime.value = this.delay * 0.05;
+     // console.log(this.delayNodeRight.delayTime.value);
+    }
+
+    setSpeed(_speed) {
+      if (_speed < this.params.speed.max && _speed > this.params.speed.min) this.speed = _speed;
+      this.osc.frequency.value = this.speed;
+    //  console.log(this.osc.frequency.value);
+     // console.log(this.scldepth);
+    }
+
+    setDepth(_depth) {
+      if (_depth < this.params.depth.max && _depth > this.params.depth.min) this.depth = _depth;
+      this.scldepth.gain.value = this.depth ;
+      this.scrdepth.gain.value = - this.depth;
+      console.log(this.depth);
+      console.log(this.scldepth.gain.value);
+    }
+    setMix(_mix) {
+      if (_mix < this.params.mix.max && _mix > this.params.mix.min) this.mix = _mix;
+      this.dryGainNode.gain.value = this.getDryLevel(this.mix);
+      this.wetGainNode.gain.value = this.getWetLevel(this.mix);
+    }
+ 
+    getDelay(){
+      return this.delay;
+    }
+
+    getDepth(){
+      return this.depth;
+    }
+    getSpeed(){
+      return this.speed;
+    }
+
 
   }
 
