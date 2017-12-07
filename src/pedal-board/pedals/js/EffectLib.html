@@ -271,173 +271,6 @@
 
   }
 
-  /*############################################ LFO ##################################################
-
-  class LFO extends EffectTemplate {
-    constructor(nom, version) {
-      super(nom, version);
-      var frequency, offset, oscillation, phase,phaseInc,target, bufferSize,LFONode, sampleRate;
-
-    }
-
-    setup() {
-      super.setup();
-      if (this.params == null) this.params = this.getSetupParamsDefault();
-      this.bufferSize = this.params.bufferSize.default;
-      this.sampleRate = this.params.sampleRate.default;
-      this.createNodes();
-      this.connectNodes();
-      this.linktoParams();
-    }
-
-    createNodes() {
-      super.createNodes();
-      this.LFONode = this.context.createScriptProcessor(256,1,1);
-      this.LFONode.onaudioprocess = this.onAudioProcess();
-      console.log(this.LFONode);
-    }
-
-    connectNodes() {
-      // dry mix
-      this.inputNode.connect(this.LFONode);
-      this.LFONode.connect(this.target);// connect on the target directly ?
-    }
-    linktoParams() {
-      /*
-       * set default value for parameters and assign it to the web audio nodes
-       
-       this.setFrequency(this.params.frequency.default);
-       this.setOffset(this.params.offset.default);
-       this.setPhase(this.params.phase.default);
-       this.setOscillation(this.params.oscillation.default);
-    }
-
-    getSetupParamsDefault() {
-      return {
-        "bufferSize":{
-          "default": 256
-        },
-        "sampleRate":{
-          "default":44100
-        },
-        "frequency": {
-          "min": 0,
-          "max": 20,
-          "default": 1,
-          "type": "linear",
-          "control": "knob"
-        },
-        "offset": {
-          "min": 0,
-          "max": 22049,
-          "default": 0.85,
-          "type": "linear",
-          "control": "knob"
-        },
-        "phase": {
-          "min": 0,
-          "max": 2 * Math.PI,
-          "default": 0,
-          "type": "linear",
-          "control": "knob"
-        },
-        "oscillation": {
-          "min": -22050,
-          "max": 22050,
-          "default": 2000,
-          "type": "linear",
-          "control": "knob"
-        }
-      }
-    }
-
-    // coté pédale créer un json params ou je récupère les valeurs des boutons 
-    save(_params) {
-      this.params = {
-        "bufferSize":{
-          "default": 256
-        },
-        "sampleRate":{
-          "default":44100
-        },
-        "frequency": {
-          "min": ((_params.frequency.min) ? (_params.frequency.min) : this.params.frequency.min),
-          "max": ((_params.frequency.max) ? (this.params.frequency.max) : _params.frequency.max),
-          "default": ((_params.frequency.default) ? (this.params.frequency.default) : _params.frequency.default),
-          "type": ((_params.frequency.type) ? (this.params.frequency.type) : _params.frequency.type),
-          "control": ((_params.frequency.control) ? (this.params.frequency.control) : _params.frequency.control)
-        },
-        "offset": {
-          "min": ((_params.offset.min) ? (this.params.offset.min) : _params.offset.min),
-          "max": ((_params.offset.max) ? (this.params.offset.max) : _params.offset.max),
-          "default": ((_params.offset.default) ? (this.params.offset.default) : _params.offset.default),
-          "type": ((_params.offset.type) ? (this.params.offset.type) : _params.offset.type),
-          "control": ((_params.offset.control) ? (this.params.offset.control) : _params.offset.control)
-        },
-        "phase": {
-          "min": ((_params.phase.min) ? (this.params.phase.min) : _params.phase.min),
-          "max": ((_params.phase.max) ? (this.params.phase.max) : _params.phase.max),
-          "default": ((_params.phase.default) ? (this.params.phase.default) : _params.phase.default),
-          "type": ((_params.phase.type) ? (this.params.phase.type) : _params.phase.type),
-          "control": ((_params.phase.control) ? (this.params.phase.control) : _params.phase.control)
-        },
-        "oscillation": {
-          "min": ((_params.oscillation.min) ? (this.params.oscillation.min) : _params.oscillation.min),
-          "max": ((_params.oscillation.max) ? (this.params.oscillation.max) : _params.oscillation.max),
-          "default": ((_params.oscillation.default) ? (this.params.oscillation.default) : _params.oscillation.default),
-          "type": ((_params.oscillation.type) ? (this.params.oscillation.type) : _params.oscillation.type),
-          "control": ((_params.oscillation.control) ? (this.params.oscillation.control) : _params.oscillation.control)
-        }
-      }
-      return this.params;
-    }
-
-    reactivate() {
-      this.connectNodes();
-      this.setFrequency(this.params.frequency.default);
-      this.setOffset(this.params.offset.default);
-      this.setPhase(this.params.phase.default);
-      this.setOscillation(this.params.oscillation.default);
-      this.setTarget(this.target);
-      
-
-    }
-
-    bypass() {
-      this.inputNode.disconnect(this.LFONode);
-      super.bypass();
-    }
-
-    /*
-    * Gestion des setteurs pour chaque paramêtres de l'effet
-    
-    setFrequency(_frequency) {
-      if (_frequency < this.params.frequency.max && _frequency > this.params.frequency.min) this.frequency = _frequency;
-      this.phaseInc = 2 * Math.PI * this.frequency * this.bufferSize / this.sampleRate;
-      //this.onAudioProcess();
-    }
-    setOffset(_offset) {
-      if (_offset < this.params.offset.max && _offset > this.params.offset.min) this.offset = _offset;
-     // this.onAudioProcess();
-    }
-    setPhase(_phase) {
-      if (_phase < this.params.phase.max && _phase > this.params.phase.min) this.phase = _phase;
-      //this.onAudioProcess();
-    }
-    setOscillation(_oscillation) {
-      if (_oscillation < this.params.oscillation.max && _oscillation > this.params.oscillation.min) this.oscillation = _oscillation;
-      //this.onAudioProcess();
-    }
-    setTarget(_target){
-      this.target = _target;
-    }
-    onAudioProcess(){
-      if (this.phaseInc> 2 * Math.PI) this.phase = 0;
-      return (this.target, this.offset + this.oscillation * Math.sin(this.phase));
-    }
-
-  }*/
-
   /*  ################################## Chorus ########################################@  */
 
   class Chorus extends EffectTemplate {
@@ -505,7 +338,7 @@
         "delay": {
           "min": 0,
           "max": 1,
-          "default": 0.04,
+          "default": 0.8,
           "type": "linear",
           "control": "knob"
         },
@@ -629,6 +462,192 @@
 
 
   }
+
+   /*  ################################## OVERDRIVE ########################################@  */
+
+   class Overdrive extends EffectTemplate {
+    constructor(nom, version) {
+      super(nom, version);
+      var preBand,color, drive, postCut, curve;
+
+    }
+
+    setup() {
+      super.setup();
+      if (this.params == null) this.params = this.getSetupParamsDefault();
+      this.curve = new Float32Array(22050);
+      this.createNodes();
+      this.connectNodes();
+      this.linktoParams();
+    }
+
+
+    createNodes() {
+      super.createNodes();
+      this.dryGainNode = this.context.createGain();
+      this.wetGainNode = this.context.createGain();
+      this.waveShaper = this.context.createWaveShaper();
+      this.bandpass = this.context.createBiquadFilter();
+      this.lowpass = this.context.createBiquadFilter();
+    }
+
+    connectNodes() {
+      this.inputNode.connect(this.bandpass);
+      this.bandpass.connect(this.wetGainNode);
+      this.bandpass.connect(this.dryGainNode);
+      this.wetGainNode.connect(this.waveShaper);
+      this.dryGainNode.connect(this.waveShaper);
+      this.waveShaper.connect(this.lowpass);
+      this.lowpass.connect(this.outputNode);
+
+
+    }
+    linktoParams() {
+      /*
+       * set default value for parameters and assign it to the web audio nodes
+       */
+      this.setcolor(this.params.color.default);
+      this.setpostCut(this.params.postCut.default);
+      this.setdrive(this.params.drive.default);
+      this.setpreBand(this.params.preBand.default);
+      console.log(this.preBand);
+    }
+
+    getSetupParamsDefault() {
+      return {
+        "preBand": {
+          "min": 0,
+          "max": 1,
+          "default": 0.5,
+          "type": "linear",
+          "control": "knob"
+        },
+        "color": {
+          "min": 0,
+          "max": 22050,
+          "default": 800,
+          "type": "linear",
+          "control": "knob"
+        },
+        "drive": {
+          "min": 0,
+          "max": 1,
+          "default": 0.5,
+          "type": "linear",
+          "control": "knob"
+        },
+        "postCut": {
+          "min": 0,
+          "max": 22050,
+          "default": 3000,
+          "type": "linear",
+          "control": "knob"
+        }
+      }
+    }
+
+
+    save(_params) {
+      this.params = {
+        "preBand": {
+          "min": ((_params.preBand.min) ? (_params.preBand.min) : this.params.preBand.min),
+          "max": ((_params.preBand.max) ? (this.params.preBand.max) : _params.preBand.max),
+          "default": ((_params.preBand.default) ? (this.params.preBand.default) : _params.preBand.default),
+          "type": ((_params.preBand.type) ? (this.params.preBand.type) : _params.preBand.type),
+          "control": ((_params.preBand.control) ? (this.params.preBand.control) : _params.preBand.control)
+        },
+        "color": {
+          "min": ((_params.color.min) ? (this.params.color.min) : _params.color.min),
+          "max": ((_params.color.max) ? (this.params.color.max) : _params.color.max),
+          "default": ((_params.color.default) ? (this.params.color.default) : _params.color.default),
+          "type": ((_params.color.type) ? (this.params.color.type) : _params.color.type),
+          "control": ((_params.color.control) ? (this.params.color.control) : _params.color.control)
+        },
+        "drive": {
+          "min": ((_params.drive.min) ? (this.params.drive.min) : _params.drive.min),
+          "max": ((_params.drive.max) ? (this.params.drive.max) : _params.drive.max),
+          "default": ((_params.drive.default) ? (this.params.drive.default) : _params.drive.default),
+          "type": ((_params.drive.type) ? (this.params.drive.type) : _params.drive.type),
+          "control": ((_params.drive.control) ? (this.params.drive.control) : _params.drive.control)
+        },
+        "postCut": {
+          "min": ((_params.postCut.min) ? (this.params.postCut.min) : _params.postCut.min),
+          "max": ((_params.postCut.max) ? (this.params.postCut.max) : _params.postCut.max),
+          "default": ((_params.postCut.default) ? (this.params.postCut.default) : _params.postCut.default),
+          "type": ((_params.postCut.type) ? (this.params.postCut.type) : _params.postCut.type),
+          "control": ((_params.postCut.control) ? (this.params.postCut.control) : _params.postCut.control)
+        }
+      }
+      return this.params;
+    }
+
+    reactivate() {
+      this.connectNodes();
+      this.setpreBand(this.params.preBand.default);
+      this.setcolor(this.params.color.default);
+      this.setdrive(this.params.drive.default);
+      this.setpostCut(this.params.postCut.default);
+
+    }
+
+    bypass() {
+      this.inputNode.disconnect(this.bandpass);
+      super.bypass();
+    }
+
+  
+
+    /*
+    * Gestion des setteurs pour chaque paramêtres de l'effet
+    */
+
+
+    setpostCut(_postCut) {
+      if (_postCut < this.params.postCut.max && _postCut > this.params.postCut.min) this.postCut = _postCut;
+      this.lowpass.frequency.setValueAtTime (this.postCut,0);
+    }
+
+    setdrive(_drive) {
+      if (_drive < this.params.drive.max && _drive > this.params.drive.min) this.drive = _drive;
+      for (var i = 0; i< 22050; i++){
+        var x = i * 2 / 22050 - 1;
+        this.curve[i] = (3 + (this.drive)* 100) * x * 20 * (Math.PI /180) / (Math.PI + (this.drive * 100) * Math.abs(x));
+      }
+      this.waveShaper.curve = this.curve;
+    }
+    setpreBand(_preBand) {
+      if (_preBand < this.params.preBand.max && _preBand > this.params.preBand.min) this.preBand = _preBand;  
+      try {
+        this.wetGainNode.gain.setValueAtTime(this.preband,0);
+        this.dryGainNode.gain.setValueAtTime(1.0 - this.preBand,0);
+      } catch (error) {
+        if (error instanceof RangeError){
+          alert('provided float non finite');
+        }
+      }
+      
+    }
+
+    setcolor(_color) {
+      if (_color < this.params.color.max && _color > this.params.color.min) this.color = _color;
+      this.bandpass.frequency.setValueAtTime(this.color,0);
+
+    }
+ 
+    getcolor(){
+      return this.color;
+    }
+
+    getdrive(){
+      return this.drive;
+    }
+    getpostCut(){
+      return this.postCut;
+    }
+
+
+  }
+
 
 
 

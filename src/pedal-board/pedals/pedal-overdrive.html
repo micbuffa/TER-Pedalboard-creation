@@ -1,12 +1,12 @@
 <link rel="import" href="../../../bower_components/webaudio-controls/webaudio-controls.html">
 <link rel="import" href="./js/pedal-behavior.html">
 
-<dom-module id="pedal-chorus">
+<dom-module id="pedal-overdrive">
   <template>
     <style include="shared-styles">
       :host {
-        background-color: #f02cff;
-        background: linear-gradient(pink, purple);
+        background-color: #ff2c2c;
+        background: linear-gradient(rgb(85, 4, 19), rgb(223, 110, 110));
       }
     </style>
     <div class="laPedale">
@@ -15,26 +15,26 @@
         <div class="row">
           <div class="column">
             <webaudio-knob id="knob1" class="knob" sprites="99" value="0" step="1" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
-              data-role="delay"></webaudio-knob>
-            <span class="knob-label" id="knob1-label">DELAY</span>
+              data-role="preBand"></webaudio-knob>
+            <span class="knob-label" id="knob1-label">preBand</span>
           </div>
           <div class="column">
-            <webaudio-knob id="knob2" class="knob" min="0" max="5" sprites="99" value="2" step="0.1" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
-              data-role="speed"></webaudio-knob>
-            <span class="knob-label" id="knob2-label">SPEED</span>
+            <webaudio-knob id="knob2" class="knob" sprites="99" value="0" step="1" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
+              data-role="color"></webaudio-knob>
+            <span class="knob-label" id="knob2-label">color</span>
           </div>
         </div>
 
         <div class="row">
           <div class="column">
-            <webaudio-knob id="knob3" class="knob" sprites="99" value="15" step="0.1" max="25" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
-              data-role="depth"></webaudio-knob>
-            <span class="knob-label" id="knob3-label">DEPTH</span>
+            <webaudio-knob id="knob3" class="knob" sprites="99" value="0" step="1" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
+              data-role="drive"></webaudio-knob>
+            <span class="knob-label" id="knob3-label">drive</span>
           </div>
           <div class="column">
             <webaudio-knob id="knob4" class="knob" sprites="99" value="0" step="1" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
-              data-role="mix"></webaudio-knob>
-            <span class="knob-label" id="knob4-label">MIX</span>
+              data-role="postCut"></webaudio-knob>
+            <span class="knob-label" id="knob4-label">postCut</span>
           </div>
         </div>
         <div class="row">
@@ -45,16 +45,16 @@
 
         <div class="row">
           <div class="column">
-            <span class="pedalLabel">CHORUS</span>
+            <span class="pedalLabel">overdrive</span>
           </div>
         </div>
       </div>
     </div>
   </template>
   <script>
-    class PedalChorus extends MyMixin(Polymer.Element) {
+    class PedalOverdrive extends MyMixin(Polymer.Element) {
 
-      static get is() { return 'pedal-chorus'; }
+      static get is() { return 'pedal-overdrive'; }
 
       static get properties() {
         return {
@@ -81,7 +81,7 @@
       }
 
       createAllInternNodes() {
-        this.effect = new Chorus("chorus",1);
+        this.effect = new Overdrive();
         this.effect.setup();
       }
 
@@ -91,16 +91,15 @@
       }
 
       setKnobsListeners() {
-        this.$.knob1.addEventListener('change', (e) =>  this.effect.setDelay(e.target.value / 100));
-        this.$.knob2.addEventListener('change', (e) =>  this.effect.setSpeed(parseFloat(e.target.value)));
-        this.$.knob3.addEventListener('change', (e) =>  this.effect.setDepth(e.target.value / 30000));
-        this.$.knob4.addEventListener('change', (e) =>  this.effect.setMix(e.target.value / 100));
+        this.$.knob1.addEventListener('change', (e) =>  this.effect.setpreBand(e.target.value / 100));
+        this.$.knob2.addEventListener('change', (e) =>  this.effect.setcolor(e.target.value * 200));
+        this.$.knob3.addEventListener('change', (e) =>  this.effect.setdrive(e.target.value / 100));
+        this.$.knob4.addEventListener('change', (e) =>  this.effect.setpostCut(e.target.value * 200));
       }
 
 
       getDefaultButtonsValues() {
-        return { delay: 60, depth: 15, mix: 80, speed: 3.66
-         };
+        return { preBand: 50, color: 4, drive: 50, postCut:15};
       }
 
       bypass() {
@@ -112,6 +111,6 @@
       }
     }
     // Register the x-custom element with the browser
-    customElements.define(PedalChorus.is, PedalChorus);
+    customElements.define(PedalOverdrive.is, PedalOverdrive);
   </script>
 </dom-module>

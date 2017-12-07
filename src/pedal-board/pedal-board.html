@@ -2,16 +2,16 @@
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 
 <link rel="import" href="./pedals/css/shared-styles.html">
-<!-- <link rel="import" href="./pedals/js/Pizzicato_2.html"> -->
-
 <link rel="import" href="./pedals/pedal-in.html">
 <link rel="import" href="./pedals/pedal-out.html">
 <link rel="import" href="./pedals/pedal-delay.html">
 <link rel="import" href="./pedals/pedal-chorus.html">
+<link rel="import" href="./pedals/pedal-overdrive.html">
 <link rel="import" href="./pedals/pedal-flanger.html">
 <link rel="import" href="./pedals/pedal-lowpass.html">
 <link rel="import" href="./pedals/pedal-quadrafuzz.html">
 <link rel="import" href="./amp-sim/amp-sim.html">
+<!-- <link rel="import" href="http://www.webaudiomodules.org/wamsynths/webdx7/wam-webdx7.html"> -->
 <link rel="import" href="./pedals/js/GlobalContext.html">
 <link rel="import" href="./pedals/js/EffectLib.html">
 
@@ -179,6 +179,19 @@
         height: 162px;
         background-image: url("../../img/chorus.png");
       }
+
+
+      #overdrive {
+        width: 162px;
+        height: 162px;
+        background-image: url("../../img/chorus.png");
+      }
+/* 
+      #dx7 {
+        width: 162px;
+        height: 162px;
+        background-image: url("../../img/chorus.png");
+      } */
 
 
       #ampsim {
@@ -407,8 +420,8 @@
       <div class="div_tabs" id="div_tabs">
         <input id="tab-1" type="radio" name="input-tab"><label for="tab-1">delay</label>
         <input id="tab-2" type="radio" name="input-tab" checked><label for="tab-2">chorus</label>
-        <!--<input id="tab-3" type="radio" name="input-tab"><label for="tab-3">quadrafuzz</label>
-        <input id="tab-4" type="radio" name="input-tab"><label for="tab-4">flanger</label>
+        <input id="tab-3" type="radio" name="input-tab"><label for="tab-3">overdrive</label>
+        <!--<input id="tab-4" type="radio" name="input-tab"><label for="tab-4">flanger</label>
         <input id="tab-5" type="radio" name="input-tab"><label for="tab-5">ampsim</label> -->
 
         <button id="bt_hide_tabs"><iron-icon icon="expand-more"></iron-icon></button>
@@ -428,14 +441,14 @@
             </div>
           </div>
 
-          <!--<div id="content-3">
+          <div id="content-3">
             <div class="pedals">
-              <div id="quadrafuzz" class="pedal" draggable="true"></div>
-              <span>quadrafuzz</span>
+              <div id="overdrive" class="pedal" draggable="true"></div>
+              <span>overdrive</span>
             </div>
-          </div>
+          </div>          
 
-          <div id="content-4">
+          <!--<div id="content-4">
             <div class="pedals">
               <div id="flanger" class="pedal" draggable="true"></div>
               <span>flanger</span>
@@ -573,6 +586,11 @@
         let p2 = document.createElement("pedal-chorus");
         p2.setPosition(400, 200);
         this.addPedal(p2);
+
+        let p3 = document.createElement("pedal-overdrive");
+        p3.setPosition(600, 200);
+        this.addPedal(p3);
+
 /*
         let p3 = document.createElement("pedal-lowpass");
         p3.setPosition(700, 400);
@@ -586,7 +604,8 @@
         // CONNECT PEDALS
         this.connect(this.pIn, p1);
         this.connect(p1, p2);
-        this.connect(p2, this.pOut);
+        this.connect(p2,p3);
+        this.connect(p3, this.pOut);
         
 
 
@@ -1351,7 +1370,7 @@
         let _id;
         // ICI GENERER UN ID UNIQUE !!! il peut y avoir plusieurs instances
         // de la même pédale
-        if (id == "delay"|| id =="chorus"/*|| id == "flanger" || id == "lowpass" || id == "quadrafuzz"*/) {
+        if (id == "delay"|| id =="chorus"|| id =="overdrive"/*|| id =="dx7"|| id == "flanger" || id == "lowpass" || id == "quadrafuzz"*/) {
           _id = "pedal-" + id;
         }/* else if (id == "ampsim") {
           _id = "amp-sim";
