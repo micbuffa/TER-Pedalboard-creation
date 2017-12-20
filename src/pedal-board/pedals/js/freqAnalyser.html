@@ -63,12 +63,11 @@ class FrequencyAnalyzer extends AnalyserNode {
   stop() {
      cancelAnimationFrame(this.rAF);
      this.rAF = null;
-     console.log(this.rAF);
   }
   
   // call this method if there is a need to resize the freq analyzer
   resize(w, h) {
-    console.log("resize");
+    //console.log("resize");
     this.canvas.width = w;
     this.canvas.height = h;
     this.WIDTH = w;

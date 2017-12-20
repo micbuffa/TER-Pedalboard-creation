@@ -576,7 +576,9 @@
 
         // clip detector
         this.meter1;
-        this.canvasInputContext;
+        this.meter2;
+        this.canvasInputContext1;
+        this.canvasInputContext2;
         // this.inputVisualization;
         // this.outputVisualization;
 
@@ -630,7 +632,9 @@
 
         // clip detector  
         this.meter1 = createAudioMeter(GlobalContext.context);
+        this.meter2 = createAudioMeter(GlobalContext.context);
         this.canvasInputContext1 = this.$["meter1"].getContext("2d");
+        this.canvasInputContext2 = this.$["meter2"].getContext("2d");
 
         // Handles the WebAudio graph initialization
         this.soundHandler();
@@ -649,21 +653,22 @@
         this.addPedal(p0);*/
 
 
-       /* let divfa1 = this.$["faWrapper1"];
-        console.log(divfa1);
-        this.fa1 = new FrequencyAnalyzer(GlobalContext.context, divfa1, "At input");
-        this.pIn.connectOut(this.fa1);
-
-        let divfa2 = this.$["faWrapper2"];
-        console.log(divfa2);
-        this.fa2 = new FrequencyAnalyzer(GlobalContext.context, divfa2, "At output");
-        this.pOut.connectOut(this.fa2);*/
+        /* let divfa1 = this.$["faWrapper1"];
+         console.log(divfa1);
+         this.fa1 = new FrequencyAnalyzer(GlobalContext.context, divfa1, "At input");
+         this.pIn.connectOut(this.fa1);
+ 
+         let divfa2 = this.$["faWrapper2"];
+         console.log(divfa2);
+         this.fa2 = new FrequencyAnalyzer(GlobalContext.context, divfa2, "At output");
+         this.pOut.connectOut(this.fa2);*/
 
 
 
         let p1 = document.createElement("pedal-delay");
         p1.setPosition(100, 250);
         this.addPedal(p1);
+        console.log(this.nbPedalsAdded);
 
         let p2 = document.createElement("pedal-chorus");
         p2.setPosition(230, 250);
@@ -677,7 +682,7 @@
         p4.setPosition(770, 180);
         this.addPedal(p4);
 
-        
+
 
 
 
@@ -699,6 +704,8 @@
         this.connect(p2, p3);
         this.connect(p3, p4);
         this.connect(p4, this.pOut);
+        p4.connectOut(this.meter2);
+        // we have au automatise the connection between outputlevel and last pedal
 
 
 
@@ -1113,24 +1120,6 @@
         return Math.sqrt(dx * dx + dy * dy);
       }
 
-      // drawloop method for clip meter canvas
-      drawLoop(canvasId,meterId) {
-        // clear the background
-        canvasId.clearRect(0, 0, 100, 20);
-
-        // check if we're currently clipping
-        if (meterId.checkClipping())
-        canvasId.fillStyle = "red";
-        else
-        canvasId.fillStyle = "green";
-
-        // draw a bar based on the current volume
-        canvasId.fillRect(0, 0, meterId.volume * 100 * 1.4, 20);
-
-        // set up the next visual callback
-        let rafID = window.requestAnimationFrame(this.drawLoop.bind(this));
-      }
-
       /************* DRAGGABLE ********************/
       addDraggableListeners() {
         window.addEventListener('mousedown', this.mouseDownDraggable.bind(this), false);
@@ -1394,6 +1383,7 @@
         this.sound.mediaSource = this.sound.context.createMediaElementSource(this.soundSample);
         this.sound.audioDestination = this.sound.context.destination;
         this.sound.mediaSource.connect(this.meter1);
+        console.log(this.nbPedalsAdded);
 
         if (navigator.mediaDevices.getUserMedia) {
           var constraints = {
@@ -1411,15 +1401,15 @@
             this.splitter.connect(this.monoMediaSourceM, 0, 0);
             this.splitter.connect(this.monoMediaSourceM, 0, 1);
             this.monoMediaSourceM.connect(this.meter1);
-            
+
           }).catch(function (err) {
             // handle the error
             console.log(err.name + ": " + err.message);
           });
         }
-  
-        // lien avec le clip detector why?
-        //this.drawloop(this.canvasInputContext1,this.meter1);
+
+        // lien avec le clip detector
+        this.drawLoop();
 
         // CHANGE STATE MIC(1) -> DEMO SOUND (0)
         var mic = this.$.mic;
@@ -1449,11 +1439,31 @@
           }
         })
       }
-
-
       
+      // drawloop method for clip meter canvas
+      drawLoop() {
+        this.canvasInputContext1.clearRect(0, 0, 100, 20);
+        this.canvasInputContext2.clearRect(0, 0, 100, 20);
+
+        // check if we're currently clipping
+        if (this.meter1.checkClipping())
+          this.canvasInputContext1.fillStyle = "red";
+        else
+          this.canvasInputContext1.fillStyle = "green";
+
+        if (this.meter2.checkClipping())
+          this.canvasInputContext2.fillStyle = "red";
+        else
+          this.canvasInputContext2.fillStyle = "green";
 
 
+        // draw a bar based on the current volume
+        this.canvasInputContext1.fillRect(0, 0, this.meter1.volume * 100 * 1.4, 20);
+        this.canvasInputContext2.fillRect(0, 0, this.meter2.volume * 100 * 1.4, 20);
+
+        // set up the next visual callback
+        let rafID = window.requestAnimationFrame(this.drawLoop.bind(this));
+      }
 
       soundNodeConnection(p1, p2) {
         if (p1.id == "pedalIn" && p2.id == "pedalOut") {
