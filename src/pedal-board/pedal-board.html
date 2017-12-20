@@ -7,13 +7,18 @@
 <link rel="import" href="./pedals/pedal-delay.html">
 <link rel="import" href="./pedals/pedal-chorus.html">
 <link rel="import" href="./pedals/pedal-overdrive.html">
-<link rel="import" href="./pedals/pedal-flanger.html">
+<link rel="import" href="./pedals/pedal-analyse.html">
+<!-- <link rel="import" href="./pedals/pedal-flanger.html">
 <link rel="import" href="./pedals/pedal-lowpass.html">
 <link rel="import" href="./pedals/pedal-quadrafuzz.html">
-<link rel="import" href="./amp-sim/amp-sim.html">
-<!-- <link rel="import" href="http://www.webaudiomodules.org/wamsynths/webdx7/wam-webdx7.html"> -->
+<link rel="import" href="./amp-sim/amp-sim.html"> -->
+<!-- <link rel="import" href="http://www.webaudiomodules.org/wamsynths/webdx7"/> -->
 <link rel="import" href="./pedals/js/GlobalContext.html">
+<script src="./pedals/js/volume-meter.js"></script>
 <link rel="import" href="./pedals/js/EffectLib.html">
+<link rel="import" href="./pedals/js/freqAnalyser.html">
+<script src="./amp-sim/src/js/Visualization.class.js"></script>
+<script scr="./pedals/js/oscilloscope.js"></script>
 
 
 <dom-module id="pedal-board">
@@ -187,9 +192,15 @@
 
 
       #overdrive {
-        width: 162px;
-        height: 162px;
-        background-image: url("../../img/chorus.png");
+        width: 185px;
+        height: 165px;
+        background-image: url("../../img/overdrive.png");
+      }
+
+      #analyser {
+        width: 115px;
+        height: 155px;
+        background-image: url("../../img/soundChecker.png");
       }
 
       /* 
@@ -387,6 +398,26 @@
         color: #fff;
         background-image: url("../img/RightJackHoverL.png");
       }
+
+      .faWrapper {
+        background: #000;
+        height: 50px;
+        width: 50px;
+        border: 5px solid grey;
+        border-radius: 15px;
+      }
+
+      .freqAnalyzer {
+        height: 150px;
+        width: 200px;
+        border-radius: 10px;
+      }
+
+      #analyzers,
+      #oscilloscopes {
+        display: flex;
+        flex-direction: row;
+      }
     </style>
 
     <header>
@@ -413,6 +444,16 @@
         <span>MICRO</span>
         <webaudio-switch src="img/switch_toggle.png" class="id" id="mic" height="28" width="50" alt="Press to record" title="Press to record"></webaudio-switch>
       </div>
+      <div>
+        <span>Input level</span>
+        <canvas id="meter1" width="100" height="20"></canvas>
+      </div>
+      <div>
+        <span>Output level</span>
+        <canvas id="meter2" width="100" height="20"></canvas>
+      </div>
+      <div>
+
     </header>
 
     <pedal-in id="pedalIn"></pedal-in>
@@ -433,8 +474,9 @@
         <label for="tab-2">chorus</label>
         <input id="tab-3" type="radio" name="input-tab">
         <label for="tab-3">overdrive</label>
-        <!--<input id="tab-4" type="radio" name="input-tab"><label for="tab-4">flanger</label>
-        <input id="tab-5" type="radio" name="input-tab"><label for="tab-5">ampsim</label> -->
+        <input id="tab-4" type="radio" name="input-tab">
+        <label for="tab-4">analyser</label>
+        <!-- <input id="tab-5" type="radio" name="input-tab"><label for="tab-5">ampsim</label>  -->
 
         <button id="bt_hide_tabs">
           <iron-icon icon="expand-more"></iron-icon>
@@ -462,14 +504,14 @@
             </div>
           </div>
 
-          <!--<div id="content-4">
+          <div id="content-4">
             <div class="pedals">
-              <div id="flanger" class="pedal" draggable="true"></div>
-              <span>flanger</span>
+              <div id="analyser" class="pedal" draggable="true"></div>
+              <span>analyser</span>
             </div>
           </div>
 
-          <div id="content-5">
+          <!--<div id="content-5">
             <div class="pedals">
               <div id="ampsim" class="pedal" draggable="true">
               </div>
@@ -528,6 +570,15 @@
         this.pOut;
 
         this.svgcanvas = undefined;
+        this.monoMediaSourceM;
+        this.fa1;
+        this.fa2;
+
+        // clip detector
+        this.meter1;
+        this.canvasInputContext;
+        // this.inputVisualization;
+        // this.outputVisualization;
 
         this.currentState = "none";
         this.oldMousePosX = 0;
@@ -577,6 +628,10 @@
         // create SVG canvas
         this.svgcanvas = PedalBoard.createSVGcanvas(this.w, this.h);
 
+        // clip detector  
+        this.meter1 = createAudioMeter(GlobalContext.context);
+        this.canvasInputContext1 = this.$["meter1"].getContext("2d");
+
         // Handles the WebAudio graph initialization
         this.soundHandler();
 
@@ -593,33 +648,57 @@
         p0.setPosition(450, 200);
         this.addPedal(p0);*/
 
+
+       /* let divfa1 = this.$["faWrapper1"];
+        console.log(divfa1);
+        this.fa1 = new FrequencyAnalyzer(GlobalContext.context, divfa1, "At input");
+        this.pIn.connectOut(this.fa1);
+
+        let divfa2 = this.$["faWrapper2"];
+        console.log(divfa2);
+        this.fa2 = new FrequencyAnalyzer(GlobalContext.context, divfa2, "At output");
+        this.pOut.connectOut(this.fa2);*/
+
+
+
         let p1 = document.createElement("pedal-delay");
-        p1.setPosition(200, 200);
+        p1.setPosition(100, 250);
         this.addPedal(p1);
 
         let p2 = document.createElement("pedal-chorus");
-        p2.setPosition(400, 200);
+        p2.setPosition(230, 250);
         this.addPedal(p2);
 
         let p3 = document.createElement("pedal-overdrive");
-        p3.setPosition(600, 200);
+        p3.setPosition(500, 250);
         this.addPedal(p3);
 
-        /*
-                let p3 = document.createElement("pedal-lowpass");
-                p3.setPosition(700, 400);
-                this.addPedal(p3);
+        let p4 = document.createElement("pedal-analyse");
+        p4.setPosition(770, 180);
+        this.addPedal(p4);
+
         
-                let p4 = document.createElement("pedal-quadrafuzz");
-                p4.setPosition(150, 50);
-                this.addPedal(p4);*/
+
+
+
+        // a decommenter pour l'affichage des 
+        /*this.fa1.start();
+        this.fa2.start();*/
+
+
+        // let dx7 = document.createElement("wam-webdx7");
+        // dx7.setPosition(200,200);
+        // dx7.init(GlobalContext.context).then(function(controller){
+        //  controller.connect(GlobalContext.context.destination);
+        // });
 
 
         // CONNECT PEDALS
         this.connect(this.pIn, p1);
         this.connect(p1, p2);
         this.connect(p2, p3);
-        this.connect(p3, this.pOut);
+        this.connect(p3, p4);
+        this.connect(p4, this.pOut);
 
 
 
@@ -637,7 +716,14 @@
         this.addTabsListeners();
 
         this.addChangeAudioListeners();
+
+        // add analysers 
+
+        //this.addAnalysers();
+        //this.initVisualizations();
       }
+
+
 
       addChangeAudioListeners() {
         let selectAudio = this.$.select_audio;
@@ -916,11 +1002,11 @@
         let menu = this.$["context-menuJack"];
         menu.style.width = "" + newMenuWid + "px";
         this.root.querySelector(".context-menu__items").style.width = "" + newMenuWid + "px";
-
+  
         // Approximatively adapts the Y position where the jacks in menu start
         // according to the number of jacks plugged in the pedal, since the
         // menu adapts its position according to the number of item
-
+  
         if (this.zoom == 1) {
           if (board.style.transformOrigin == 'left top 0px' || board.style.transformOrigin == 'center top 0px' ||
             board.style.transformOrigin == 'right top 0px') {
@@ -931,12 +1017,12 @@
             offsetY += 2.5;
           }
         }
-
+  
         */
 
         jacks.forEach((j) => {
           /*
-
+  
           // Adds a menu item for each jack in the pedal
           let ul = this.$["menu-container"];
           let li = document.createElement("li");
@@ -947,7 +1033,7 @@
           // let menuItemWid = 40 * (1 + (zoom * 2));
           // let menuItemHei = 14 * (zoom + 1);
           // li.style = "width:"+ menuItemWid +"px; height: "+ menuItemHei +"px";
-
+  
           ul.appendChild(li);
           */
 
@@ -961,7 +1047,7 @@
           li.addEventListener("mousedown", function (e) {
             // Computes the location of the mouse in the SVG canvas
             var loc = cursorPoint(e);
-
+  
             e.preventDefault();
             e.stopPropagation();
             // first we disconnect the jack before immediatly creating
@@ -972,7 +1058,7 @@
             let y1 = j.p1.getOutputPos().y;
             let x2 = j.p2.getInputPos().x;
             let y2 = j.p2.getInputPos().y;
-
+  
             pedalboard.currentDraggableJack = createBezierSVGJack("tmpJack", x1, y1, loc.x, loc.y);
             pedalboard.currentDraggableJack.end.setAttribute("x", loc.x - 7);
             pedalboard.currentDraggableJack.end.setAttribute("y", loc.y - 10);
@@ -1025,6 +1111,24 @@
         var dy = y1 - y2;
 
         return Math.sqrt(dx * dx + dy * dy);
+      }
+
+      // drawloop method for clip meter canvas
+      drawLoop(canvasId,meterId) {
+        // clear the background
+        canvasId.clearRect(0, 0, 100, 20);
+
+        // check if we're currently clipping
+        if (meterId.checkClipping())
+        canvasId.fillStyle = "red";
+        else
+        canvasId.fillStyle = "green";
+
+        // draw a bar based on the current volume
+        canvasId.fillRect(0, 0, meterId.volume * 100 * 1.4, 20);
+
+        // set up the next visual callback
+        let rafID = window.requestAnimationFrame(this.drawLoop.bind(this));
       }
 
       /************* DRAGGABLE ********************/
@@ -1282,130 +1386,140 @@
 
 
 
-    /***** SOUND *****/
-    soundHandler() {
-      this.sound.context = GlobalContext.context;
-      this.sound.mediaSource = this.sound.context.createMediaElementSource(this.soundSample);
-      this.sound.audioDestination = this.sound.context.destination;
+      /***** SOUND *****/
+      soundHandler() {
 
-      if (navigator.mediaDevices.getUserMedia) {
-        var constraints = {
-          audio: {
-            echoCancellation: false,
-            mozNoiseSuppression: false,
-            mozAutoGainControl: false
+
+        this.sound.context = GlobalContext.context;
+        this.sound.mediaSource = this.sound.context.createMediaElementSource(this.soundSample);
+        this.sound.audioDestination = this.sound.context.destination;
+        this.sound.mediaSource.connect(this.meter1);
+
+        if (navigator.mediaDevices.getUserMedia) {
+          var constraints = {
+            audio: {
+              echoCancellation: false,
+              mozNoiseSuppression: false,
+              mozAutoGainControl: false
+            }
+          };
+          navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+            this.sound.mediaSourceM = this.sound.context.createMediaStreamSource(stream);
+            this.splitter = this.sound.context.createChannelSplitter(2);
+            this.monoMediaSourceM = this.sound.context.createChannelMerger(2);
+            this.sound.mediaSourceM.connect(this.splitter);
+            this.splitter.connect(this.monoMediaSourceM, 0, 0);
+            this.splitter.connect(this.monoMediaSourceM, 0, 1);
+            this.monoMediaSourceM.connect(this.meter1);
+            
+          }).catch(function (err) {
+            // handle the error
+            console.log(err.name + ": " + err.message);
+          });
+        }
+  
+        // lien avec le clip detector why?
+        //this.drawloop(this.canvasInputContext1,this.meter1);
+
+        // CHANGE STATE MIC(1) -> DEMO SOUND (0)
+        var mic = this.$.mic;
+        mic.addEventListener("change", (e) => {
+          if (this.sound.state == 0) {
+            if (this.pedals[0].outputJacks.length != 0) {
+              this.pedals[0].outputJacks.forEach((j) => {
+                this.soundNodeDisconnection(j.p1, j.p2);
+                this.sound.state = 1;
+                this.soundNodeConnection(j.p1, j.p2);
+                // this.sound.state goes back to 0 for the next disconnect
+                this.sound.state = 0;
+              })
+            }
+            this.sound.state = 1;
+          } else {
+            if (this.pedals[0].outputJacks.length != 0) {
+              this.pedals[0].outputJacks.forEach((j) => {
+                this.soundNodeDisconnection(j.p1, j.p2);
+                this.sound.state = 0;
+                this.soundNodeConnection(j.p1, j.p2);
+                // this.sound.state goes back to 1 for the next disconnect
+                this.sound.state = 1;
+              })
+            }
+            this.sound.state = 0;
           }
-        };
-        navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-          this.sound.mediaSourceM = this.sound.context.createMediaStreamSource(stream);
-          this.splitter =this.sound.context.createChannelSplitter(2);
-          this.monoMediaSourceM= this.sound.context.createChannelMerger(2);
-          console.log(this.monoMediaSourceM);
-          this.sound.mediaSourceM.connect(this.splitter);
-          this.splitter.connect(this.monoMediaSourceM,0,0);
-          this.splitter.connect(this.monoMediaSourceM,0,1);
-          console.log(this.monoMediaSourceM);
-
-        }).catch(function (err) {
-          // handle the error
-          console.log(err.name + ": " + err.message);
-        });
+        })
       }
 
-      // CHANGE STATE MIC(1) -> DEMO SOUND (0)
-      var mic = this.$.mic;
-      mic.addEventListener("change", (e) => {
-        if (this.sound.state == 0) {
-          if (this.pedals[0].outputJacks.length != 0) {
-            this.pedals[0].outputJacks.forEach((j) => {
-              this.soundNodeDisconnection(j.p1, j.p2);
-              this.sound.state = 1;
-              this.soundNodeConnection(j.p1, j.p2);
-              // this.sound.state goes back to 0 for the next disconnect
-              this.sound.state = 0;
-            })
+
+      
+
+
+
+      soundNodeConnection(p1, p2) {
+        if (p1.id == "pedalIn" && p2.id == "pedalOut") {
+          if (this.sound.state == 0) {
+            this.sound.mediaSource.connect(this.sound.audioDestination);
+          } else {
+            //this.sound.mediaSourceM.connect(this.sound.audioDestination);
+            this.monoMediaSourceM.connect(this.sound.audioDestination);
           }
-          this.sound.state = 1;
-        } else {
-          if (this.pedals[0].outputJacks.length != 0) {
-            this.pedals[0].outputJacks.forEach((j) => {
-              this.soundNodeDisconnection(j.p1, j.p2);
-              this.sound.state = 0;
-              this.soundNodeConnection(j.p1, j.p2);
-              // this.sound.state goes back to 1 for the next disconnect
-              this.sound.state = 1;
-            })
+        } else if (p1.id == "pedalIn") {
+          if (this.sound.state == 0) {
+            this.sound.mediaSource.connect(p2.elem.soundNodeIn);
+          } else {
+            //this.sound.mediaSourceM.connect(p2.elem.soundNodeIn);
+            this.monoMediaSourceM.connect(p2.elem.soundNodeIn);
           }
-          this.sound.state = 0;
-        }
-      })
-    }
-
-    soundNodeConnection(p1, p2) {
-      if (p1.id == "pedalIn" && p2.id == "pedalOut") {
-        if (this.sound.state == 0) {
-          this.sound.mediaSource.connect(this.sound.audioDestination);
+        } else if (p2.id == "pedalOut") {
+          p1.elem.soundNodeOut.connect(this.sound.audioDestination);
         } else {
-          //this.sound.mediaSourceM.connect(this.sound.audioDestination);
-          this.monoMediaSourceM.connect(this.sound.audioDestination);
+          p1.elem.soundNodeOut.connect(p2.elem.soundNodeIn);
         }
-      } else if (p1.id == "pedalIn") {
-        if (this.sound.state == 0) {
-          this.sound.mediaSource.connect(p2.elem.soundNodeIn);
-        } else {
-          //this.sound.mediaSourceM.connect(p2.elem.soundNodeIn);
-          this.monoMediaSourceM.connect(p2.elem.soundNodeIn);
-        }
-      } else if (p2.id == "pedalOut") {
-        p1.elem.soundNodeOut.connect(this.sound.audioDestination);
-      } else {
-        p1.elem.soundNodeOut.connect(p2.elem.soundNodeIn);
       }
-    }
 
-    soundNodeDisconnection(p1, p2) {
-      if (p1.id == "pedalIn" && p2.id == "pedalOut") {
-        if (this.sound.state == 0) {
-          this.sound.mediaSource.disconnect(this.sound.audioDestination);
+      soundNodeDisconnection(p1, p2) {
+        if (p1.id == "pedalIn" && p2.id == "pedalOut") {
+          if (this.sound.state == 0) {
+            this.sound.mediaSource.disconnect(this.sound.audioDestination);
+          } else {
+            //this.sound.mediaSourceM.disconnect(this.sound.audioDestination);
+            this.monoMediaSourceM.disconnect(this.sound.audioDestination);
+          }
+        } else if (p1.id == "pedalIn") {
+          if (this.sound.state == 0) {
+            this.sound.mediaSource.disconnect(p2.elem.soundNodeIn);
+          } else {
+            //this.sound.mediaSourceM.disconnect(p2.elem.soundNodeIn);
+            this.monoMediaSourceM.disconnect(p2.elem.soundNodeIn);
+          }
+        } else if (p2.id == "pedalOut") {
+          p1.elem.soundNodeOut.disconnect(this.sound.audioDestination);
         } else {
-          //this.sound.mediaSourceM.disconnect(this.sound.audioDestination);
-          this.monoMediaSourceM.disconnect(this.sound.audioDestination);
+          p1.elem.soundNodeOut.disconnect(p2.elem.soundNodeIn);
         }
-      } else if (p1.id == "pedalIn") {
-        if (this.sound.state == 0) {
-          this.sound.mediaSource.disconnect(p2.elem.soundNodeIn);
-        } else {
-          //this.sound.mediaSourceM.disconnect(p2.elem.soundNodeIn);
-          this.monoMediaSourceM.disconnect(p2.elem.soundNodeIn);
-        }
-      } else if (p2.id == "pedalOut") {
-        p1.elem.soundNodeOut.disconnect(this.sound.audioDestination);
-      } else {
-        p1.elem.soundNodeOut.disconnect(p2.elem.soundNodeIn);
       }
-    }
 
-    dragPedalHandler(e) {
-      e.preventDefault();
-      return false;
-    }
+      dragPedalHandler(e) {
+        e.preventDefault();
+        return false;
+      }
 
-    dropPedalHandler(e) {
-      let id = e.dataTransfer.getData("pedalId");
-      let _id;
-      // ICI GENERER UN ID UNIQUE !!! il peut y avoir plusieurs instances
-      // de la même pédale
-      if (id == "delay" || id == "chorus" || id == "overdrive"/*|| id =="dx7"|| id == "flanger" || id == "lowpass" || id == "quadrafuzz"*/) {
-        _id = "pedal-" + id;
-      }/* else if (id == "ampsim") {
+      dropPedalHandler(e) {
+        let id = e.dataTransfer.getData("pedalId");
+        let _id;
+        // ICI GENERER UN ID UNIQUE !!! il peut y avoir plusieurs instances
+        // de la même pédale
+        if (id == "delay" || id == "chorus" || id == "overdrive" || id == "analyser"/*|| id =="dx7"*/) {
+          _id = "pedal-" + id;
+        }/* else if (id == "ampsim") {
           _id = "amp-sim";
         }*/
-      let p = document.createElement(_id);
-      // if (id == "ampsim") p.showEqualizer = true;
+        let p = document.createElement(_id);
+        // if (id == "ampsim") p.showEqualizer = true;
 
-      p.setPosition(e.clientX - 30 - (p.dataWidth / 2), event.clientY - 10 - (p.dataHeight / 2));
-      this.addPedal(p);
-    }
+        p.setPosition(e.clientX - 30 - (p.dataWidth / 2), event.clientY - 10 - (p.dataHeight / 2));
+        this.addPedal(p);
+      }
     }
 
     class Jack {

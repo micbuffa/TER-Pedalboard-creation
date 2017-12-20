@@ -1,0 +1,131 @@
+<link rel="import" href="../../../bower_components/webaudio-controls/webaudio-controls.html">
+<script>UseWebAudioControlsMidi = 1</script>
+
+<link rel="import" href="./js/pedal-behavior.html">
+
+<dom-module id="pedal-analyse">
+  <template>
+    <style include="shared-styles">
+      :host {
+        background: linear-gradient(rgb(207, 200, 201), rgb(134, 177, 241));
+      }
+
+      #analyseWrapper {
+        background: #000;
+        height: 180px;
+        width: 200px;
+        border: 5px solid grey;
+        border-radius: 15px;
+      }
+    </style>
+    <div class="laPedale">
+      <div class="elements">
+        <div class="column">
+          <div id="analyseWrapper">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="column">
+            <webaudio-slider midilearn="true" src="./img/switches/threepositionslider.png" knobsrc="./img/switches/buttonforslider.png"
+              direction="horz" value="2" min="1" max="3" id="slider1" knobwidth="40" width="128" height="30" data-role="mode"></webaudio-slider>
+            <span class="knob-label" id="switch-label">Clip - Oscillator - Frequency</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="column">
+            <webaudio-switch midilearn="true" src="./img/switches/switch_1.png" class="switch" id="switch1" width="40" height="25"></webaudio-switch>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="column">
+            <span class="pedalLabel">Sound Checker</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+  <script>
+
+    class PedalAnalyse extends MyMixin(Polymer.Element) {
+
+      static get is() { return 'pedal-analyse'; }
+
+      static get properties() {
+        return {
+          dataWidth: {
+            type: Number,
+            value: 230
+          },
+          dataHeight: {
+            type: Number,
+            value: 320
+
+          }
+        };
+      }
+      constructor() {
+        super();
+        var visualiser, analyseWrapper, mode;
+        this.mode = 2;
+      }
+
+      ready() {
+        super.ready();
+        this.createAllInternNodes();
+        this.connectInternNodes();
+        this.resetKnobs();
+        this.setKnobsListeners();
+        this.setValuesToKnobs();
+        this.setPedalActive();
+        this.setSwitchListener();
+        //this.visualize();
+      }
+
+      createAllInternNodes() {
+        this.analyseWrapper = this.$["analyseWrapper"];
+        switch (this.mode) {
+          case 2: this.visualiser = new FrequencyAnalyzer(GlobalContext.context, this.analyseWrapper, "Check by frequency"); break;
+          case 3: this.visualiser = null; break;
+          case 1: this.visualiser = null; break;
+        }
+        console.log(this.visualiser);
+      }
+
+      connectInternNodes() {
+        this.soundNodeIn.connect(this.visualiser);
+        this.soundNodeIn.connect(this.soundNodeOut);
+      }
+
+      setKnobsListeners() {
+        this.$.slider1.addEventListener('change', (e) => this.setMode(e.target.value));
+      }
+
+      setMode(numMode) {
+        this.mode = numMode;
+      }
+
+      getDefaultButtonsValues() {
+        return { mode: 2 };
+      }
+
+      bypass() {
+        this.visualiser.stop();
+      }
+
+      reactivate() {
+        this.visualiser.start();
+        this.visualize();
+
+      }
+
+      visualize(){
+        this.visualiser.update();
+        requestAnimationFrame(this.visualize.bind(this));
+      }
+    }
+    // Register the x-custom element with the browser
+    customElements.define(PedalAnalyse.is, PedalAnalyse);
+  </script>
+</dom-module>
