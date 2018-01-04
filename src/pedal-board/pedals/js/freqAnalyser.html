@@ -43,8 +43,8 @@ class FrequencyAnalyzer extends AnalyserNode {
     this.canvasParent = parent;
     this.canvasParent.appendChild(this.canvas);
     this.ctx = this.canvas.getContext('2d');
-    this.WIDTH = 250;
-    this.HEIGHT = 200;
+    this.WIDTH = this.canvasParent.clientWidth;
+    this.HEIGHT = this.canvasParent.clientHeight;
     
     this.resize(this.WIDTH, this.HEIGHT);
     

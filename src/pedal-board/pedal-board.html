@@ -197,7 +197,7 @@
         background-image: url("../../img/overdrive.png");
       }
 
-      #analyser {
+      #analyse {
         width: 115px;
         height: 155px;
         background-image: url("../../img/soundChecker.png");
@@ -473,7 +473,7 @@
         <input id="tab-3" type="radio" name="input-tab">
         <label for="tab-3">overdrive</label>
         <input id="tab-4" type="radio" name="input-tab">
-        <label for="tab-4">analyser</label>
+        <label for="tab-4">analyse</label>
         <!-- <input id="tab-5" type="radio" name="input-tab"><label for="tab-5">ampsim</label>  -->
 
         <button id="bt_hide_tabs">
@@ -504,8 +504,8 @@
 
           <div id="content-4">
             <div class="pedals">
-              <div id="analyser" class="pedal" draggable="true"></div>
-              <span>analyser</span>
+              <div id="analyse" class="pedal" draggable="true"></div>
+              <span>analyse</span>
             </div>
           </div>
 
@@ -663,49 +663,29 @@
 
 
 
-        let p1 = document.createElement("pedal-delay");
-        p1.setPosition(100, 250);
-        this.addPedal(p1);
+        let p0 = document.createElement("pedal-delay");
+        p0.setPosition(100, 250);
+        this.addPedal(p0);
         console.log(this.nbPedalsAdded);
 
-        let p2 = document.createElement("pedal-chorus");
-        p2.setPosition(230, 250);
+        let p1 = document.createElement("pedal-chorus");
+        p1.setPosition(230, 250);
+        this.addPedal(p1);
+
+        let p2 = document.createElement("pedal-overdrive");
+        p2.setPosition(500, 250);
         this.addPedal(p2);
 
-        let p3 = document.createElement("pedal-overdrive");
-        p3.setPosition(500, 250);
+        let p3 = document.createElement("pedal-analyse");
+        p3.setPosition(770, 180);
         this.addPedal(p3);
 
-        let p4 = document.createElement("pedal-analyse");
-        p4.setPosition(770, 180);
-        this.addPedal(p4);
 
-
-
-
-
-        // a decommenter pour l'affichage des 
-        /*this.fa1.start();
-        this.fa2.start();*/
-
-
-        // let dx7 = document.createElement("wam-webdx7");
-        // dx7.setPosition(200,200);
-        // dx7.init(GlobalContext.context).then(function(controller){
-        //  controller.connect(GlobalContext.context.destination);
-        // });
-
-
-        // CONNECT PEDALS
-        this.connect(this.pIn, p1);
+        this.connect(this.pIn, p0);
+        this.connect(p0, p1);
         this.connect(p1, p2);
         this.connect(p2, p3);
-        this.connect(p3, p4);
-        this.connect(p4, this.pOut);
-        p4.connectOut(this.meter2);
-        // we have au automatise the connection between outputlevel and last pedal
-
-
+        this.connect(p3, this.pOut)
 
         // For pedals to be draggable
         this.addDraggableListeners();
@@ -721,11 +701,6 @@
         this.addTabsListeners();
 
         this.addChangeAudioListeners();
-
-        // add analysers 
-
-        //this.addAnalysers();
-        //this.initVisualizations();
       }
 
 
@@ -1086,7 +1061,7 @@
         // Firefox
         //this.addEventListener("DOMMouseScroll", this.mouseWheelHandler, false);
 
-        this.addEventListener("dblclick", this.dblclickHandler, false);
+       // this.addEventListener("dblclick", this.dblclickHandler, false);
       }
 
       static createSVGcanvas(w, h) {
@@ -1469,17 +1444,16 @@
           if (this.sound.state == 0) {
             this.sound.mediaSource.connect(this.sound.audioDestination);
           } else {
-            //this.sound.mediaSourceM.connect(this.sound.audioDestination);
             this.monoMediaSourceM.connect(this.sound.audioDestination);
           }
         } else if (p1.id == "pedalIn") {
           if (this.sound.state == 0) {
             this.sound.mediaSource.connect(p2.elem.soundNodeIn);
           } else {
-            //this.sound.mediaSourceM.connect(p2.elem.soundNodeIn);
             this.monoMediaSourceM.connect(p2.elem.soundNodeIn);
           }
         } else if (p2.id == "pedalOut") {
+          p1.elem.soundNodeOut.connect(this.meter2);
           p1.elem.soundNodeOut.connect(this.sound.audioDestination);
         } else {
           p1.elem.soundNodeOut.connect(p2.elem.soundNodeIn);
@@ -1518,12 +1492,13 @@
         let _id;
         // ICI GENERER UN ID UNIQUE !!! il peut y avoir plusieurs instances
         // de la même pédale
-        if (id == "delay" || id == "chorus" || id == "overdrive" || id == "analyser"/*|| id =="dx7"*/) {
+        if (id == "delay" || id == "chorus" || id == "overdrive" || id == "analyse"/*|| id =="dx7"*/) {
           _id = "pedal-" + id;
         }/* else if (id == "ampsim") {
           _id = "amp-sim";
         }*/
         let p = document.createElement(_id);
+        console.log(p);
         // if (id == "ampsim") p.showEqualizer = true;
 
         p.setPosition(e.clientX - 30 - (p.dataWidth / 2), event.clientY - 10 - (p.dataHeight / 2));

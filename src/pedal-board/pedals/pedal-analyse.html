@@ -1,5 +1,8 @@
 <link rel="import" href="../../../bower_components/webaudio-controls/webaudio-controls.html">
 <script>UseWebAudioControlsMidi = 1</script>
+<script src="./js/volume-meter.js"></script>
+<script src="./js/oscilloscope.js"></script>
+
 
 <link rel="import" href="./js/pedal-behavior.html">
 
@@ -29,7 +32,7 @@
           <div class="column">
             <webaudio-slider midilearn="true" src="./img/switches/threepositionslider.png" knobsrc="./img/switches/buttonforslider.png"
               direction="horz" value="2" min="1" max="3" id="slider1" knobwidth="40" width="128" height="30" data-role="mode"></webaudio-slider>
-            <span class="knob-label" id="switch-label">Clip - Oscillator - Frequency</span>
+            <span class="knob-label" id="switch-label">Clip - Frequency - Oscillator</span>
           </div>
         </div>
         <div class="row">
@@ -67,7 +70,7 @@
       }
       constructor() {
         super();
-        var visualiser, analyseWrapper, mode;
+        var visualiser, analyseWrapper, canvas, mode, state, clipWrapper, oscilloWrapper;
         this.mode = 2;
       }
 
@@ -80,21 +83,18 @@
         this.setValuesToKnobs();
         this.setPedalActive();
         this.setSwitchListener();
-        //this.visualize();
       }
 
       createAllInternNodes() {
         this.analyseWrapper = this.$["analyseWrapper"];
-        switch (this.mode) {
-          case 2: this.visualiser = new FrequencyAnalyzer(GlobalContext.context, this.analyseWrapper, "Check by frequency"); break;
-          case 3: this.visualiser = null; break;
-          case 1: this.visualiser = null; break;
-        }
+        this.visualNode = GlobalContext.context.createGain(2);
+
       }
 
       connectInternNodes() {
-        this.soundNodeIn.connect(this.visualiser);
-        this.soundNodeIn.connect(this.soundNodeOut);
+      this.soundNodeIn.connect(this.soundNodeOut);
+      this.soundNodeIn.connect(this.visualNode);
+
       }
 
       setKnobsListeners() {
@@ -102,28 +102,87 @@
       }
 
       setMode(numMode) {
-        this.mode = numMode;
+        if (this.state == 0) this.mode = numMode;
       }
 
       getDefaultButtonsValues() {
         return { mode: 2 };
       }
 
-      bypass() {
-        this.visualiser.stop();
-      }
-
       reactivate() {
-        this.visualiser.start();
-        this.visualize();
+        this.state = 1;
+        console.log(this.mode);
 
+        switch (this.mode) {
+          case 2:
+            this.visualiser = new FrequencyAnalyzer(GlobalContext.context, this.analyseWrapper, "Check by frequency");
+            this.visualiser.start();
+            break;
+          case 1:
+            this.visualiser = createAudioMeter(GlobalContext.context);
+            this.canvas = document.createElement("canvas");
+            this.canvas.setAttribute("id", "clipWrapper");
+            this.analyseWrapper.appendChild(this.canvas);
+            this.clipWrapper = this.canvas.getContext("2d");
+
+            break;
+          case 3:
+            this.oscilloWrapper = document.createElement("div");
+            this.oscilloWrapper.setAttribute("id", "oscilloscope");
+            let sensitivity = document.createElement("input");
+            sensitivity.setAttribute("id","sensivityOsc1")
+            sensitivity.setAttribute("type", "range");
+            sensitivity.setAttribute("min", "1");
+            sensitivity.setAttribute("max", "100");
+            sensitivity.setAttribute("value", "27");
+            let labelOsc = document.createElement("label");
+            labelOsc.setAttribute("id","labelOsc");
+            labelOsc.setAttribute("for","sensivityOsc1");
+            this.analyseWrapper.appendChild(this.oscilloWrapper);
+            this.analyseWrapper.appendChild(sensitivity);
+            this.analyseWrapper.appendChild(labelOsc);
+
+            this.visualiser = new Oscilloscope(GlobalContext.context, this.oscilloWrapper,"Oscilloscope");
+            sensitivity.addEventListener('input', function() {visualiser.sensitivity = sensitivity.value;});
+
+            break;
+        }
+        //this.soundNodeIn.connect(this.visualiser);
+        this.visualNode.connect(this.visualiser);
+        this.visualize();
       }
 
-      visualize(){
-        this.visualiser.update();
+      visualize() {
+        switch (this.mode) {
+          case 2:
+            this.visualiser.update();
+            break;
+          case 1:
+            this.clipWrapper.clearRect(0, 0, 100, 20);
+            if (this.visualiser.checkClipping())
+              this.clipWrapper.fillStyle = "red";
+            else
+              this.clipWrapper.fillStyle = "white";
+            this.clipWrapper.fillRect(0, 0, this.visualiser.volume * 100 * 1.4, 20);
+            break;
+          case 3: this.visualiser.update(); 
+            break;
+        }
         requestAnimationFrame(this.visualize.bind(this));
       }
+
+      bypass() {
+        this.state = 0;
+        if (this.mode == 2 && this.visualiser) { this.visualiser.stop(); }
+        if (this.analyseWrapper) {
+          while (this.analyseWrapper.firstChild) {
+            this.analyseWrapper.removeChild(this.analyseWrapper.firstChild);
+          }
+        }
+        this.visualNode.disconnect(this.visualiser);
+      }
     }
+
     // Register the x-custom element with the browser
     customElements.define(PedalAnalyse.is, PedalAnalyse);
   </script>
