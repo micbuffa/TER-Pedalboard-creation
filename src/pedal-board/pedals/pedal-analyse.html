@@ -120,6 +120,7 @@
             break;
           case 1:
             this.visualiser = createAudioMeter(GlobalContext.context);
+            console.log(this.visualiser);
             this.canvas = document.createElement("canvas");
             this.canvas.setAttribute("id", "clipWrapper");
             this.analyseWrapper.appendChild(this.canvas);
@@ -143,8 +144,7 @@
             this.analyseWrapper.appendChild(labelOsc);
 
             this.visualiser = new Oscilloscope(GlobalContext.context, this.oscilloWrapper,"Oscilloscope");
-            sensitivity.addEventListener('input', function() {visualiser.sensitivity = sensitivity.value;});
-
+            sensitivity.addEventListener('input', (e) => this.visualiser.sensitivity = sensitivity.value);
             break;
         }
         //this.soundNodeIn.connect(this.visualiser);
@@ -158,12 +158,12 @@
             this.visualiser.update();
             break;
           case 1:
-            this.clipWrapper.clearRect(0, 0, 100, 20);
+            this.clipWrapper.clearRect(10, 150, 180, -150);
             if (this.visualiser.checkClipping())
               this.clipWrapper.fillStyle = "red";
             else
               this.clipWrapper.fillStyle = "white";
-            this.clipWrapper.fillRect(0, 0, this.visualiser.volume * 100 * 1.4, 20);
+            this.clipWrapper.fillRect(10, 150, 180, -this.visualiser.volume * 100 * 3);
             break;
           case 3: this.visualiser.update(); 
             break;
