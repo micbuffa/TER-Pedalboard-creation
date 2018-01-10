@@ -4,11 +4,11 @@ Line to follow to create your personnal pedal compatible with the pedalboard
 
 ## The effect
 
-You can both use an effect from the library **EffectLib.html** or create your own web-audio graph and connect it to the global one in a pedal html file.
+You can both use an effect from the library **EffectLib.html** or create your own web-audio graph and connect it to the global one in an html pedal file.
 
 ## Structure of the pedal
 ### Global structure
-In the pedalboard we include html files to add a pedal as a plugin. So to crate a new one you need to create an html file which will contain the html/css/js code as a Polymer web-component.
+In the pedalboard we include html files to add a pedal as a plugin. So to create a new one you need to add an html file which will contain the html/css/js code as a Polymer web-component.
 ### Js Structure
 You have to extends from class "mymixin" present in the file **pedalBehavior.html** and implements the methods:
 ```
@@ -46,13 +46,13 @@ Start from this template and customize the style and disposition of the pedal
           </div>
         </div>
       </div>
-    </div>
+    </div>e
   </template>
 ```
 
 ## Add it to the pedal board
 
-There is several actions that now are not automated. You manually have to add on the **pedal-board.html** file :
+There is several actions that currently are not automated. You manually have to add into the **pedal-board.html** file :
 
  - In the `div_app_tabs` an input and label for your pedal
  - In the `div_container`a draggable div with the appropriate class and its block of css (link the image to drag on the pedalboard)
