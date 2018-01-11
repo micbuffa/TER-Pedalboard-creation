@@ -673,7 +673,6 @@
       }
       constructor() {
         super();
-        window.AudioContext = window.AudioContext || window.webkitAudioContext;
         this.audioContext;
         this.guitarPluggedIn = false;
         this.menuPresets;
@@ -693,7 +692,7 @@
         // Create an AudioNode from the stream.
         //this.audioPlayer = this.$.player;
         this.audioPlayer = this.pedalboard.soundSample;
-        this.audioContext = this.pedalboard.sound.pzContext;
+        this.audioContext = GlobalContext.context;
 
         var convolverSlider,
           convolverCabinetSlider,

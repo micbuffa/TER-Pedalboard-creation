@@ -640,12 +640,12 @@
         this.addPedal(this.pOut);
 
         /*
-        // ADD NEW PEDAL TO PEDALBOARD
+        // ADDING NEW PEDAL TO PEDALBOARD
         let p0 = document.createElement("amp-sim");
         p0.setPosition(450, 200);
         this.addPedal(p0);*/
 
-        let p0 = document.createElement("pedal-delay");
+       /* let p0 = document.createElement("pedal-delay");
         p0.setPosition(100, 250);
         this.addPedal(p0);
         console.log(this.nbPedalsAdded);
@@ -667,7 +667,7 @@
         this.connect(p0, p1);
         this.connect(p1, p2);
         this.connect(p2, p3);
-        this.connect(p3, this.pOut)
+        this.connect(p3, this.pOut)*/
 
         // For pedals to be draggable
         this.addDraggableListeners();
@@ -1474,12 +1474,12 @@
         // Generate a unique id for the pedal, handle case for multiple instances of the same pedal
         if (id == "delay" || id == "chorus" || id == "overdrive" || id == "analyse"/*|| id =="dx7"*/) {
           _id = "pedal-" + id;
-        } else if (id == "ampsim") {
-          _id = "amp-sim";
-        }
+         } else if (id == "ampsim") {
+           _id = "amp-sim";
+         }
         let p = document.createElement(_id);
         console.log(p);
-         if (id == "ampsim") p.showEqualizer = true;
+         //if (id == "ampsim") p.showEqualizer = true;
 
         p.setPosition(e.clientX - 30 - (p.dataWidth / 2), event.clientY - 10 - (p.dataHeight / 2));
         this.addPedal(p);
