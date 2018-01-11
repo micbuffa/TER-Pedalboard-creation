@@ -10,8 +10,8 @@
 <link rel="import" href="./pedals/pedal-analyse.html">
 <!-- <link rel="import" href="./pedals/pedal-flanger.html">
 <link rel="import" href="./pedals/pedal-lowpass.html">
-<link rel="import" href="./pedals/pedal-quadrafuzz.html">
-<link rel="import" href="./amp-sim/amp-sim.html"> -->
+<link rel="import" href="./pedals/pedal-quadrafuzz.html">-->
+<link rel="import" href="./amp-sim/amp-sim.html"> 
 <!-- <link rel="import" href="http://www.webaudiomodules.org/wamsynths/webdx7"/> -->
 <link rel="import" href="./pedals/js/GlobalContext.html">
 <script src="./pedals/js/volume-meter.js"></script>
@@ -204,13 +204,6 @@
         height: 155px;
         background-image: url("../../img/soundChecker.png");
       }
-
-      /* 
-      #dx7 {
-        width: 162px;
-        height: 162px;
-        background-image: url("../../img/chorus.png");
-      } */
 
       #ampsim {
         width: 420px;
@@ -476,7 +469,7 @@
         <label for="tab-3">overdrive</label>
         <input id="tab-4" type="radio" name="input-tab">
         <label for="tab-4">analyse</label>
-        <!-- <input id="tab-5" type="radio" name="input-tab"><label for="tab-5">ampsim</label>  -->
+        <input id="tab-5" type="radio" name="input-tab"><label for="tab-5">ampsim</label>
 
         <button id="bt_hide_tabs">
           <iron-icon icon="expand-more"></iron-icon>
@@ -511,13 +504,13 @@
             </div>
           </div>
 
-          <!--<div id="content-5">
+          <div id="content-5">
             <div class="pedals">
               <div id="ampsim" class="pedal" draggable="true">
               </div>
               <span>ampsim</span>
             </div>
-          </div> -->
+          </div>
 
         </div>
       </div>
@@ -543,7 +536,7 @@
         return 'pedal-board';
       }
 
-      // 2 propriétés : width et height de la pedalboard
+      
       static get properties() {
         return {
           dataWidth: {
@@ -639,7 +632,7 @@
         // Handles the WebAudio graph initialization
         this.soundHandler();
 
-        // ajout des sources IN/OUT dans le pedalBoard
+        // Adding I/O src
         this.pIn.setPosition(-20, (this.h / 2));
         this.pOut.setPosition(this.w, (this.h / 2));
 
@@ -651,19 +644,6 @@
         let p0 = document.createElement("amp-sim");
         p0.setPosition(450, 200);
         this.addPedal(p0);*/
-
-
-        /* let divfa1 = this.$["faWrapper1"];
-         console.log(divfa1);
-         this.fa1 = new FrequencyAnalyzer(GlobalContext.context, divfa1, "At input");
-         this.pIn.connectOut(this.fa1);
- 
-         let divfa2 = this.$["faWrapper2"];
-         console.log(divfa2);
-         this.fa2 = new FrequencyAnalyzer(GlobalContext.context, divfa2, "At output");
-         this.pOut.connectOut(this.fa2);*/
-
-
 
         let p0 = document.createElement("pedal-delay");
         p0.setPosition(100, 250);
@@ -954,7 +934,7 @@
       }
 
       handleJackMenu(p) {
-        // clique sur input
+        // clic on an input
         let input = "";
         p.inputP.addEventListener("click", (e) => {
           e.preventDefault();
@@ -964,10 +944,10 @@
             input.setAttribute("open", false);
           } else {
             input.setAttribute("open", true);
-            // si nombre de jacks > 1
+            // if number of jacks > 1
           }
           if (p.inputJacks.length > 1) {
-            // création du menu items
+            // items creation
             this.createMenuItems(p.inputJacks, input.getAttribute("open") === 'true');
             //this.toggleMenuOn();
             //this.positionMenu(e, p);
@@ -1099,7 +1079,7 @@
       addDraggableListeners() {
         window.addEventListener('mousedown', this.mouseDownDraggable.bind(this), false);
         window.addEventListener('mouseup', this.mouseUpDraggable.bind(this), false);
-        // celui-là pour detecter si on est au voisinage des inputs et outputs des pédales
+        // detect proximity to I/O
         this.addEventListener('mousemove', this.highlightInputsOutputs.bind(this), false);
       }
 
@@ -1141,10 +1121,9 @@
         // e.preventDefault();
         // e.stopPropagation();
 
-        // Quand on clique on mémorise : 1) l'ancienne position
-        // de l'objet qu'on draggue et 2) l'ancienne position de
-        // la souris (la position cliquee) et 3) on ajoute un 
-        // mousemove listener
+        // clic : register : 1) old position of abject dragged
+        // 2) clicked position 
+        // 3) adding mouse listener
         let p;
         window.addEventListener('mousemove', this.mouseMoveDraggable.bind(this), true);
 
@@ -1220,11 +1199,11 @@
       }
 
       mouseUpDraggable() {
-        // Une fois que la souris est relachée, on a plus besoin de l'évènement "mousemove", on le supprime
+        // removing of mouse listener
         window.removeEventListener('mousemove', this.mouseMoveDraggable.bind(this), true);
         let p;
         switch (this.currentState) {
-          // on vient de déplacer un jack
+          // after mooving a jack
           case "drawingNewJack":
             {
               // Remove current tmp jack
@@ -1249,7 +1228,7 @@
               delete this.currentDraggableJack;
             }
             break;
-          // on vient de déplacer une pédale
+          // after moving a pedal
           case "draggingPedal":
             break;
           case "draggingPedalboard":
@@ -1262,7 +1241,7 @@
       mouseMoveDraggable(e) {
         // Computes the location of the mouse in the SVG canvas
         var loc = this.cursorPoint(e);
-        // deplacement souris incrémental
+        // incremental mouse movement
         let dx = (e.clientX - this.oldMousePosX);
         let dy = (e.clientY - this.oldMousePosY);
         switch (this.currentState) {
@@ -1280,8 +1259,8 @@
             break;
           case "draggingPedal":
             {
-              // test obligatoire car on pourrait cliquer
-              // sur les input ou output ou boutons rotatifs etc.*
+              // Test if you're clicking on a pedal or on it's component
+              // --> have to check for sliders
               if (this.currentDraggablePedal !== undefined && this.currentDraggablePedal.classList.contains(
                 'draggable')) {
                 let p = this.currentDraggablePedal;
@@ -1382,7 +1361,7 @@
           });
         }
 
-        // lien avec le clip detector
+        // link to clip detector
         this.drawLoop();
 
         // CHANGE STATE MIC(1) -> DEMO SOUND (0)
@@ -1492,16 +1471,15 @@
       dropPedalHandler(e) {
         let id = e.dataTransfer.getData("pedalId");
         let _id;
-        // ICI GENERER UN ID UNIQUE !!! il peut y avoir plusieurs instances
-        // de la même pédale
+        // Generate a unique id for the pedal, handle case for multiple instances of the same pedal
         if (id == "delay" || id == "chorus" || id == "overdrive" || id == "analyse"/*|| id =="dx7"*/) {
           _id = "pedal-" + id;
-        }/* else if (id == "ampsim") {
+        } else if (id == "ampsim") {
           _id = "amp-sim";
-        }*/
+        }
         let p = document.createElement(_id);
         console.log(p);
-        // if (id == "ampsim") p.showEqualizer = true;
+         if (id == "ampsim") p.showEqualizer = true;
 
         p.setPosition(e.clientX - 30 - (p.dataWidth / 2), event.clientY - 10 - (p.dataHeight / 2));
         this.addPedal(p);
@@ -1608,7 +1586,7 @@
       }
 
       /*
-       * Si _id est définie alors on créer un nouveau câble, sinon on met à jour seulement
+       * choice to create(if new id) or just update jack 
        */
       reviewSVGJack(_pos, _id) {
         let tension = 1;

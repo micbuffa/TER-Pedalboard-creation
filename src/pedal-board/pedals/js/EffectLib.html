@@ -5,9 +5,9 @@
   /*  ################################## main effect class ########################################  */
   class EffectTemplate {
 
-    constructor(nom, version) {
+    constructor(name, version) {
       this.params = null;
-      this.nom = nom;
+      this.name = name;
       this.version = version;
       this.context = GlobalContext.context;
 
@@ -20,8 +20,8 @@
     }
     connectNodes() { }
     getSetupParams() { }
-    getNom() {
-      return this.nom;
+    getName() {
+      return this.name;
     }
     getVersion() {
       return this.version;
@@ -32,6 +32,9 @@
     getOutputNode() {
       return this.outputNode;
     }
+    getContext(){
+      return this.context;
+    }
     bypass() {
       this.inputNode.connect(this.outputNode);
     }
@@ -40,7 +43,7 @@
 
     /*
     *
-    *Bibliothèque utile de pizzicato, surement à modifier pour affiner le son 
+    *Tools to build sounds 
     */
     isString(arg) {
       return toString.call(arg) === '[object String]';
@@ -114,8 +117,8 @@
   /*  ################################## Delay ########################################@  */
 
   class PongPingDelay extends EffectTemplate {
-    constructor(nom, version) {
-      super(nom, version);
+    constructor(name, version) {
+      super(name, version);
       var mix, time, feedback;
 
     }
@@ -194,7 +197,9 @@
       }
     }
 
-    // coté pédale créer un json params ou je récupère les valeurs des boutons 
+    /*
+    * Update values of params 
+    */
     save(_params) {
       this.params = {
         "mix": {
@@ -239,7 +244,7 @@
   
 
     /*
-    * Gestion des setteurs pour chaque paramêtres de l'effet
+    * Setters for each param
     */
     setTime(_time) {
       if (_time < this.params.time.max && _time > this.params.time.min) this.time = _time;
@@ -274,8 +279,8 @@
   /*  ################################## Chorus ########################################@  */
 
   class Chorus extends EffectTemplate {
-    constructor(nom, version) {
-      super(nom, version);
+    constructor(name, version) {
+      super(name, version);
       var speed,delay, depth, osc, mix;
 
     }
@@ -420,7 +425,7 @@
   
 
     /*
-    * Gestion des setteurs pour chaque paramêtres de l'effet
+    * Setters for each param
     */
     setDelay(_delay) {
       if (_delay < this.params.delay.max && _delay > this.params.delay.min) this.delay = _delay;
@@ -466,8 +471,8 @@
    /*  ################################## OVERDRIVE ########################################@  */
 
    class Overdrive extends EffectTemplate {
-    constructor(nom, version) {
-      super(nom, version);
+    constructor(name, version) {
+      super(name, version);
       var preBand,color, drive, postCut, curve;
 
     }
@@ -598,7 +603,7 @@
   
 
     /*
-    * Gestion des setteurs pour chaque paramêtres de l'effet
+    * Setters for each param
     */
 
 
