@@ -8,6 +8,7 @@
 <link rel="import" href="./pedals/pedal-chorus.html">
 <link rel="import" href="./pedals/pedal-overdrive.html">
 <link rel="import" href="./pedals/pedal-analyse.html">
+<link rel="import" href="./pedals/pedal-alike-dx7.html">
 <!-- <link rel="import" href="./pedals/pedal-flanger.html">
 <link rel="import" href="./pedals/pedal-lowpass.html">
 <link rel="import" href="./pedals/pedal-quadrafuzz.html">-->
@@ -192,6 +193,11 @@
         background-image: url("../../img/chorus.png");
       }
 
+      #alike-dx7 {
+        width: 325px;
+        height: 50px;
+        background-image: url("../../img/dx7.png");
+      } 
 
       #overdrive {
         width: 185px;
@@ -470,6 +476,8 @@
         <input id="tab-4" type="radio" name="input-tab">
         <label for="tab-4">analyse</label>
         <input id="tab-5" type="radio" name="input-tab"><label for="tab-5">ampsim</label>
+        <input id="tab-6" type="radio" name="input-tab">
+        <label for="tab-6">alike-dx7</label>
 
         <button id="bt_hide_tabs">
           <iron-icon icon="expand-more"></iron-icon>
@@ -509,6 +517,13 @@
               <div id="ampsim" class="pedal" draggable="true">
               </div>
               <span>ampsim</span>
+            </div>
+          </div>
+
+          <div id="content-6">
+            <div class="pedals">
+              <div id="alike-dx7" class="pedal" draggable="true"></div>
+              <span>alike-dx7</span>
             </div>
           </div>
 
@@ -660,10 +675,15 @@
 
         let p3 = document.createElement("pedal-analyse");
         p3.setPosition(770, 180);
-        this.addPedal(p3);
+        this.addPedal(p3);*/
+
+        let p4 = document.createElement("pedal-alike-dx7");
+        p4.setPosition(100, 80);
+        this.addPedal(p4);
+        
 
 
-        this.connect(this.pIn, p0);
+        /*this.connect(this.pIn, p0);
         this.connect(p0, p1);
         this.connect(p1, p2);
         this.connect(p2, p3);
@@ -1472,7 +1492,7 @@
         let id = e.dataTransfer.getData("pedalId");
         let _id;
         // Generate a unique id for the pedal, handle case for multiple instances of the same pedal
-        if (id == "delay" || id == "chorus" || id == "overdrive" || id == "analyse"/*|| id =="dx7"*/) {
+        if (id == "delay" || id == "chorus" || id == "overdrive" || id == "analyse" || id =="alike-dx7") {
           _id = "pedal-" + id;
          } else if (id == "ampsim") {
            _id = "amp-sim";
