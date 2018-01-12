@@ -284,7 +284,8 @@
       .div_app_tabs #tab-2:checked~.div_container #content-2,
       .div_app_tabs #tab-3:checked~.div_container #content-3,
       .div_app_tabs #tab-4:checked~.div_container #content-4,
-      .div_app_tabs #tab-5:checked~.div_container #content-5 {
+      .div_app_tabs #tab-5:checked~.div_container #content-5,
+      .div_app_tabs #tab-6:checked~.div_container #content-6 {
         display: flex;
       }
 
@@ -475,9 +476,10 @@
         <label for="tab-3">overdrive</label>
         <input id="tab-4" type="radio" name="input-tab">
         <label for="tab-4">analyse</label>
-        <input id="tab-5" type="radio" name="input-tab"><label for="tab-5">ampsim</label>
+        <input id="tab-5" type="radio" name="input-tab">
+        <label for="tab-5">alike-dx7</label>
         <input id="tab-6" type="radio" name="input-tab">
-        <label for="tab-6">alike-dx7</label>
+        <label for="tab-6">ampsim</label>
 
         <button id="bt_hide_tabs">
           <iron-icon icon="expand-more"></iron-icon>
@@ -512,7 +514,16 @@
             </div>
           </div>
 
+           
+
           <div id="content-5">
+            <div class="pedals">
+              <div id="alike-dx7" class="pedal" draggable="true"></div>
+              <span>alike-dx7</span>
+            </div>
+          </div>
+
+          <div id="content-6">
             <div class="pedals">
               <div id="ampsim" class="pedal" draggable="true">
               </div>
@@ -520,18 +531,9 @@
             </div>
           </div>
 
-          <div id="content-6">
-            <div class="pedals">
-              <div id="alike-dx7" class="pedal" draggable="true"></div>
-              <span>alike-dx7</span>
-            </div>
-          </div>
-
         </div>
       </div>
     </div>
-
-
     <div>
       <nav id="context-menuJack" class="context-menu">
         <ul id="menu-container" class="context-menu__items">
