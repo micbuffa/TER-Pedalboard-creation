@@ -50,6 +50,15 @@ var DX7Library = function ()
 }
 
 var banklist = [
+  "rom1a.syx",
+  "rom1b.syx",
+  "rom2a.syx",
+  "rom2b.syx",
+  "rom3a.syx",
+  "rom3b.syx",
+  "rom4a.syx",
+  "rom4b.syx",
+  "tx7Rip.syx",
   "brass2.syx",
   "piano03.syx"
 ];

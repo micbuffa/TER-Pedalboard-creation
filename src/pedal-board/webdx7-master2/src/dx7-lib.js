@@ -56,5 +56,6 @@ var banklist = [
   "weird1.syx",
   "solange2.syx",
   "analog1.syx",
-  "Dexed_01.syx"
+  "Dexed_01.syx",
+  "1322.syx"
 ];
