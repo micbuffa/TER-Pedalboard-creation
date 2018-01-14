@@ -190,12 +190,15 @@
           // -- midi keyboard
           var velo = 80;
           var midikeys = new QwertyHancock({
-            container: dx.shadowRoot.getElementById("keys"), width: dx.width, height: 60, margin: 0,
+            container: dx.shadowRoot.getElementById("keys"), 
+            width: dx.width, height: 60, margin: 0,
             octaves: 6, startNote: 'C2', oct: 4,
             whiteNotesColour: 'white', blackNotesColour: 'black', activeColour: 'orange'
           });
           midikeys.keyDown = (note, name) => dx7.onMidi([0x90, note, velo]);
           midikeys.keyUp = (note, name) => dx7.onMidi([0x80, note, velo]);
+          var keys = dx.shadowRoot.getElementById("keys")
+          //keys.onmousemove = function (e) { e.stopPropagation(); }
         }
 
         function initMidi() {
