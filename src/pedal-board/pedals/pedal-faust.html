@@ -1,0 +1,52 @@
+<link rel="import" href="../../../bower_components/webaudio-controls/webaudio-controls.html">
+<script>UseWebAudioControlsMidi=1</script>
+<link rel="import" href="../Faustexamples/clarinetMIDI.html"
+<link rel="import" href="./js/pedal-behavior.html">
+
+<dom-module id="pedal-faust">
+  <template>
+    <style include="shared-styles">
+      :host {
+        background-color: #f02cff;
+        background: linear-gradient(pink, purple);
+      }
+    </style>
+    <div class="laPedale">
+      
+    </div>
+  </template>
+  <script>
+    class Pedalfaust extends MyMixin(Polymer.Element) {
+
+      static get is() { return 'pedal-faust'; }
+
+      static get properties() {
+        return {
+          dataWidth: {
+            type: Number,
+            value: 250
+          },
+          dataHeight: {
+            type: Number,
+            value: 230
+          }
+        };
+      }
+
+      ready() {
+        super.ready();
+        this.createAllInternNodes();
+        this.resetKnobs();
+        this.setKnobsListeners();
+        this.setValuesToKnobs();
+      }
+
+      createAllInternNodes() {
+       // this.effect = faust.createclarinetMIDI(GlobalContext.context, 1024, function(){return null});
+        console.log(this.effect.getParams());
+      }
+    }
+    // Register the x-custom element with the browser
+    customElements.define(Pedalfaust.is, Pedalfaust);
+  </script>
+</dom-module>
