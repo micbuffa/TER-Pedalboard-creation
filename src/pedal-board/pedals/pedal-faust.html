@@ -1,7 +1,6 @@
 <link rel="import" href="../../../bower_components/webaudio-controls/webaudio-controls.html">
-<script>UseWebAudioControlsMidi=1</script>
-<link rel="import" href="../Faustexamples/clarinetMIDI.html"
-<link rel="import" href="./js/pedal-behavior.html">
+<script>UseWebAudioControlsMidi = 1</script>
+<link rel="import" href="../Faustexamples/clarinetMIDI.html" <link rel="import" href="./js/pedal-behavior.html">
 
 <dom-module id="pedal-faust">
   <template>
@@ -12,11 +11,11 @@
       }
     </style>
     <div class="laPedale">
-      
+
     </div>
   </template>
   <script>
-    class Pedalfaust extends MyMixin(Polymer.Element) {
+    class Pedalfaust extends PBPlugin(Polymer.Element) {
 
       static get is() { return 'pedal-faust'; }
 
@@ -42,9 +41,16 @@
       }
 
       createAllInternNodes() {
-       // this.effect = faust.createclarinetMIDI(GlobalContext.context, 1024, function(){return null});
-        console.log(this.effect.getParams());
+        let jsonDesc, effect
+        this.effect = faust.createclarinetMIDI(GlobalContext.context, 1024, this.success);
       }
+
+      success(dsp) {
+      effect = dsp;
+      effect.connect(ctx.destination);
+      console.log("ClarinetMidi créée et connectée à la destination");
+      jsonDesc = effect.getJSON();
+    }
     }
     // Register the x-custom element with the browser
     customElements.define(Pedalfaust.is, Pedalfaust);
