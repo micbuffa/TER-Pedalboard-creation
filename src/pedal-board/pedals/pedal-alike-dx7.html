@@ -48,7 +48,7 @@
         
 
         host.context = actx;
-        host.load("https://webaudiomodules.org/temp/synths/dx7.html").then( function (wam) {
+        host.load("https://webaudiomodules.org/temp/synths/dx7.js").then( function (wam) {
            wam.connect(dx.soundNodeOut); // Jari: this.soundNoteOut is inherited too...
         });
       }
