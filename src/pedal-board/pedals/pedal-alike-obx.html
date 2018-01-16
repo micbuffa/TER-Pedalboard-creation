@@ -1,18 +1,18 @@
 <link rel="import" href="./js/pedal-behavior.html">
 <link rel="import" href="https://webaudiomodules.org/temp/wam-host.html">
 <script>UseWebAudioControlsMidi=1</script>
-<dom-module id="pedal-alike-dx7">
+<dom-module id="pedal-alike-obx">
   <template>
     <style include="shared-styles">
     </style>
     <div class="laPedale">
-        <wam-host id="dx7"></wam-host>  
+        <wam-host id="obx"></wam-host>  
     </div>
   </template>
   <script>
-    class PedalAlikeDx7 extends PBPlugin(Polymer.Element) {
+    class PedalAlikeObx extends PBPlugin(Polymer.Element) {
 
-      static get is() { return 'pedal-alike-dx7'; }
+      static get is() { return 'pedal-alike-obx'; }
 
       static get properties() {
         this.boundingRect = {
@@ -42,19 +42,19 @@
           actx = AWPF.context;
         else actx = GlobalContext.context;
 
-        var host = this.$.dx7;
+        var host = this.$.obx;
         var rect = host.getBoundingClientRect();
 
         
 
         host.context = actx;
-        host.load("https://webaudiomodules.org/temp/synths/dx7.js").then( function (wam) {
+        host.load("https://webaudiomodules.org/temp/synths/obxd.html").then( function (wam) {
            wam.connect(dx.soundNodeOut); // Jari: this.soundNoteOut is inherited too...
         });
       }
     }
 
     // Register the x-custom element with the browser
-    customElements.define(PedalAlikeDx7.is, PedalAlikeDx7);
+    customElements.define(PedalAlikeObx.is, PedalAlikeObx);
   </script>
 </dom-module>

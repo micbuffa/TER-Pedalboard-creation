@@ -9,6 +9,7 @@
 <link rel="import" href="./pedals/pedal-overdrive.html">
 <link rel="import" href="./pedals/pedal-analyse.html">
 <link rel="import" href="./pedals/pedal-alike-dx7.html">
+<link rel="import" href="./pedals/pedal-alike-obx.html">
 <!-- <link rel="import" href="./pedals/pedal-flanger.html">
 <link rel="import" href="./pedals/pedal-lowpass.html">
 <link rel="import" href="./pedals/pedal-quadrafuzz.html">-->
@@ -199,6 +200,11 @@
         background-image: url("../../img/dx7.png");
       } 
 
+      #alike-obx {
+        width: 325px;
+        height: 50px;
+        background-image: url("../../img/obx.png");
+      } 
       #overdrive {
         width: 185px;
         height: 165px;
@@ -520,6 +526,10 @@
             <div class="pedals">
               <div id="alike-dx7" class="pedal" draggable="true"></div>
               <span>alike-dx7</span>
+            </div>
+            <div class="pedals">
+              <div id="alike-obx" class="pedal" draggable="true"></div>
+              <span>alike-obx</span>
             </div>
           </div>
 
@@ -1494,7 +1504,7 @@
         let id = e.dataTransfer.getData("pedalId");
         let _id;
         // Generate a unique id for the pedal, handle case for multiple instances of the same pedal
-        if (id == "delay" || id == "chorus" || id == "overdrive" || id == "analyse" || id =="alike-dx7") {
+        if (id == "delay" || id == "chorus" || id == "overdrive" || id == "analyse" || id =="alike-dx7"|| id =="alike-obx") {
           _id = "pedal-" + id;
          } else if (id == "ampsim") {
            _id = "amp-sim";
