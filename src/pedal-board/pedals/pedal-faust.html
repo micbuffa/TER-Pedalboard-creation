@@ -1,6 +1,6 @@
 <link rel="import" href="../../../bower_components/webaudio-controls/webaudio-controls.html">
 <script>UseWebAudioControlsMidi = 1</script>
-<!--<link rel="import" href="zitaRev.html">-->
+<!-- <link rel="import" href="zitaRev.html"> -->
 <script src="zitaRev.js"></script>
 <link rel="import" href="./js/pedal-behavior.html">
 
@@ -115,7 +115,6 @@
       createAllInternNodes() {
         this.fst = faust.createzitaRev(GlobalContext.context, 512, ((dsp) => {
           this.effect = dsp;
-          console.log(this.effect);
           this.soundNodeIn.connect(this.effect);
           this.effect.connect(this.soundNodeOut);
           console.log("zitarev créée et connectée à la soundNodeOut");
@@ -140,7 +139,6 @@
       }
 
       bypass(){
-        console.log("hello");
         this.soundNodeIn.disconnect(this.effect);
         this.soundNodeIn.connect(this.soundNodeOut);
 
@@ -158,7 +156,7 @@
       }
     }
 
-   // }
+ 
 
     // Register the x-custom element with the browser
     customElements.define(PedalZitaRev.is, PedalZitaRev);
