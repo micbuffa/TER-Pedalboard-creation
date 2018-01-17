@@ -108,34 +108,56 @@
         this.createAllInternNodes();
         this.resetKnobs();
         this.setKnobsListeners();
-        //this.setValuesToKnobs();
+        this.setSwitchListener();
       }
 
       createAllInternNodes() {
         this.fst = faust.createzitaRev(GlobalContext.context, 512, ((dsp) => {
-          var effect = dsp;
-          this.soundNodeIn.connect(effect);
-          effect.connect(this.soundNodeOut);
+          this.effect = dsp;
+          console.log(this.effect);
+          this.soundNodeIn.connect(this.effect);
+          this.effect.connect(this.soundNodeOut);
           console.log("zitarev créée et connectée à la soundNodeOut");
-          let jsonDesc = effect.getJSON();
-          console.log(jsonDesc);
-          var params = effect.getParams();
-          console.log(params);
-          this.$.knob1.addEventListener('change', (e) => effect.setParamValue("/Zita_Rev1/Input/In_Delay", e.target.value));
-          this.$.knob2.addEventListener('change', (e) => effect.setParamValue("/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/LF_X", e.target.value));
-          this.$.knob3.addEventListener('change', (e) => effect.setParamValue("/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/Low_RT60", e.target.value));
-          this.$.knob4.addEventListener('change', (e) => effect.setParamValue("/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/Mid_RT60", e.target.value));
-          this.$.knob5.addEventListener('change', (e) => effect.setParamValue("/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/HF_Damping", e.target.value));
-          this.$.knob6.addEventListener('change', (e) => effect.setParamValue("/Zita_Rev1/RM_Peaking_Equalizer_1/Eq1_Freq", e.target.value));
-          this.$.knob7.addEventListener('change', (e) => effect.setParamValue("/Zita_Rev1/RM_Peaking_Equalizer_1/Eq1_Level", e.target.value));
-          this.$.knob8.addEventListener('change', (e) => effect.setParamValue("/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Freq", e.target.value));
-          this.$.knob9.addEventListener('change', (e) => effect.setParamValue("/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Level", e.target.value));
-          this.$.knob10.addEventListener('change', (e) => effect.setParamValue("/Zita_Rev1/Output/Dry/Wet_Mix", e.target.value));
-          this.$.knob11.addEventListener('change', (e) => effect.setParamValue("/Zita_Rev1/Output/Level", e.target.value));
+          let jsonDesc = this.effect.getJSON();
+          var params = this.effect.getParams();
+          this.$.knob1.addEventListener('change', (e) => this.effect.setParamValue("/Zita_Rev1/Input/In_Delay", e.target.value));
+          this.$.knob2.addEventListener('change', (e) => this.effect.setParamValue("/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/LF_X", e.target.value));
+          this.$.knob3.addEventListener('change', (e) => this.effect.setParamValue("/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/Low_RT60", e.target.value));
+          this.$.knob4.addEventListener('change', (e) => this.effect.setParamValue("/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/Mid_RT60", e.target.value));
+          this.$.knob5.addEventListener('change', (e) => this.effect.setParamValue("/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/HF_Damping", e.target.value));
+          this.$.knob6.addEventListener('change', (e) => this.effect.setParamValue("/Zita_Rev1/RM_Peaking_Equalizer_1/Eq1_Freq", e.target.value));
+          this.$.knob7.addEventListener('change', (e) => this.effect.setParamValue("/Zita_Rev1/RM_Peaking_Equalizer_1/Eq1_Level", e.target.value));
+          this.$.knob8.addEventListener('change', (e) => this.effect.setParamValue("/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Freq", e.target.value));
+          this.$.knob9.addEventListener('change', (e) => this.effect.setParamValue("/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Level", e.target.value));
+          this.$.knob10.addEventListener('change', (e) => this.effect.setParamValue("/Zita_Rev1/Output/Dry/Wet_Mix", e.target.value));
+          this.$.knob11.addEventListener('change', (e) => this.effect.setParamValue("/Zita_Rev1/Output/Level", e.target.value));
+
+          // this.$.switch1.addEventListener('click', (e) =>
+          // if()
+          // // effect.setParamValue("/Zita_Rev1/Output/Dry/Wet_Mix", 1));
         }));
       }
 
+      bypass(){
+        console.log("hello");
+        this.soundNodeIn.disconnect(this.effect);
+        this.soundNodeIn.connect(this.soundNodeOut);
+
+      }
+
+      reactivate(){
+        this.soundNodeIn.connect(this.effect);
+        try {
+          this.soundNodeIn.disconnect(this.soundNodeOut);
+        }
+        catch(error){
+          console.log("plugin was not connected");
+        }
+        
+      }
     }
+
+   // }
 
     // Register the x-custom element with the browser
     customElements.define(Pedalfaust.is, Pedalfaust);
