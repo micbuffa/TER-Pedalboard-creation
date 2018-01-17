@@ -3,7 +3,7 @@
 <link rel="import" href="zitaRev.html">
 <link rel="import" href="./js/pedal-behavior.html">
 
-<dom-module id="pedal-faust">
+<dom-module id="pedal-zita_rev">
   <template>
     <style include="shared-styles">
       :host {
@@ -86,9 +86,9 @@
     </div>
   </template>
   <script>
-    class Pedalfaust extends PBPlugin(Polymer.Element) {
+    class PedalZitaRev extends PBPlugin(Polymer.Element) {
 
-      static get is() { return 'pedal-faust'; }
+      static get is() { return 'pedal-zita_rev'; }
 
       static get properties() {
         return {
@@ -160,6 +160,6 @@
    // }
 
     // Register the x-custom element with the browser
-    customElements.define(Pedalfaust.is, Pedalfaust);
+    customElements.define(PedalZitaRev.is, PedalZitaRev);
   </script>
 </dom-module>

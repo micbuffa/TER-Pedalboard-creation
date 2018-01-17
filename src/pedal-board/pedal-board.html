@@ -215,7 +215,7 @@
       }
 
 
-      #faust {
+      #zita_rev {
         width: 260px;
         height: 170px;
         background-image: url("../../img/faust.png");
@@ -567,9 +567,9 @@
 
           <div id="content-7">
             <div class="pedals">
-              <div id="faust" class="pedal" draggable="true">
+              <div id="zita_rev" class="pedal" draggable="true">
               </div>
-              <span>Faust ZitaRev</span>
+              <span>ZitaRev</span>
             </div>
           </div>
 
@@ -725,9 +725,9 @@
         // p4.setPosition(100, 80);
         // this.addPedal(p4);
 
-        let p5 = document.createElement("pedal-faust");
-        p5.setPosition(400, 150);
-        this.addPedal(p5);
+        // let p5 = document.createElement("pedal-zita_rev");
+        // p5.setPosition(400, 150);
+        // this.addPedal(p5);
 
 
 
@@ -1540,7 +1540,7 @@
         let id = e.dataTransfer.getData("pedalId");
         let _id;
         // Generate a unique id for the pedal, handle case for multiple instances of the same pedal
-        if (id == "delay" || id == "chorus" || id == "overdrive" || id == "analyse" || id == "alike-dx7" || id == "alike-obx"|| id == "faust") {
+        if (id == "delay" || id == "chorus" || id == "overdrive" || id == "analyse" || id == "alike-dx7" || id == "alike-obx"|| id == "zita_rev") {
           _id = "pedal-" + id;
         } else if (id == "ampsim") {
           _id = "amp-sim";
