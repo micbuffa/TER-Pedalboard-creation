@@ -10,10 +10,11 @@
 <link rel="import" href="./pedals/pedal-analyse.html">
 <link rel="import" href="./pedals/pedal-alike-dx7.html">
 <link rel="import" href="./pedals/pedal-alike-obx.html">
+<!-- <link rel="import" href="./pedals/pedal-alike-dexed.html"> -->
 <!-- <link rel="import" href="./pedals/pedal-flanger.html">
 <link rel="import" href="./pedals/pedal-lowpass.html">
 <link rel="import" href="./pedals/pedal-quadrafuzz.html">-->
-<!-- <link rel="import" href="./pedals/pedal-faust.html"> -->
+<link rel="import" href="./pedals/pedal-faust.html">
 <link rel="import" href="./amp-sim/amp-sim.html"> 
 <link rel="import" href="./pedals/js/GlobalContext.html">
 <script src="./pedals/js/volume-meter.js"></script>
@@ -205,6 +206,14 @@
         height: 50px;
         background-image: url("../../img/obx.png");
       } 
+
+
+      #alike-obx {
+        width: 325px;
+        height: 50px;
+        background-image: url("../../img/obx.png");
+      } 
+
       #overdrive {
         width: 185px;
         height: 165px;
@@ -531,6 +540,10 @@
               <div id="alike-obx" class="pedal" draggable="true"></div>
               <span>alike-obx</span>
             </div>
+            <div class="pedals">
+              <div id="alike-dexed" class="pedal" draggable="true"></div>
+              <span>alike-dexed</span>
+            </div>
           </div>
 
           <div id="content-6">
@@ -693,9 +706,9 @@
         // p4.setPosition(100, 80);
         // this.addPedal(p4);
 
-        // let p5 = document.createElement("pedal-faust");
-        // p5.setPosition(400,150);
-        // this.addPedal(p5);
+         let p5 = document.createElement("pedal-faust");
+         p5.setPosition(400,150);
+         this.addPedal(p5);
         
 
 

@@ -77,9 +77,11 @@
       ready() {
         super.ready();
         //disable the pedal drag when you change position
-        // this.$["slider1"].$["wac-body"].addEventListener("mousemove", function(event){
-        // event.preventDefault()
-        // });
+
+        this.$["slider1"].$["wac-body"].addEventListener("mousemove", function(event){
+        event.stopPropagation();
+        event.preventDefault();
+        },false);
         this.createAllInternNodes();
         this.connectInternNodes();
         this.resetKnobs();
