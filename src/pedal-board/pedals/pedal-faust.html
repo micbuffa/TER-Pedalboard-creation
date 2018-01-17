@@ -138,24 +138,22 @@
         }));
       }
 
-      // bypass(){
-      //   console.log("hello");
-      //   this.soundNodeIn.disconnect(this.effect);
-      //   this.soundNodeIn.connect(this.soundNodeOut);
+      bypass(){
+        this.soundNodeIn.disconnect(this.effect);
+        this.soundNodeIn.connect(this.soundNodeOut);
 
-      // }
+      }
 
-      // reactivate(){
-      //   console.log("reactivate");
-      //   this.soundNodeIn.connect(this.effect);
-      //   try {
-      //     this.soundNodeIn.disconnect(this.soundNodeOut);
-      //   }
-      //   catch(error){
-      //     console.log("plugin was not connected");
-      //   }
+      reactivate(){
+        this.soundNodeIn.connect(this.effect);
+        try {
+          this.soundNodeIn.disconnect(this.soundNodeOut);
+        }
+        catch(error){
+          console.log("plugin was not connected");
+        }
         
-      // }
+      }
     }
 
  
