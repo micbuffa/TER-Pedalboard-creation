@@ -4221,7 +4221,7 @@ _f4u$t.json_to_ui = function(json, hash) {
  
 /*
  * look for the phrase
- * UI2clarinetMIDI to see where the UI sends messages to clarinetMIDI
+ * UI2zitaRev to see where the UI sends messages to zitaRev
  * obviously, the goal is to separate the two as much as possible
  */
 
@@ -4624,7 +4624,7 @@ _f4u$t.internal_move_active_object = function(e, identifier) {
    now =  fn(e, identifier);
   }
 
-  // UI2clarinetMIDI
+  // UI2zitaRev
   if (now != null && now != _f4u$t._I[identifier]['value']) {
     var id = _f4u$t.unique(_f4u$t._I[identifier]['id']);
     _f4u$t.fausthandler(_f4u$t.IDS_TO_ATTRIBUTES[id]["address"], now);
@@ -4716,7 +4716,7 @@ _f4u$t.respondToOrientationChange = function(e) {
            _f4u$t.active_addresses.push(_f4u$t.IDS_TO_ATTRIBUTES[id]["address"]);
           now = _f4u$t.moveSliderViaAccelerometer(e, id);
         }
-        // UI2clarinetMIDI
+        // UI2zitaRev
         if (now != null && now != _f4u$t._I['orientation'+id]['value']) {
           _f4u$t.fausthandler(_f4u$t.IDS_TO_ATTRIBUTES[id]["address"], now);
           _f4u$t._I['orientation'+id]['value'] = now;
@@ -4970,7 +4970,7 @@ _f4u$t.change_checkbox = function(I, touch) {
     alert("malfunctional checkbox");
   }
   box.style.opacity = opacity;
-  // UI2clarinetMIDI
+  // UI2zitaRev
   _f4u$t.fausthandler(address, opacity);
 }
 
@@ -5036,7 +5036,7 @@ _f4u$t.actualize_buffer = function() {
   _f4u$t.change_label_text(label, id);
   _f4u$t.IDS_TO_ATTRIBUTES[id]["init"] = _f4u$t.IDS_TO_ATTRIBUTES[id]["buffer"]; // prevents bad snaps of values
 
-  // UI2clarinetMIDI
+  // UI2zitaRev
   _f4u$t.fausthandler(address, now);
 
   _f4u$t.actualize_incremental_object(id);
@@ -5414,8 +5414,8 @@ Code generated with Faust version 2.5.16
 Compilation options: wasm, -scal -ftz 2
 */
 
-function getJSONclarinetMIDI() {
-	return "{\"name\":\"ClarinetMIDI\",\"version\":\"2.5.16\",\"options\":\"wasm, -scal -ftz 2\",\"size\":\"16604\",\"inputs\":\"0\",\"outputs\":\"2\",\"meta\":[{\"basics.lib/name\":\"Faust Basic Element Library\"},{\"basics.lib/version\":\"0.0\"},{\"copyright\":\"(c)Romain Michon, CCRMA (Stanford University), GRAME\"},{\"delays.lib/name\":\"Faust Delay Library\"},{\"delays.lib/version\":\"0.0\"},{\"description\":\"Simple MIDI-controllable clarinet physical model with physical parameters.\"},{\"filters.lib/name\":\"Faust Filters Library\"},{\"filters.lib/version\":\"0.0\"},{\"license\":\"MIT\"},{\"maths.lib/author\":\"GRAME\"},{\"maths.lib/copyright\":\"GRAME\"},{\"maths.lib/license\":\"LGPL with exception\"},{\"maths.lib/name\":\"Faust Math Library\"},{\"maths.lib/version\":\"2.1\"},{\"name\":\"ClarinetMIDI\"},{\"noises.lib/name\":\"Faust Noise Generator Library\"},{\"noises.lib/version\":\"0.0\"},{\"oscillators.lib/name\":\"Faust Oscillator Library\"},{\"oscillators.lib/version\":\"0.0\"},{\"routes.lib/name\":\"Faust Signal Routing Library\"},{\"routes.lib/version\":\"0.0\"},{\"signals.lib/name\":\"Faust Signal Routing Library\"},{\"signals.lib/version\":\"0.0\"}],\"ui\":[{\"type\":\"vgroup\",\"label\":\"clarinet\",\"items\":[{\"type\":\"hgroup\",\"label\":\"midi\",\"meta\":[{\"0\":\"\"}],\"items\":[{\"type\":\"hslider\",\"label\":\"freq\",\"address\":\"/clarinet/midi/freq\",\"index\":\"8372\",\"meta\":[{\"0\":\"\"},{\"style\":\"knob\"}],\"init\":\"440\",\"min\":\"50\",\"max\":\"1000\",\"step\":\"0.01\"},{\"type\":\"hslider\",\"label\":\"bend\",\"address\":\"/clarinet/midi/bend\",\"index\":\"8376\",\"meta\":[{\"1\":\"\"},{\"hidden\":\"1\"},{\"midi\":\"pitchwheel\"},{\"style\":\"knob\"}],\"init\":\"1\",\"min\":\"0\",\"max\":\"10\",\"step\":\"0.01\"},{\"type\":\"hslider\",\"label\":\"gain\",\"address\":\"/clarinet/midi/gain\",\"index\":\"88\",\"meta\":[{\"2\":\"\"},{\"style\":\"knob\"}],\"init\":\"0.6\",\"min\":\"0\",\"max\":\"1\",\"step\":\"0.01\"},{\"type\":\"hslider\",\"label\":\"envAttack\",\"address\":\"/clarinet/midi/envAttack\",\"index\":\"96\",\"meta\":[{\"3\":\"\"},{\"style\":\"knob\"}],\"init\":\"1\",\"min\":\"0\",\"max\":\"30\",\"step\":\"0.01\"},{\"type\":\"hslider\",\"label\":\"sustain\",\"address\":\"/clarinet/midi/sustain\",\"index\":\"76\",\"meta\":[{\"4\":\"\"},{\"hidden\":\"1\"},{\"midi\":\"ctrl 64\"},{\"style\":\"knob\"}],\"init\":\"0\",\"min\":\"0\",\"max\":\"1\",\"step\":\"1\"}]},{\"type\":\"hgroup\",\"label\":\"otherParams\",\"meta\":[{\"1\":\"\"}],\"items\":[{\"type\":\"hslider\",\"label\":\"reedStiffness\",\"address\":\"/clarinet/otherParams/reedStiffness\",\"index\":\"164\",\"meta\":[{\"0\":\"\"},{\"midi\":\"ctrl 1\"},{\"style\":\"knob\"}],\"init\":\"0.5\",\"min\":\"0\",\"max\":\"1\",\"step\":\"0.01\"},{\"type\":\"hslider\",\"label\":\"bellOpening\",\"address\":\"/clarinet/otherParams/bellOpening\",\"index\":\"16\",\"meta\":[{\"1\":\"\"},{\"midi\":\"ctrl 3\"},{\"style\":\"knob\"}],\"init\":\"0.5\",\"min\":\"0\",\"max\":\"1\",\"step\":\"0.01\"},{\"type\":\"hslider\",\"label\":\"vibratoFreq\",\"address\":\"/clarinet/otherParams/vibratoFreq\",\"index\":\"52\",\"meta\":[{\"2\":\"\"},{\"style\":\"knob\"}],\"init\":\"5\",\"min\":\"1\",\"max\":\"10\",\"step\":\"0.01\"},{\"type\":\"hslider\",\"label\":\"vibratoGain\",\"address\":\"/clarinet/otherParams/vibratoGain\",\"index\":\"36\",\"meta\":[{\"3\":\"\"},{\"style\":\"knob\"}],\"init\":\"0.25\",\"min\":\"0\",\"max\":\"1\",\"step\":\"0.01\"},{\"type\":\"hslider\",\"label\":\"outGain\",\"address\":\"/clarinet/otherParams/outGain\",\"index\":\"0\",\"meta\":[{\"4\":\"\"},{\"style\":\"knob\"}],\"init\":\"0.5\",\"min\":\"0\",\"max\":\"1\",\"step\":\"0.01\"}]},{\"type\":\"button\",\"label\":\"gate\",\"address\":\"/clarinet/gate\",\"index\":\"72\",\"meta\":[{\"2\":\"\"}]}]}]}";
+function getJSONzitaRev() {
+	return "{\"name\":\"zitaRev\",\"version\":\"2.5.16\",\"options\":\"wasm, -scal -ftz 2\",\"size\":\"959048\",\"inputs\":\"2\",\"outputs\":\"2\",\"meta\":[{\"author\":\"JOS, Revised by RM\"},{\"basics.lib/name\":\"Faust Basic Element Library\"},{\"basics.lib/version\":\"0.0\"},{\"delays.lib/name\":\"Faust Delay Library\"},{\"delays.lib/version\":\"0.0\"},{\"description\":\"Example GUI for zita_rev1_stereo (mostly following the Linux zita-rev1 GUI).\"},{\"filters.lib/name\":\"Faust Filters Library\"},{\"filters.lib/version\":\"0.0\"},{\"maths.lib/author\":\"GRAME\"},{\"maths.lib/copyright\":\"GRAME\"},{\"maths.lib/license\":\"LGPL with exception\"},{\"maths.lib/name\":\"Faust Math Library\"},{\"maths.lib/version\":\"2.1\"},{\"name\":\"zitaRev\"},{\"reverbs.lib/name\":\"Faust Reverb Library\"},{\"reverbs.lib/version\":\"0.0\"},{\"routes.lib/name\":\"Faust Signal Routing Library\"},{\"routes.lib/version\":\"0.0\"},{\"signals.lib/name\":\"Faust Signal Routing Library\"},{\"signals.lib/version\":\"0.0\"},{\"version\":\"0.0\"}],\"ui\":[{\"type\":\"hgroup\",\"label\":\"Zita_Rev1\",\"meta\":[{\"0\":\"\"},{\"tooltip\":\"~ ZITA REV1 FEEDBACK DELAY NETWORK (FDN) & SCHROEDER  ALLPASS-COMB REVERBERATOR (8x8). See Faust's reverbs.lib for documentation and  references\"}],\"items\":[{\"type\":\"hgroup\",\"label\":\"Input\",\"meta\":[{\"1\":\"\"}],\"items\":[{\"type\":\"vslider\",\"label\":\"In Delay\",\"address\":\"/Zita_Rev1/Input/In_Delay\",\"index\":\"262260\",\"meta\":[{\"1\":\"\"},{\"style\":\"knob\"},{\"tooltip\":\"Delay in ms   before reverberation begins\"},{\"unit\":\"ms\"}],\"init\":\"60\",\"min\":\"20\",\"max\":\"100\",\"step\":\"1\"}]},{\"type\":\"hgroup\",\"label\":\"Decay Times in Bands (see tooltips)\",\"meta\":[{\"2\":\"\"}],\"items\":[{\"type\":\"vslider\",\"label\":\"LF X\",\"address\":\"/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/LF_X\",\"index\":\"65620\",\"meta\":[{\"1\":\"\"},{\"scale\":\"log\"},{\"style\":\"knob\"},{\"tooltip\":\"Crossover frequency (Hz) separating low and middle frequencies\"},{\"unit\":\"Hz\"}],\"init\":\"200\",\"min\":\"50\",\"max\":\"1000\",\"step\":\"1\"},{\"type\":\"vslider\",\"label\":\"Low RT60\",\"address\":\"/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/Low_RT60\",\"index\":\"65612\",\"meta\":[{\"2\":\"\"},{\"scale\":\"log\"},{\"style\":\"knob\"},{\"tooltip\":\"T60 = time (in seconds) to decay 60dB in low-frequency band\"},{\"unit\":\"s\"}],\"init\":\"3\",\"min\":\"1\",\"max\":\"8\",\"step\":\"0.1\"},{\"type\":\"vslider\",\"label\":\"Mid RT60\",\"address\":\"/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/Mid_RT60\",\"index\":\"65600\",\"meta\":[{\"3\":\"\"},{\"scale\":\"log\"},{\"style\":\"knob\"},{\"tooltip\":\"T60 = time (in seconds) to decay 60dB in middle band\"},{\"unit\":\"s\"}],\"init\":\"2\",\"min\":\"1\",\"max\":\"8\",\"step\":\"0.1\"},{\"type\":\"vslider\",\"label\":\"HF Damping\",\"address\":\"/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/HF_Damping\",\"index\":\"65608\",\"meta\":[{\"4\":\"\"},{\"scale\":\"log\"},{\"style\":\"knob\"},{\"tooltip\":\"Frequency (Hz) at which the high-frequency T60 is half the middle-band's T60\"},{\"unit\":\"Hz\"}],\"init\":\"6000\",\"min\":\"1500\",\"max\":\"23520\",\"step\":\"1\"}]},{\"type\":\"hgroup\",\"label\":\"RM Peaking Equalizer 1\",\"meta\":[{\"3\":\"\"}],\"items\":[{\"type\":\"vslider\",\"label\":\"Eq1 Freq\",\"address\":\"/Zita_Rev1/RM_Peaking_Equalizer_1/Eq1_Freq\",\"index\":\"65584\",\"meta\":[{\"1\":\"\"},{\"scale\":\"log\"},{\"style\":\"knob\"},{\"tooltip\":\"Center-frequency of second-order Regalia-Mitra peaking equalizer section 1\"},{\"unit\":\"Hz\"}],\"init\":\"315\",\"min\":\"40\",\"max\":\"2500\",\"step\":\"1\"},{\"type\":\"vslider\",\"label\":\"Eq1 Level\",\"address\":\"/Zita_Rev1/RM_Peaking_Equalizer_1/Eq1_Level\",\"index\":\"65588\",\"meta\":[{\"2\":\"\"},{\"style\":\"knob\"},{\"tooltip\":\"Peak level   in dB of second-order Regalia-Mitra peaking equalizer section 1\"},{\"unit\":\"dB\"}],\"init\":\"0\",\"min\":\"-15\",\"max\":\"15\",\"step\":\"0.1\"}]},{\"type\":\"hgroup\",\"label\":\"RM Peaking Equalizer 2\",\"meta\":[{\"4\":\"\"}],\"items\":[{\"type\":\"vslider\",\"label\":\"Eq2 Freq\",\"address\":\"/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Freq\",\"index\":\"65576\",\"meta\":[{\"1\":\"\"},{\"scale\":\"log\"},{\"style\":\"knob\"},{\"tooltip\":\"Center-frequency of second-order Regalia-Mitra peaking equalizer section 2\"},{\"unit\":\"Hz\"}],\"init\":\"1500\",\"min\":\"160\",\"max\":\"10000\",\"step\":\"1\"},{\"type\":\"vslider\",\"label\":\"Eq2 Level\",\"address\":\"/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Level\",\"index\":\"65580\",\"meta\":[{\"2\":\"\"},{\"style\":\"knob\"},{\"tooltip\":\"Peak level   in dB of second-order Regalia-Mitra peaking equalizer section 2\"},{\"unit\":\"dB\"}],\"init\":\"0\",\"min\":\"-15\",\"max\":\"15\",\"step\":\"0.1\"}]},{\"type\":\"hgroup\",\"label\":\"Output\",\"meta\":[{\"5\":\"\"}],\"items\":[{\"type\":\"vslider\",\"label\":\"Dry/Wet Mix\",\"address\":\"/Zita_Rev1/Output/Dry/Wet_Mix\",\"index\":\"65552\",\"meta\":[{\"1\":\"\"},{\"style\":\"knob\"},{\"tooltip\":\"-1 = dry, 1 = wet\"}],\"init\":\"0\",\"min\":\"-1\",\"max\":\"1\",\"step\":\"0.01\"},{\"type\":\"vslider\",\"label\":\"Level\",\"address\":\"/Zita_Rev1/Output/Level\",\"index\":\"0\",\"meta\":[{\"2\":\"\"},{\"style\":\"knob\"},{\"tooltip\":\"Output scale   factor\"},{\"unit\":\"dB\"}],\"init\":\"-20\",\"min\":\"-70\",\"max\":\"40\",\"step\":\"0.1\"}]}]}]}";
 }
 /*
  faust2webaudio
@@ -5455,7 +5455,7 @@ function Heap2Str(buf)
     return str;
 }
 
-// Monophonic Faust clarinetMIDI
+// Monophonic Faust zitaRev
 
 /**
 * Constructor
@@ -5466,12 +5466,12 @@ function Heap2Str(buf)
 *
 * @return a valid WebAudio ScriptProcessorNode object or null
 */
-faust.clarinetMIDI = function (dsp_instance, context, buffer_size) {
+faust.zitaRev = function (dsp_instance, context, buffer_size) {
 
     // Keep JSON parsed object
     var json_object = null;
     try {
-        json_object = JSON.parse(getJSONclarinetMIDI());
+        json_object = JSON.parse(getJSONzitaRev());
     } catch (e) {
         faust.error_msg = "Error in JSON.parse: " + e;
         return null;
@@ -5530,7 +5530,7 @@ faust.clarinetMIDI = function (dsp_instance, context, buffer_size) {
 
     // Start of HEAP index
 
-    // clarinetMIDI is placed first with index 0. Audio buffer start at the end of clarinetMIDI.
+    // zitaRev is placed first with index 0. Audio buffer start at the end of zitaRev.
     sp.audio_heap_ptr = parseInt(json_object.size);
 
     // Setup pointers offset
@@ -5541,7 +5541,7 @@ faust.clarinetMIDI = function (dsp_instance, context, buffer_size) {
     sp.audio_heap_inputs = sp.audio_heap_ptr_outputs + (sp.numOut * sp.ptr_size);
     sp.audio_heap_outputs = sp.audio_heap_inputs + (sp.numIn * buffer_size * sp.sample_size);
 
-    // Start of clarinetMIDI memory : clarinetMIDI is placed first with index 0
+    // Start of zitaRev memory : zitaRev is placed first with index 0
     sp.dsp = 0;
 
     sp.pathTable = [];
@@ -5681,7 +5681,7 @@ faust.clarinetMIDI = function (dsp_instance, context, buffer_size) {
         // Parse JSON UI part
         sp.parse_ui(sp.json_object.ui);
 
-        // Init clarinetMIDI
+        // Init zitaRev
         sp.factory.init(sp.dsp, context.sampleRate);
     }
 
@@ -5856,16 +5856,16 @@ faust.clarinetMIDI = function (dsp_instance, context, buffer_size) {
     }
 
     /**
-    * Get clarinetMIDI JSON description with its UI and metadata
+    * Get zitaRev JSON description with its UI and metadata
     *
-    * @return clarinetMIDI JSON description
+    * @return zitaRev JSON description
     */
     sp.getJSON = function ()
     {
-        return getJSONclarinetMIDI();
+        return getJSONzitaRev();
     }
 
-    // Init resulting clarinetMIDI
+    // Init resulting zitaRev
     sp.initAux();
 
     return sp;
@@ -5879,7 +5879,7 @@ faust.clarinetMIDI = function (dsp_instance, context, buffer_size) {
 * @param buffer_size - the buffer_size in frames
 * @param callback - a callback taking the created ScriptProcessorNode as parameter, or null in case of error
 */
-faust.createclarinetMIDI = function(context, buffer_size, callback)
+faust.createzitaRev = function(context, buffer_size, callback)
 {
     var importObject = {
         env: {
@@ -5935,11 +5935,11 @@ faust.createclarinetMIDI = function(context, buffer_size, callback)
         }
     };
 
-    fetch('clarinetMIDI.wasm')
+    fetch('./zitaRev.wasm')
     .then(dsp_file => dsp_file.arrayBuffer())
     .then(dsp_bytes => WebAssembly.instantiate(dsp_bytes, importObject))
-    .then(dsp_module => callback(faust.clarinetMIDI(dsp_module.instance, context, buffer_size)))
-    .catch(function(error) { console.log(error); faust.error_msg = "Faust clarinetMIDI cannot be loaded or compiled"; callback(null); });
+    .then(dsp_module => callback(faust.zitaRev(dsp_module.instance, context, buffer_size)))
+    .catch(function(error) { console.log(error); faust.error_msg = "Faust zitaRev cannot be loaded or compiled"; callback(null); });
 }
 </script>
 </head>
@@ -5956,7 +5956,7 @@ var isWebKitAudio = (typeof(webkitAudioContext) !== "undefined");
 var isWasm = (typeof(WebAssembly) !== "undefined");
 var audio_context = (isWebKitAudio) ? new webkitAudioContext() : new AudioContext();
 var audio_input = null;
-var clarinetMIDI = null;
+var zitaRev = null;
 var faustsvg = null;
 var output_handler = null;
 
@@ -5964,7 +5964,7 @@ function changeBufferSize(buffer_size)
 {
     var new_buffer_size = buffer_size.options[buffer_size.selectedIndex].value;
     console.log(new_buffer_size);
-    startNewclarinetMIDI(new_buffer_size);
+    startNewzitaRev(new_buffer_size);
 }
 
 
@@ -5972,15 +5972,15 @@ function changeBufferSize(buffer_size)
 
 function pitchWheel(channel, wheel)
 {
-    if (clarinetMIDI) {
-        clarinetMIDI.pitchWheel(channel, wheel);
+    if (zitaRev) {
+        zitaRev.pitchWheel(channel, wheel);
     }
 }
 
 function ctrlChange(channel, ctrl, value)
 {
-    if (clarinetMIDI) {
-        clarinetMIDI.ctrlChange(channel, ctrl, value);
+    if (zitaRev) {
+        zitaRev.ctrlChange(channel, ctrl, value);
     }
 }
 
@@ -6058,28 +6058,28 @@ function getDevice(device)
     audio_input = audio_context.createMediaStreamSource(device);
 
     // Connect it to the destination.
-    audio_input.connect(clarinetMIDI);
+    audio_input.connect(zitaRev);
 }
 
 // Save/Load functions using local storage
-function saveclarinetMIDI()
+function savezitaRev()
 {
     if (typeof(Storage) !== "undefined") {
-        var params = clarinetMIDI.getParams();
+        var params = zitaRev.getParams();
         for (var i = 0; i < params.length; i++) {
-            localStorage.setItem(params[i], clarinetMIDI.getParamValue(params[i]));
+            localStorage.setItem(params[i], zitaRev.getParamValue(params[i]));
         }
     }
 }
 
-function loadclarinetMIDI()
+function loadzitaRev()
 {
     if (typeof(Storage) !== "undefined") {
-        var params = clarinetMIDI.getParams();
+        var params = zitaRev.getParams();
         for (var i = 0; i < params.length; i++) {
             if (localStorage.getItem(params[i])) {
-                // Restore clarinetMIDI state
-                clarinetMIDI.setParamValue(params[i], Number(localStorage.getItem(params[i])));
+                // Restore zitaRev state
+                zitaRev.setParamValue(params[i], Number(localStorage.getItem(params[i])));
                 // Restore GUI state
                 output_handler(params[i], Number(localStorage.getItem(params[i])));
             }
@@ -6087,7 +6087,7 @@ function loadclarinetMIDI()
     }
 }
 
-function startclarinetMIDIAux(dsp)
+function startzitaRevAux(dsp)
 {
     if (!dsp) {
         alert(faust.getErrorMessage());
@@ -6095,40 +6095,40 @@ function startclarinetMIDIAux(dsp)
     }
 
     activateMIDIInput();
-    clarinetMIDI = dsp;
+    zitaRev = dsp;
 
-    if (clarinetMIDI.getNumInputs() > 0) {
+    if (zitaRev.getNumInputs() > 0) {
         activateAudioInput();
     }
     
-    clarinetMIDI.connect(audio_context.destination);
-    console.log(clarinetMIDI.getJSON());
+    zitaRev.connect(audio_context.destination);
+    console.log(zitaRev.getJSON());
 
     // TODO: emcc
-    //clarinetMIDI.metadata({ declare: function(key, value) { console.log("key = " + key + " value = " + value); }});
-    console.log(clarinetMIDI.getParams());
+    //zitaRev.metadata({ declare: function(key, value) { console.log("key = " + key + " value = " + value); }});
+    console.log(zitaRev.getParams());
 
     // No polling from the server needed, so use an empty loop
     _f4u$t.main_loop = function() {}
 
     faustsvg = $('<div />');
     $('body').append(faustsvg);
-    output_handler = _f4u$t.main(clarinetMIDI.getJSON(), faustsvg, function(path, val) { clarinetMIDI.setParamValue(path, val); });
-    clarinetMIDI.setOutputParamHandler(output_handler);
+    output_handler = _f4u$t.main(zitaRev.getJSON(), faustsvg, function(path, val) { zitaRev.setParamValue(path, val); });
+    zitaRev.setOutputParamHandler(output_handler);
 
-    // Load clarinetMIDI state from local storage
-    loadclarinetMIDI();
+    // Load zitaRev state from local storage
+    loadzitaRev();
 }
 
-function startclarinetMIDI()
+function startzitaRev()
 {
-    startNewclarinetMIDI(1024);
+    startNewzitaRev(1024);
 }
 
-function startNewclarinetMIDI(buffer_size)
+function startNewzitaRev(buffer_size)
 {
     if (isWasm) {
-        faust.createclarinetMIDI(audio_context, buffer_size, startclarinetMIDIAux);
+        faust.createzitaRev(audio_context, buffer_size, startzitaRevAux);
     }  else {
         alert("WebAssembly is not supported in this browser !")
     }
@@ -6153,14 +6153,14 @@ window.addEventListener('touchstart', function() {
 // Start monophonic instrument
 if (typeof (Module) !== "undefined") {
     console.log("Compiled with EMCC");
-    Module['onRuntimeInitialized'] = startclarinetMIDI;
+    Module['onRuntimeInitialized'] = startzitaRev;
 } else {
     console.log("Compiled with WASM backend");
-    startclarinetMIDI();
+    startzitaRev();
 }
 
-// Save clarinetMIDI state to local storage
-setInterval(function() { if (clarinetMIDI) saveclarinetMIDI(); }, 1000);
+// Save zitaRev state to local storage
+setInterval(function() { if (zitaRev) savezitaRev(); }, 1000);
 
 </script>
 

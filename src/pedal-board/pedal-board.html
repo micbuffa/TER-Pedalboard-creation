@@ -10,11 +10,12 @@
 <link rel="import" href="./pedals/pedal-analyse.html">
 <link rel="import" href="./pedals/pedal-alike-dx7.html">
 <link rel="import" href="./pedals/pedal-alike-obx.html">
+<!-- <link rel="import" href="./pedals/pedal-alike-dexed.html"> -->
 <!-- <link rel="import" href="./pedals/pedal-flanger.html">
 <link rel="import" href="./pedals/pedal-lowpass.html">
 <link rel="import" href="./pedals/pedal-quadrafuzz.html">-->
-<!-- <link rel="import" href="./pedals/pedal-faust.html"> -->
-<link rel="import" href="./amp-sim/amp-sim.html"> 
+<link rel="import" href="./pedals/pedal-faust.html">
+<link rel="import" href="./amp-sim/amp-sim.html">
 <link rel="import" href="./pedals/js/GlobalContext.html">
 <script src="./pedals/js/volume-meter.js"></script>
 <link rel="import" href="./pedals/js/EffectLib.html">
@@ -198,13 +199,29 @@
         width: 325px;
         height: 50px;
         background-image: url("../../img/dx7.png");
-      } 
+      }
 
       #alike-obx {
         width: 325px;
         height: 50px;
         background-image: url("../../img/obx.png");
-      } 
+      }
+
+
+      #alike-obx {
+        width: 325px;
+        height: 50px;
+        background-image: url("../../img/obx.png");
+      }
+
+
+      #zita_rev {
+        width: 260px;
+        height: 170px;
+        background-image: url("../../img/faust.png");
+        background-size: cover;
+      }
+
       #overdrive {
         width: 185px;
         height: 165px;
@@ -291,7 +308,8 @@
       .div_app_tabs #tab-3:checked~.div_container #content-3,
       .div_app_tabs #tab-4:checked~.div_container #content-4,
       .div_app_tabs #tab-5:checked~.div_container #content-5,
-      .div_app_tabs #tab-6:checked~.div_container #content-6 {
+      .div_app_tabs #tab-6:checked~.div_container #content-6,
+      .div_app_tabs #tab-7:checked~.div_container #content-7 {
         display: flex;
       }
 
@@ -486,6 +504,8 @@
         <label for="tab-5">Synths</label>
         <input id="tab-6" type="radio" name="input-tab">
         <label for="tab-6">ampsim</label>
+        <input id="tab-7" type="radio" name="input-tab">
+        <label for="tab-7">FAUST</label>
 
         <button id="bt_hide_tabs">
           <iron-icon icon="expand-more"></iron-icon>
@@ -520,7 +540,7 @@
             </div>
           </div>
 
-           
+
 
           <div id="content-5">
             <div class="pedals">
@@ -531,6 +551,10 @@
               <div id="alike-obx" class="pedal" draggable="true"></div>
               <span>alike-obx</span>
             </div>
+            <div class="pedals">
+              <div id="alike-dexed" class="pedal" draggable="true"></div>
+              <span>alike-dexed</span>
+            </div>
           </div>
 
           <div id="content-6">
@@ -538,6 +562,14 @@
               <div id="ampsim" class="pedal" draggable="true">
               </div>
               <span>ampsim</span>
+            </div>
+          </div>
+
+          <div id="content-7">
+            <div class="pedals">
+              <div id="zita_rev" class="pedal" draggable="true">
+              </div>
+              <span>ZitaRev</span>
             </div>
           </div>
 
@@ -563,7 +595,7 @@
         return 'pedal-board';
       }
 
-      
+
       static get properties() {
         return {
           dataWidth: {
@@ -672,31 +704,31 @@
         p0.setPosition(450, 200);
         this.addPedal(p0);*/
 
-       /* let p0 = document.createElement("pedal-delay");
-        p0.setPosition(100, 250);
-        this.addPedal(p0);
-        console.log(this.nbPedalsAdded);
+        /* let p0 = document.createElement("pedal-delay");
+         p0.setPosition(100, 250);
+         this.addPedal(p0);
+         console.log(this.nbPedalsAdded);
+ 
+         let p1 = document.createElement("pedal-chorus");
+         p1.setPosition(230, 250);
+         this.addPedal(p1);
+ 
+         let p2 = document.createElement("pedal-overdrive");
+         p2.setPosition(500, 250);
+         this.addPedal(p2);
+ 
+         let p3 = document.createElement("pedal-analyse");
+         p3.setPosition(770, 180);
+         this.addPedal(p3);*/
 
-        let p1 = document.createElement("pedal-chorus");
-        p1.setPosition(230, 250);
-        this.addPedal(p1);
+        // let p4 = document.createElement("pedal-alike-dx7");
+        // p4.setPosition(100, 80);
+        // this.addPedal(p4);
 
-        let p2 = document.createElement("pedal-overdrive");
-        p2.setPosition(500, 250);
-        this.addPedal(p2);
-
-        let p3 = document.createElement("pedal-analyse");
-        p3.setPosition(770, 180);
-        this.addPedal(p3);*/
-
-        //let p4 = document.createElement("pedal-alike-dx7");
-        //p4.setPosition(100, 80);
-        //this.addPedal(p4);
-
-        // let p5 = document.createElement("pedal-faust");
-        // p5.setPosition(400,150);
+        // let p5 = document.createElement("pedal-zita_rev");
+        // p5.setPosition(400, 150);
         // this.addPedal(p5);
-        
+
 
 
         /*this.connect(this.pIn, p0);
@@ -1079,7 +1111,7 @@
         // Firefox
         //this.addEventListener("DOMMouseScroll", this.mouseWheelHandler, false);
 
-       // this.addEventListener("dblclick", this.dblclickHandler, false);
+        // this.addEventListener("dblclick", this.dblclickHandler, false);
       }
 
       static createSVGcanvas(w, h) {
@@ -1430,7 +1462,7 @@
           }
         })
       }
-      
+
       // drawloop method for clip meter canvas
       drawLoop() {
         this.canvasInputContext1.clearRect(0, 0, 100, 20);
@@ -1508,14 +1540,14 @@
         let id = e.dataTransfer.getData("pedalId");
         let _id;
         // Generate a unique id for the pedal, handle case for multiple instances of the same pedal
-        if (id == "delay" || id == "chorus" || id == "overdrive" || id == "analyse" || id =="alike-dx7"|| id =="alike-obx") {
+        if (id == "delay" || id == "chorus" || id == "overdrive" || id == "analyse" || id == "alike-dx7" || id == "alike-obx"|| id == "zita_rev") {
           _id = "pedal-" + id;
-         } else if (id == "ampsim") {
-           _id = "amp-sim";
-         }
+        } else if (id == "ampsim") {
+          _id = "amp-sim";
+        }
         let p = document.createElement(_id);
         console.log(p);
-         //if (id == "ampsim") p.showEqualizer = true;
+        //if (id == "ampsim") p.showEqualizer = true;
 
         p.setPosition(e.clientX - 30 - (p.dataWidth / 2), event.clientY - 10 - (p.dataHeight / 2));
         this.addPedal(p);
