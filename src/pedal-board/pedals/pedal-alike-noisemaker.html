@@ -1,24 +1,28 @@
 <link rel="import" href="./js/pedal-behavior.html">
 <link rel="import" href="https://webaudiomodules.org/wam-host.html">
 <script>UseWebAudioControlsMidi=1</script>
-<dom-module id="pedal-alike-dexed">
+<dom-module id="pedal-alike-noisemaker">
   <template>
     <style include="shared-styles">
+       #noisemakerDiv {
+        display:inline-block;
+        background-color:pink;
+      }
     </style>
-    <div class="laPedale">
-        <wam-host id="dexed"></wam-host>  
+    <div id="noisemakerDiv" class="laPedale">
+        <wam-host id="noisemaker"></wam-host>  
     </div>
   </template>
   <script>
-    class PedalAlikeDexed extends PBPlugin(Polymer.Element) {
+    class PedalAlikeNoiseMaker extends PBPlugin(Polymer.Element) {
 
-      static get is() { return 'pedal-alike-dexed'; }
+      static get is() { return 'pedal-alike-noisemaker'; }
 
       static get properties() {
         this.boundingRect = {
           dataWidth: {
             type: Number,
-            value: 900
+            value: 685
           },
           dataHeight: {
             type: Number,
@@ -42,18 +46,20 @@
           actx = AWPF.context;
         else actx = GlobalContext.context;
 
-        var host = this.$.dexed;
+        var host = this.$.noisemaker;
         var rect = host.getBoundingClientRect();
-        //console.log("dexed largeur = " + rect.width)
+        console.log("noisemaker width = " + rect.width)
+
+        
 
         host.context = actx;
-        host.load("https://webaudiomodules.org/synths/dexed.html").then( function (wam) {
+        host.load("https://webaudiomodules.org/synths/noisemaker.html").then( function (wam) {
            wam.connect(dx.soundNodeOut); // Jari: this.soundNoteOut is inherited too...
         });
       }
     }
 
     // Register the x-custom element with the browser
-    customElements.define(PedalAlikeDexed.is, PedalAlikeDexed);
+    customElements.define(PedalAlikeNoiseMaker.is, PedalAlikeNoiseMaker);
   </script>
 </dom-module>

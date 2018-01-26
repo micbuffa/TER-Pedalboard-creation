@@ -1,5 +1,5 @@
 <link rel="import" href="./js/pedal-behavior.html">
-<link rel="import" href="https://webaudiomodules.org/temp/wam-host.html">
+<link rel="import" href="https://webaudiomodules.org/wam-host.html">
 <script>UseWebAudioControlsMidi=1</script>
 <dom-module id="pedal-alike-obx">
   <template>
@@ -48,7 +48,7 @@
         
 
         host.context = actx;
-        host.load("https://webaudiomodules.org/temp/synths/obxd.html").then( function (wam) {
+        host.load("https://webaudiomodules.org/synths/obxd.html").then( function (wam) {
            wam.connect(dx.soundNodeOut); // Jari: this.soundNoteOut is inherited too...
         });
       }

@@ -10,7 +10,8 @@
 <link rel="import" href="./pedals/pedal-analyse.html">
 <link rel="import" href="./pedals/pedal-alike-dx7.html">
 <link rel="import" href="./pedals/pedal-alike-obx.html">
-<!-- <link rel="import" href="./pedals/pedal-alike-dexed.html"> -->
+<link rel="import" href="./pedals/pedal-alike-dexed.html">
+<link rel="import" href="./pedals/pedal-alike-noisemaker.html">
 <!-- <link rel="import" href="./pedals/pedal-flanger.html">
 <link rel="import" href="./pedals/pedal-lowpass.html">
 <link rel="import" href="./pedals/pedal-quadrafuzz.html">-->
@@ -201,22 +202,28 @@
       }
 
       #alike-dx7 {
-        width: 325px;
-        height: 50px;
+        width: 513px;
+        height: 158px;
         background-image: url("../../img/dx7.png");
       }
 
       #alike-obx {
-        width: 325px;
-        height: 50px;
+        width: 293px;
+        height: 158px;
         background-image: url("../../img/obx.png");
       }
 
 
-      #alike-obx {
-        width: 325px;
-        height: 50px;
-        background-image: url("../../img/obx.png");
+      #alike-dexed {
+        width: 197px;
+        height: 158px;
+        background-image: url("../../img/dexed.png");
+      }
+
+      #alike-noisemaker {
+        width: 139px;
+        height: 158px;
+        background-image: url("../../img/noisemaker.png");
       }
 
 
@@ -561,6 +568,10 @@
             <div class="pedals">
               <div id="alike-dexed" class="pedal" draggable="true"></div>
               <span>alike-dexed</span>
+            </div>
+            <div class="pedals">
+              <div id="alike-noisemaker" class="pedal" draggable="true"></div>
+              <span>alike-noisemaker</span>
             </div>
           </div>
 
@@ -1557,7 +1568,7 @@
         let id = e.dataTransfer.getData("pedalId");
         let _id;
         // Generate a unique id for the pedal, handle case for multiple instances of the same pedal
-        if (id == "delay" || id == "chorus" || id == "overdrive" || id == "analyse" || id == "alike-dx7" || id == "alike-obx"|| id == "zita_rev") {
+        if (id == "delay" || id == "chorus" || id == "overdrive" || id == "analyse" || id == "alike-dx7" || id == "alike-obx"|| id == "alike-dexed"|| id == "alike-noisemaker"|| id == "zita_rev") {
           _id = "pedal-" + id;
         } else if (id == "ampsim") {
           _id = "amp-sim";
