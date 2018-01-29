@@ -63,14 +63,14 @@
 
       header,
       .div_app_tabs {
-        background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.5));
+        /* background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.5)); */
         /*background: url(https://media.fabfab.net/images/products/250/15_10007_080.jpg);*/
-        backgroundColor:grey;
+        /* backgroundColor:grey; */
+        background: #333;
         box-shadow: inset 0px 1px 10px 0px #111;
       }
 
       header {
-
         z-index: 1;
 
         display: flex;
@@ -83,7 +83,7 @@
       header a {
         /*color: #ccc;*/
 
-        color:black;
+        color:#ccc;
         text-shadow: 0px -1px 0px #000;
 
         font-size: 20px;
@@ -276,12 +276,12 @@
 
       .div_app_tabs input:hover+label {
         background: #222;
-        border-top: 1px solid orange;
+        border-top: 2px solid orange;
       }
 
       .div_app_tabs input:checked+label {
         background: #111;
-        border-top: 1px solid purple;
+        border-top: 2px solid tomato;
       }
 
       .div_app_tabs label:hover {
@@ -291,13 +291,14 @@
       .div_app_tabs label {
         background: linear-gradient(#333, #111);
         color: #eee;
-        border: 1px solid #111;
+        border: 2px solid #111;
 
         padding: 10px;
 
         font-family: 'Quicksand', cursive;
         display: inline-block;
         cursor: pointer;
+        transition: 0.2s;
       }
 
       .div_app_tabs .div_container {
@@ -463,7 +464,7 @@
           <option value="Muse2Rythm.mp3">Muse rythm</option>
           <option value="11">Multi feeq sin wave</option>
         </select>
-        <audio src="./audio/BasketCase Greenday riff DI.mp3" id="soundSample" controls loop crossorigin="anonymous"></audio>
+        <audio src="./audio/BasketCase Greenday riff DI.mp3" id="soundSample" controls loop crossorigin="anonymous" controlsList="nodownload"></audio>
       </div>
       <div>
         <span>MICRO</span>

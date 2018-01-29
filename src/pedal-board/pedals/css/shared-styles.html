@@ -1,12 +1,12 @@
 <dom-module id="shared-styles">
   <template>
     <style>
-       :host {
+      :host {
         box-shadow: inset -3px -3px 3px 5px rgba(0, 0, 0, 0.6), inset 3px 3px 3px 5px rgba(255, 255, 255, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.9), 0 4px 5px 0 rgba(0, 0, 0, 0.9), 0 1px 10px 0 rgba(0, 0, 0, 0.9);
-
+        /* box-shadow: inset -3px -3px 3px 5px rgba(0, 0, 0, 0.69), inset 3px 3px 3px 2px rgba(255, 255, 255, 0.45), 0 2px 4px -1px rgba(0, 0, 0, 0), 0 4px 5px 0 rgba(0, 0, 0, 0), 0 1px 10px 0 rgba(181, 181, 181, 0); */
         width: [[dataWidth]]px;
         /* height: [[dataHeight]]px; */
-        border-radius: 10px;
+        border-radius: 8px;
 
         position: absolute;
         top: 0px;
@@ -21,18 +21,31 @@
       }
 
       .pedalLabel {
-        font-size: 20px;
+        background: rgba(0, 0, 0, 0.4);
+        color: #ccc;
+        box-shadow: inset 0px 2px 3px #111;
+        border-bottom:1px solid #aaa;
+        padding: 5px 15px;
+        border-radius: 5px;
+
+        font-size: 16px;
         text-align: center;
         user-select: none;
-        font-family: Lemon\/Milk;
+        /* font-family: Lemon\/Milk; */
+        font-family: helvetica;
+        text-transform: uppercase;
       }
 
       .knob-label {
+        color: #111;
+
         font-size: 10px;
 
         text-align: center;
         overflow: hidden;
         user-select: none;
+        font-family: helvetica;
+
       }
 
       .elements {
@@ -59,6 +72,7 @@
         justify-content: flex-start;
         align-items: stretch;
       }
+
       /***** .input,.output  *****/
 
       .input,
@@ -97,10 +111,11 @@
 
         left: -20px;
       }
+
       /***** div_menuPanel *****/
 
       .div_menuPanel {
-        background:linear-gradient(45deg,rgba(255,255,255, 0.3),transparent);
+        background: linear-gradient(45deg, rgba(255, 255, 255, 0.3), transparent);
 
         display: flex;
         flex-direction: row;
@@ -135,7 +150,7 @@
         color: #111;
 
         width: 16px;
-        
+
         font-weight: bold;
       }
     </style>
