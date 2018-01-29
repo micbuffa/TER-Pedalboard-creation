@@ -325,25 +325,6 @@
         display: flex;
       }
 
-      .div_app_tabs #bt_hide_tabs:hover {
-        background: #222;
-      }
-
-      .div_app_tabs #bt_hide_tabs {
-        background: linear-gradient(#333, #111);
-        color: #eee;
-        border: 1px solid #111;
-
-        position: absolute;
-        top: 0px;
-        right: 0px;
-
-        padding: 10px;
-        margin: 10px;
-
-        cursor: pointer;
-      }
-
       .bottomTabs {
         bottom: -230px !important;
       }
@@ -456,6 +437,10 @@
         display: flex;
         flex-direction: row;
       }
+
+      .bottomTabs {
+        bottom: -210px !important;
+      }
     </style>
 
     <header>
@@ -504,7 +489,7 @@
     <slot id="slot" ondragover="[[dragPedalHandler]]" ondrop="[[dropPedalHandler]]"></slot>
     -->
 
-    <div id="div_app_tabs" class="div_app_tabs">
+    <div id="div_app_tabs" class="div_app_tabs bottomTabs" on-mouseover="viewTabs" on-mouseout="hideTabs">
       <div class="div_tabs" id="div_tabs">
         <input id="tab-1" type="radio" name="input-tab">
         <label for="tab-1">delay</label>
@@ -521,9 +506,6 @@
         <input id="tab-7" type="radio" name="input-tab">
         <label for="tab-7">FAUST</label>
 
-        <button id="bt_hide_tabs">
-          <iron-icon icon="expand-more"></iron-icon>
-        </button>
         <div class="div_container">
 
           <div id="content-1">
@@ -776,12 +758,8 @@
 
         this.resizeListener();
 
-        this.addTabsListeners();
-
         this.addChangeAudioListeners();
       }
-
-
 
       addChangeAudioListeners() {
         let selectAudio = this.$.select_audio;
@@ -793,6 +771,7 @@
           console.log(e.target.value);
         })
       }
+
       addPedal(p) {
         this.pedals.push(p);
         if (p.id != "pedalIn" && p.id != "pedalOut") {
@@ -1015,18 +994,6 @@
         let mouseX = e.x - rect.left;
         let mouseY = e.y - rect.top;
         let closest = this.findClosestIO(mouseX, mouseY);
-      }
-
-      addTabsListeners() {
-        this.$.bt_hide_tabs.addEventListener("click", () => {
-          if (this.$.div_app_tabs.classList.contains("bottomTabs")) {
-            this.$.bt_hide_tabs.querySelector("iron-icon").setAttribute("icon", "expand-more");
-            this.$.div_app_tabs.classList.remove("bottomTabs");
-          } else {
-            this.$.div_app_tabs.className += " bottomTabs";
-            this.$.bt_hide_tabs.querySelector("iron-icon").setAttribute("icon", "expand-less");
-          }
-        });
       }
 
       handleJackMenu(p) {
@@ -1579,6 +1546,14 @@
 
         p.setPosition(e.clientX - 30 - (p.dataWidth / 2), event.clientY - 10 - (p.dataHeight / 2));
         this.addPedal(p);
+      }
+
+      // view hide tabs pedals
+      viewTabs() {
+        this.$.div_app_tabs.classList.remove("bottomTabs");
+      }
+      hideTabs() {
+        this.$.div_app_tabs.classList.add("bottomTabs");
       }
     }
 
