@@ -30,7 +30,7 @@
       :host {
         background-color: maroon;
         /*background-image: url('../../img/background-pedalboard.jpg');*/
-        background-color:lightGrey;
+        background-color: lightGrey;
         /* background-image: url('http://media.istockphoto.com/illustrations/seamless-texture-1-credits-brick-wall-noise-effect-black-background-illustration-id164486066?k=6&m=164486066&s=612x612&w=0&h=WC2gMzgGDJTF0b8edB6l_jFYlpNggSsb1-I6oCBZ_Qo='); */
         transform: scale(1, 1);
         position: absolute;
@@ -61,44 +61,78 @@
 
       /***** header *****/
 
+      header:hover {
+        background: #333;
+      }
+
       header,
       .div_app_tabs {
         /* background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.5)); */
         /*background: url(https://media.fabfab.net/images/products/250/15_10007_080.jpg);*/
         /* backgroundColor:grey; */
-        background: #333;
-        box-shadow: inset 0px 1px 10px 0px #111;
+        background: rgba(0, 0, 0, 0.7);
       }
 
       header {
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+
         z-index: 1;
+        padding: 2px;
 
         display: flex;
         flex-direction: row;
-        justify-content: center;
-        align-items: center;
+        justify-content: space-around;
+        align-content: center;
+        align-items: stretch;
       }
 
+      header audio,
+      header select,
       header span,
       header a {
         /*color: #ccc;*/
-
-        color:#ccc;
-        text-shadow: 0px -1px 0px #000;
-
-        font-size: 20px;
+        color: #ccc;
+        /* text-shadow: 0px -1px 0px #000; */
+        font-size: 16px;
 
         font-family: 'Quicksand', cursive;
         text-decoration: none;
       }
 
-      #version, #date{
+      header a.a_title {
+        color: #fff;
+
+        font-size: 18px;
+        padding: 0px 10px;
+      }
+
+      header div {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-content: center;
+        align-items: center;
+        flex: 1;
+      }
+
+      header div:last-child {
+        /* background: crimson; */
+        justify-content: flex-end;
+      }
+
+      #version,
+      #date {
+        color: #ccc;
+
+        padding: 0px 2px;
         font-size: 10px;
       }
 
       header div {
         flex: 1;
-        padding: 20px;
 
         text-align: center;
       }
@@ -110,15 +144,16 @@
         align-content: center;
       }
 
-      header .div_audio select {
-        background: transparent;
-        color: #eee;
+      header select {
+        background: rgba(0, 0, 0, 0.5);
+        color: rgb(154, 181, 209);
         border: 0px;
+        font-size: 14px;
 
         cursor: pointer;
       }
 
-      header .div_audio select option {
+      header select option {
         background: #222;
         color: #eee;
       }
@@ -130,7 +165,7 @@
       /**/
 
       header div audio {
-        width: 100%;
+        /* width: 100%; */
       }
 
       /***** https://stackoverflow.com/questions/4126708/is-it-possible-to-style-html5-audio-tag *****/
@@ -266,8 +301,7 @@
         right: 0px;
         z-index: 1;
 
-        padding: 10px;
-        transition: 0.6s;
+        transition: 0.5s;
       }
 
       .div_app_tabs input[type=radio] {
@@ -291,21 +325,22 @@
       .div_app_tabs label {
         background: linear-gradient(#333, #111);
         color: #eee;
-        border: 2px solid #111;
 
-        padding: 10px;
+        padding: 5px 10px;
+        font-size: 12px;
 
         font-family: 'Quicksand', cursive;
         display: inline-block;
+        text-transform: uppercase;
         cursor: pointer;
         transition: 0.2s;
       }
 
       .div_app_tabs .div_container {
-        box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 4px 5px 0 rgba(0, 0, 0, 0.06), 0 1px 10px 0 rgba(0, 0, 0, 0.08);
+        /* box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 4px 5px 0 rgba(0, 0, 0, 0.06), 0 1px 10px 0 rgba(0, 0, 0, 0.08); */
 
         height: 210px;
-        padding: 10px;
+        padding: 1px;
 
         display: flex;
         flex-direction: column;
@@ -446,11 +481,12 @@
 
     <header>
       <div>
-        <a href="https://github.com/dl100463/TER-Pedalboard-creation/tree/newBranchEK">PedalBoard</a>
+        <a class="a_title" href="https://github.com/dl100463/TER-Pedalboard-creation/tree/newBranchEK">PedalBoard</a>
         <span id="version">V. 1.4 Centralised</span>
-        <span id="date">29/01/18</span>
+        <span id="date">30/01/18</span>
       </div>
-      <div class="div_audio">
+
+      <div>
         <select id="select_audio">
           <option value="Guitar_DI_Track.mp3">Metal riff 1</option>
           <option value="LasseMagoDI.mp3">Metal riff 2</option>
@@ -466,16 +502,19 @@
         </select>
         <audio src="./audio/BasketCase Greenday riff DI.mp3" id="soundSample" controls loop crossorigin="anonymous" controlsList="nodownload"></audio>
       </div>
+
+
       <div>
-        <span>MICRO</span>
-        <webaudio-switch src="img/switch_toggle.png" class="id" id="mic" height="28" width="50" alt="Press to record" title="Press to record"></webaudio-switch>
-      </div>
-      <div>
-        <span>Input level</span>
+        <div>
+          <span title="Micro">
+            <iron-icon icon="icons:settings-voice"></iron-icon>
+          </span>
+          <webaudio-switch src="img/switch_toggle.png" class="id" id="mic" height="28" width="40" alt="Press to record" title="Press to record"></webaudio-switch>
+        </div>
+        <span>input level</span>
         <canvas id="meter1" width="100" height="20"></canvas>
-      </div>
-      <div>
-        <span>Output level</span>
+
+        <span>output level</span>
         <canvas id="meter2" width="100" height="20"></canvas>
       </div>
     </header>
@@ -611,9 +650,9 @@
             type: Object,
             value: ""
           },
-          version:{
-            number:1.3,
-            dateLastChange:"24/01/2018"
+          version: {
+            number: 1.4,
+            dateLastChange: "30/01/2018"
           }
         };
       }
@@ -655,7 +694,7 @@
         this.wO = 0;
         this.hO = 0;
 
-        
+
         // ===== ===== SOUND ===== ===== 
         this.sound = {
           context: null,
@@ -1536,7 +1575,7 @@
         let id = e.dataTransfer.getData("pedalId");
         let _id;
         // Generate a unique id for the pedal, handle case for multiple instances of the same pedal
-        if (id == "delay" || id == "chorus" || id == "overdrive" || id == "analyse" || id == "alike-dx7" || id == "alike-obx"|| id == "alike-dexed"|| id == "alike-noisemaker"|| id == "zita_rev") {
+        if (id == "delay" || id == "chorus" || id == "overdrive" || id == "analyse" || id == "alike-dx7" || id == "alike-obx" || id == "alike-dexed" || id == "alike-noisemaker" || id == "zita_rev") {
           _id = "pedal-" + id;
         } else if (id == "ampsim") {
           _id = "amp-sim";
