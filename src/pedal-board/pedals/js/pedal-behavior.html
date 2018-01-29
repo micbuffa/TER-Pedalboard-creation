@@ -90,8 +90,9 @@
           this.menuLabel.className="div_menuPanel";
 
           this.menuLabel.appendChild(this.delete);
-          this.menuLabel.appendChild(this.optionMenu);
-          elem.appendChild(this.menuLabel);
+          //this.menuLabel.appendChild(this.optionMenu);
+          //elem.appendChild(this.menuLabel);
+          elem.insertAdjacentElement("beforebegin",this.menuLabel);
         }
       }
 
