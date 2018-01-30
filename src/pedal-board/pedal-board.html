@@ -27,6 +27,17 @@
 <dom-module id="pedal-board">
   <template>
     <style>
+      *{
+        padding: 0px;
+        border:0px;
+        margin: 0px;
+
+        border-collapse: collapse;
+        box-sizing: border-box;
+      }
+      *:focus{
+        outline: 0;
+      }
       :host {
         background-color: maroon;
         /*background-image: url('../../img/background-pedalboard.jpg');*/
@@ -57,6 +68,12 @@
 
       body {
         background-image: url('../img/background.jpg');
+      }
+
+      .zoom {
+        zoom: 2;
+        -moz-transform: scale(2);
+        -moz-transform-origin: 0 0;
       }
 
       /***** header *****/
@@ -294,12 +311,16 @@
 
       /***** div_app_tabs *****/
 
+      .bottomTabs {
+        bottom: -210px !important;
+      }
+
       .div_app_tabs {
         position: absolute;
         bottom: 0px;
         left: 0px;
         right: 0px;
-        z-index: 1;
+        z-index: 10;
 
         transition: 0.5s;
       }
@@ -338,7 +359,6 @@
 
       .div_app_tabs .div_container {
         /* box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 4px 5px 0 rgba(0, 0, 0, 0.06), 0 1px 10px 0 rgba(0, 0, 0, 0.08); */
-
         height: 210px;
         padding: 1px;
 
@@ -359,10 +379,6 @@
       .div_app_tabs #tab-6:checked~.div_container #content-6,
       .div_app_tabs #tab-7:checked~.div_container #content-7 {
         display: flex;
-      }
-
-      .bottomTabs {
-        bottom: -230px !important;
       }
 
       @keyframes zoomeffect {
@@ -472,10 +488,6 @@
       #oscilloscopes {
         display: flex;
         flex-direction: row;
-      }
-
-      .bottomTabs {
-        bottom: -210px !important;
       }
     </style>
 
@@ -646,6 +658,10 @@
             type: Number,
             value: 0
           },
+          dataZoom: {
+            type: Number,
+            value: 1
+          },
           soundSample: {
             type: Object,
             value: ""
@@ -704,6 +720,8 @@
           mediaSRC: null,
           state: 0
         }
+
+        console.log("dataZoom : ", this.dataZoom);
       }
 
       connectedCallback() {
@@ -813,6 +831,7 @@
       }
 
       addPedal(p) {
+        // p.style.transform='scale('+this.dataZoom+')';
         this.pedals.push(p);
         if (p.id != "pedalIn" && p.id != "pedalOut") {
           p.className = "draggable";
@@ -1700,6 +1719,8 @@
        * choice to create(if new id) or just update jack 
        */
       reviewSVGJack(_pos, _id) {
+        this.dataZoom = 0.5;
+
         let tension = 1;
         // if pedal 2 on the left of pedal 1
         if (_pos.x2 < _pos.x1) tension = -tension;
@@ -1722,30 +1743,32 @@
           // External wire
           this.shape1.setAttributeNS(null, "fill", "none");
           this.shape1.setAttributeNS(null, "stroke", "#471221");
-          this.shape1.setAttributeNS(null, "stroke-width", 10);
+          this.shape1.setAttributeNS(null, "stroke-width", 10 * this.dataZoom);
           this.shape1.setAttributeNS(null, "class", "wire");
           this.shape1.setAttributeNS(null, "id", _id + "_1");
 
           // Main colored mid wire
           this.shape2.setAttributeNS(null, "fill", "none");
           this.shape2.setAttributeNS(null, "stroke", "#8e457d");
-          this.shape2.setAttributeNS(null, "stroke-width", 6);
+          this.shape2.setAttributeNS(null, "stroke-width", 6 * this.dataZoom);
           this.shape2.setAttributeNS(null, "class", "wire");
           this.shape2.setAttributeNS(null, "id", _id + "_2");
 
           // Specular color in the middle
           this.shape3.setAttributeNS(null, "fill", "none");
           this.shape3.setAttributeNS(null, "stroke", "#b87595");
-          this.shape3.setAttributeNS(null, "stroke-width", 2);
+          this.shape3.setAttributeNS(null, "stroke-width", 2 * this.dataZoom);
           this.shape3.setAttributeNS(null, "class", "wire");
           this.shape3.setAttributeNS(null, "id", _id + "_3");
 
           // Jack ends are images (embout) 
           this.end = this.makeSVG('image', {
             class: 'map-tile',
-            'xlink:href': '../pedalboard/img/rightJack.png',
-            width: '100px',
-            height: '20px',
+            //'xlink:href': '../pedalboard/img/rightJack.png',
+            'xlink:href': '../img/rightJack.png',
+            width: 100 * this.dataZoom + 'px',
+            height: 20 * this.dataZoom + 'px',
+            //transform:'scale('+this.dataZoom +')',
             id: _id + "_4"
           });
 
@@ -1759,7 +1782,7 @@
         this.shape2.setAttribute("d", path);
         this.shape3.setAttribute("d", path);
         this.end.setAttribute("x", _pos.x2 - 10);
-        this.end.setAttribute("y", _pos.y2 - 10);
+        this.end.setAttribute("y",_pos.y2 - (10* this.dataZoom));
         return this;
       }
     }

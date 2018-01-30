@@ -6,7 +6,12 @@
     <style include="shared-styles">
       :host {
         background-color: #ff2c2c;
-        background: linear-gradient(rgb(85, 4, 19), rgb(223, 110, 110));
+        /* background: linear-gradient(rgb(85, 4, 19), rgb(223, 110, 110)); */
+        background: linear-gradient(#795548, #3E2723);
+      }
+
+      .switch {
+        /* transform: rotate(90deg); */
       }
     </style>
     <div class="laPedale">
@@ -15,31 +20,23 @@
         <div class="row">
           <div class="column">
             <webaudio-knob id="knob1" class="knob" sprites="99" value="0" step="1" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
-              data-role="preBand"></webaudio-knob>
+              data-role="preBand" diameter="24"></webaudio-knob>
             <span class="knob-label" id="knob1-label">preBand</span>
           </div>
           <div class="column">
             <webaudio-knob id="knob2" class="knob" sprites="99" value="0" step="1" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
-              data-role="color"></webaudio-knob>
+              data-role="color" diameter="24"></webaudio-knob>
             <span class="knob-label" id="knob2-label">color</span>
           </div>
-        </div>
-
-        <div class="row">
           <div class="column">
             <webaudio-knob id="knob3" class="knob" sprites="99" value="0" step="1" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
-              data-role="drive"></webaudio-knob>
+              data-role="drive" diameter="24"></webaudio-knob>
             <span class="knob-label" id="knob3-label">drive</span>
           </div>
           <div class="column">
             <webaudio-knob id="knob4" class="knob" sprites="99" value="0" step="1" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
-              data-role="postCut"></webaudio-knob>
+              data-role="postCut" diameter="24"></webaudio-knob>
             <span class="knob-label" id="knob4-label">postCut</span>
-          </div>
-        </div>
-        <div class="row">
-          <div class="column">
-            <webaudio-switch midilearn="true" src="./img/switches/switch_1.png" class="switch" id="switch1" width="40" height="25"></webaudio-switch>
           </div>
         </div>
 
@@ -48,6 +45,13 @@
             <span class="pedalLabel">overdrive</span>
           </div>
         </div>
+
+        <div class="row">
+          <div class="column">
+            <webaudio-switch midilearn="true" src="./img/switches/switch_1.png" class="switch" id="switch1" width="32" height="20"></webaudio-switch>
+          </div>
+        </div>
+
       </div>
     </div>
   </template>
@@ -60,7 +64,7 @@
         return {
           dataWidth: {
             type: Number,
-            value: 250
+            value: 140
           },
           dataHeight: {
             type: Number,
@@ -91,15 +95,15 @@
       }
 
       setKnobsListeners() {
-        this.$.knob1.addEventListener('change', (e) =>  this.effect.setpreBand(e.target.value / 100));
-        this.$.knob2.addEventListener('change', (e) =>  this.effect.setcolor(e.target.value * 200));
-        this.$.knob3.addEventListener('change', (e) =>  this.effect.setdrive(e.target.value / 100));
-        this.$.knob4.addEventListener('change', (e) =>  this.effect.setpostCut(e.target.value * 200));
+        this.$.knob1.addEventListener('change', (e) => this.effect.setpreBand(e.target.value / 100));
+        this.$.knob2.addEventListener('change', (e) => this.effect.setcolor(e.target.value * 200));
+        this.$.knob3.addEventListener('change', (e) => this.effect.setdrive(e.target.value / 100));
+        this.$.knob4.addEventListener('change', (e) => this.effect.setpostCut(e.target.value * 200));
       }
 
 
       getDefaultButtonsValues() {
-        return { preBand: 50, color: 4, drive: 50, postCut:15};
+        return { preBand: 50, color: 4, drive: 50, postCut: 15 };
       }
 
       bypass() {

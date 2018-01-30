@@ -2,12 +2,13 @@
   <template>
     <style>
       :host {
-        box-shadow: inset -3px -3px 3px 5px rgba(0, 0, 0, 0.6), inset 3px 3px 3px 5px rgba(255, 255, 255, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.9), 0 4px 5px 0 rgba(0, 0, 0, 0.9), 0 1px 10px 0 rgba(0, 0, 0, 0.9);
+        /* box-shadow: inset -3px -3px 3px 5px rgba(0, 0, 0, 0.6), inset 3px 3px 3px 5px rgba(255, 255, 255, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.9), 0 4px 5px 0 rgba(0, 0, 0, 0.9), 0 1px 10px 0 rgba(0, 0, 0, 0.9); */
         /* box-shadow: inset -3px -3px 3px 5px rgba(0, 0, 0, 0.69), inset 3px 3px 3px 2px rgba(255, 255, 255, 0.45), 0 2px 4px -1px rgba(0, 0, 0, 0), 0 4px 5px 0 rgba(0, 0, 0, 0), 0 1px 10px 0 rgba(181, 181, 181, 0); */
+        box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+       
+       
         width: [[dataWidth]]px;
         /* height: [[dataHeight]]px; */
-        border-radius: 8px;
-
         position: absolute;
         top: 0px;
         left: 0px;
@@ -17,19 +18,35 @@
         z-index: 9;
       }
 
+      :host,
+      .pedalLabel,
+      .div_buttons {
+        border-radius: 8px;
+      }
+
+      .div_menuPanel {
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+      }
+
+      .laPedale {
+        /* box-shadow: inset 0px 3px 10px #111; */
+      }
+
       webaudio-switch {
         left: -6px;
       }
 
       .pedalLabel {
-        background: rgba(0, 0, 0, 0.4);
+        /* background: rgba(0, 0, 0, 0.4); */
+        box-shadow: inset 0px 1px 5px #111;
+        border: 1px solid #ccc;
         color: #ccc;
-        box-shadow: inset 0px 2px 3px #111;
-        border-bottom:1px solid #aaa;
-        padding: 5px 15px;
-        border-radius: 5px;
+        /* border:2px solid #aaa; */
+        padding: 4px 10px;
+        margin: 2px 0px;
 
-        font-size: 16px;
+        font-size: 10px;
         text-align: center;
         user-select: none;
         /* font-family: Lemon\/Milk; */
@@ -38,11 +55,14 @@
       }
 
       .knob-label {
-        color: #111;
+        color: #ddd;
+        text-shadow: 0px 1px 1px #000;
 
-        font-size: 10px;
+        font-size: 6px;
+        margin-top: -2px;
 
         text-align: center;
+        text-transform: uppercase;
         overflow: hidden;
         user-select: none;
         font-family: helvetica;
@@ -54,6 +74,7 @@
         flex-direction: column;
         justify-content: flex-start;
         align-items: center;
+
         padding: 10px;
       }
 
@@ -64,7 +85,7 @@
         align-items: center;
 
         flex: 1;
-        margin: 1px;
+        margin: 3px;
       }
 
       .row {
@@ -94,7 +115,10 @@
         width: 90px;
         height: 20px;
 
-        right: -88px;
+        /* right: -88px; */
+        right: -65px;
+        
+        transform: scale(0.5);
       }
 
 
@@ -110,17 +134,21 @@
         width: 20px;
         height: 20px;
 
-        left: -20px;
+        /* left: -20px; */
+        left: -15px;
+
+        transform: scale(0.5);
       }
 
       /***** div_menuPanel *****/
 
       .div_menuPanel {
-        background: linear-gradient(45deg, rgba(255, 255, 255, 0.3), transparent);
+        /* background: linear-gradient(45deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.5)); */
+        background: linear-gradient(45deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.5));
 
         display: flex;
         flex-direction: row;
-        justify-content: flex-end;
+        justify-content: space-between;
         align-items: stretch;
 
         /* position: absolute; */
@@ -128,8 +156,6 @@
         right: 0px;
         left: 0px;
         z-index: 99;
-        border-top-left-radius: 12px;
-        border-top-right-radius: 12px;
       }
 
       .div_menuPanel button:hover>iron-icon {
@@ -148,9 +174,9 @@
       }
 
       .div_menuPanel button iron-icon {
-        color: #111;
+        color: #222;
 
-        width: 16px;
+        width: 10px;
 
         font-weight: bold;
       }

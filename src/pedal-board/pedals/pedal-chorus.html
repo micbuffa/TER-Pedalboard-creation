@@ -1,6 +1,5 @@
-
 <link rel="import" href="../../../bower_components/webaudio-controls/webaudio-controls.html">
-<script>UseWebAudioControlsMidi=1</script>
+<script>UseWebAudioControlsMidi = 1</script>
 
 <link rel="import" href="./js/pedal-behavior.html">
 
@@ -9,48 +8,51 @@
     <style include="shared-styles">
       :host {
         background-color: #f02cff;
-        background: linear-gradient(pink, purple);
+        /* background: linear-gradient(pink, purple); */
+        background: linear-gradient(#6A1B9A, #6A1B9A);
+      }
+
+      .switch {
+        /* transform: rotate(90deg); */
       }
     </style>
     <div class="laPedale">
       <div class="elements">
 
-        <div class="row">
+        <div class="row div_buttons">
           <div class="column">
             <webaudio-knob id="knob1" class="knob" sprites="99" value="0" step="1" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
-              data-role="delay"></webaudio-knob>
+              data-role="delay" diameter="24"></webaudio-knob>
             <span class="knob-label" id="knob1-label">DELAY</span>
           </div>
           <div class="column">
             <webaudio-knob id="knob2" class="knob" min="0" max="5" sprites="99" value="2" step="0.1" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
-              data-role="speed"></webaudio-knob>
+              data-role="speed" diameter="24"></webaudio-knob>
             <span class="knob-label" id="knob2-label">SPEED</span>
           </div>
-        </div>
-
-        <div class="row">
           <div class="column">
             <webaudio-knob id="knob3" class="knob" sprites="99" value="15" step="0.1" max="25" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
-              data-role="depth"></webaudio-knob>
+              data-role="depth" diameter="24"></webaudio-knob>
             <span class="knob-label" id="knob3-label">DEPTH</span>
           </div>
           <div class="column">
             <webaudio-knob id="knob4" class="knob" sprites="99" value="0" step="1" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
-              data-role="mix"></webaudio-knob>
+              data-role="mix" diameter="24"></webaudio-knob>
             <span class="knob-label" id="knob4-label">MIX</span>
           </div>
         </div>
         <div class="row">
           <div class="column">
-            <webaudio-switch midilearn="true" src="./img/switches/switch_1.png" class="switch" id="switch1" width="40" height="25"></webaudio-switch>
+            <span class="pedalLabel">CHORUS</span>
           </div>
         </div>
 
         <div class="row">
           <div class="column">
-            <span class="pedalLabel">CHORUS</span>
+            <webaudio-switch midilearn="true" src="./img/switches/switch_1.png" class="switch" id="switch1" width="32" height="20"></webaudio-switch>
           </div>
         </div>
+
       </div>
     </div>
   </template>
@@ -63,11 +65,11 @@
         return {
           dataWidth: {
             type: Number,
-            value: 250
+            value: 140
           },
           dataHeight: {
             type: Number,
-            value: 230
+            value: 220
           }
         };
       }
@@ -84,7 +86,7 @@
       }
 
       createAllInternNodes() {
-        this.effect = new Chorus("chorus",1);
+        this.effect = new Chorus("chorus", 1);
         this.effect.setup();
       }
 
@@ -94,16 +96,17 @@
       }
 
       setKnobsListeners() {
-        this.$.knob1.addEventListener('change', (e) =>  this.effect.setDelay(e.target.value / 100));
-        this.$.knob2.addEventListener('change', (e) =>  this.effect.setSpeed(parseFloat(e.target.value)));
-        this.$.knob3.addEventListener('change', (e) =>  this.effect.setDepth(e.target.value / 30000));
-        this.$.knob4.addEventListener('change', (e) =>  this.effect.setMix(e.target.value / 100));
+        this.$.knob1.addEventListener('change', (e) => this.effect.setDelay(e.target.value / 100));
+        this.$.knob2.addEventListener('change', (e) => this.effect.setSpeed(parseFloat(e.target.value)));
+        this.$.knob3.addEventListener('change', (e) => this.effect.setDepth(e.target.value / 30000));
+        this.$.knob4.addEventListener('change', (e) => this.effect.setMix(e.target.value / 100));
       }
 
 
       getDefaultButtonsValues() {
-        return { delay: 60, depth: 15, mix: 80, speed: 3.66
-         };
+        return {
+          delay: 60, depth: 15, mix: 80, speed: 3.66
+        };
       }
 
       bypass() {

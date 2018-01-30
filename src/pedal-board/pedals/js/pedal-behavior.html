@@ -8,6 +8,7 @@
         super();
 
         this.elem = this;
+        this.zoom=1;
 
         this.inputP ="";
         this.outputP="";
@@ -19,10 +20,12 @@
 
         this.w= this.dataWidth;
         this.h=this.dataHeight;
+
         // relative position of input and output
         this.IOsize = 15;
         this.inputOffsetX = -this.IOsize/2;
         this.inputOffsetY = this.IOsize-4;
+        
         //this.outputOffsetX = 2*this.IOsize-2;
         this.outputOffsetX = this.w+2*this.IOsize-2;
         this.outputOffsetY = this.IOsize;
@@ -54,12 +57,19 @@
         - input
         - output
         */
+
+        console.log("Position jack input / output : ");
+        console.log(this.elem);
+        console.log(this.elem.getBoundingClientRect());
+
         // - input
         this.inputP = document.createElement("div");
+        // this.inputP.style.transform='scale('+this.zoom+')';
         this.inputP.classList.add("input");
 
         // - output
         this.outputP = document.createElement("div");
+        // this.outputP.style.transform='scale('+this.zoom+')';
         this.outputP.classList.add("output");
 
         // - output
@@ -77,10 +87,10 @@
             this.pedalboard.removePedal(this);
           });
           // - bouton menu
-          this.optionMenu = document.createElement("div");
+          this.optionMenu = document.createElement("button");
           this.optionMenu.title += 'option menu';
           this.optionMenu.className+='optionMenu';
-          this.optionMenu.innerHTML+='<iron-icon icon="icons:more-vert"></iron-icon>';
+          this.optionMenu.innerHTML+='<iron-icon icon="icons:info-outline"></iron-icon>';
           this.optionMenu.addEventListener("click",(e)=>{
             this.showEqualizer=(true);
           });
@@ -89,8 +99,8 @@
           this.menuLabel=document.createElement("div");
           this.menuLabel.className="div_menuPanel";
 
+          this.menuLabel.appendChild(this.optionMenu);
           this.menuLabel.appendChild(this.delete);
-          //this.menuLabel.appendChild(this.optionMenu);
           //elem.appendChild(this.menuLabel);
           elem.insertAdjacentElement("beforebegin",this.menuLabel);
         }
