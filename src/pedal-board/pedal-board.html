@@ -27,17 +27,19 @@
 <dom-module id="pedal-board">
   <template>
     <style>
-      *{
+      * {
         padding: 0px;
-        border:0px;
+        border: 0px;
         margin: 0px;
 
         border-collapse: collapse;
         box-sizing: border-box;
       }
-      *:focus{
+
+      *:focus {
         outline: 0;
       }
+
       :host {
         background-color: maroon;
         /*background-image: url('../../img/background-pedalboard.jpg');*/
@@ -492,12 +494,14 @@
     </style>
 
     <header>
+      <!-- TITLE + VERSION -->
       <div>
         <a class="a_title" href="https://github.com/dl100463/TER-Pedalboard-creation/tree/newBranchEK">PedalBoard</a>
-        <span id="version">V. 1.4 Centralised</span>
-        <span id="date">30/01/18</span>
+        <span id="version">[[version.label]]</span>
+        <span id="date">[[version.dateLastChange]]</span>
       </div>
 
+      <!-- AUDIO -->
       <div>
         <select id="select_audio">
           <option value="Guitar_DI_Track.mp3">Metal riff 1</option>
@@ -515,7 +519,7 @@
         <audio src="./audio/BasketCase Greenday riff DI.mp3" id="soundSample" controls loop crossorigin="anonymous" controlsList="nodownload"></audio>
       </div>
 
-
+      <!-- MICRO + I/O LEVEL -->
       <div>
         <div>
           <span title="Micro">
@@ -525,12 +529,12 @@
         </div>
         <span>input level</span>
         <canvas id="meter1" width="100" height="20"></canvas>
-
         <span>output level</span>
         <canvas id="meter2" width="100" height="20"></canvas>
       </div>
     </header>
 
+    <!-- <main id="mainPedalboard"></main> -->
     <pedal-in id="pedalIn"></pedal-in>
     <pedal-out id="pedalOut"></pedal-out>
 
@@ -541,8 +545,9 @@
     <slot id="slot" ondragover="[[dragPedalHandler]]" ondrop="[[dropPedalHandler]]"></slot>
     -->
 
-    <div id="div_app_tabs" class="div_app_tabs bottomTabs" on-mouseover="viewTabs" on-mouseout="hideTabs">
+    <footer id="div_app_tabs" class="div_app_tabs bottomTabs" on-mouseover="viewTabs" on-mouseout="hideTabs">
       <div class="div_tabs" id="div_tabs">
+
         <input id="tab-1" type="radio" name="input-tab">
         <label for="tab-1">delay</label>
         <input id="tab-2" type="radio" name="input-tab" checked>
@@ -588,8 +593,6 @@
             </div>
           </div>
 
-
-
           <div id="content-5">
             <div class="pedals">
               <div id="alike-dx7" class="pedal" draggable="true"></div>
@@ -627,13 +630,17 @@
 
         </div>
       </div>
-    </div>
-    <div>
-      <nav id="context-menuJack" class="context-menu">
-        <ul id="menu-container" class="context-menu__items">
-        </ul>
-      </nav>
-    </div>
+    </footer>
+
+    <!-- 
+        <div>
+          <nav id="context-menuJack" class="context-menu">
+            <ul id="menu-container" class="context-menu__items">
+            </ul>
+          </nav>
+        </div> 
+    -->
+
   </template>
 
   <script>
@@ -667,8 +674,13 @@
             value: ""
           },
           version: {
-            number: 1.4,
-            dateLastChange: "30/01/2018"
+            type: Object,
+            value: function () {
+              return {
+                label: "V.1.4 Centralised",
+                dateLastChange: "31/01/2018"
+              }
+            }
           }
         };
       }
@@ -741,7 +753,7 @@
         this.pIn = this.$["pedalIn"];
         this.pOut = this.$["pedalOut"];
 
-        this.version = this.$["version"];
+        //this.version = this.$["version"];
         //console.log(this.is);
         //this.version.innerHTML(this.properties);
         // this.date = document.querySelector("#date");
@@ -776,15 +788,15 @@
          p0.setPosition(100, 250);
          this.addPedal(p0);
          console.log(this.nbPedalsAdded);
- 
+   
          let p1 = document.createElement("pedal-chorus");
          p1.setPosition(230, 250);
          this.addPedal(p1);
- 
+   
          let p2 = document.createElement("pedal-overdrive");
          p2.setPosition(500, 250);
          this.addPedal(p2);
- 
+   
          let p3 = document.createElement("pedal-analyse");
          p3.setPosition(770, 180);
          this.addPedal(p3);*/
@@ -831,7 +843,7 @@
       }
 
       addPedal(p) {
-        // p.style.transform='scale('+this.dataZoom+')';
+        p.style.transform = 'scale(' + this.dataZoom + ')';
         this.pedals.push(p);
         if (p.id != "pedalIn" && p.id != "pedalOut") {
           p.className = "draggable";
@@ -839,6 +851,9 @@
           this.nbPedalsAdded++;
         }
         p.pedalboard = this;
+
+        //console.log("add ",p);
+        //this.$.mainPedalboard.appendChild(p);
         this.appendChild(p);
 
         // For the jack menu to appear
@@ -1086,11 +1101,11 @@
         let menu = this.$["context-menuJack"];
         menu.style.width = "" + newMenuWid + "px";
         this.root.querySelector(".context-menu__items").style.width = "" + newMenuWid + "px";
-  
+   
         // Approximatively adapts the Y position where the jacks in menu start
         // according to the number of jacks plugged in the pedal, since the
         // menu adapts its position according to the number of item
-  
+   
         if (this.zoom == 1) {
           if (board.style.transformOrigin == 'left top 0px' || board.style.transformOrigin == 'center top 0px' ||
             board.style.transformOrigin == 'right top 0px') {
@@ -1101,12 +1116,12 @@
             offsetY += 2.5;
           }
         }
-  
+   
         */
 
         jacks.forEach((j) => {
           /*
-  
+   
           // Adds a menu item for each jack in the pedal
           let ul = this.$["menu-container"];
           let li = document.createElement("li");
@@ -1117,7 +1132,7 @@
           // let menuItemWid = 40 * (1 + (zoom * 2));
           // let menuItemHei = 14 * (zoom + 1);
           // li.style = "width:"+ menuItemWid +"px; height: "+ menuItemHei +"px";
-  
+   
           ul.appendChild(li);
           */
 
@@ -1131,7 +1146,7 @@
           li.addEventListener("mousedown", function (e) {
             // Computes the location of the mouse in the SVG canvas
             var loc = cursorPoint(e);
-  
+   
             e.preventDefault();
             e.stopPropagation();
             // first we disconnect the jack before immediatly creating
@@ -1142,7 +1157,7 @@
             let y1 = j.p1.getOutputPos().y;
             let x2 = j.p2.getInputPos().x;
             let y2 = j.p2.getInputPos().y;
-  
+   
             pedalboard.currentDraggableJack = createBezierSVGJack("tmpJack", x1, y1, loc.x, loc.y);
             pedalboard.currentDraggableJack.end.setAttribute("x", loc.x - 7);
             pedalboard.currentDraggableJack.end.setAttribute("y", loc.y - 10);
@@ -1782,7 +1797,7 @@
         this.shape2.setAttribute("d", path);
         this.shape3.setAttribute("d", path);
         this.end.setAttribute("x", _pos.x2 - 10);
-        this.end.setAttribute("y",_pos.y2 - (10* this.dataZoom));
+        this.end.setAttribute("y", _pos.y2 - (10 * this.dataZoom));
         return this;
       }
     }

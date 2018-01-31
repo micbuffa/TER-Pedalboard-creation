@@ -8,7 +8,7 @@
         super();
 
         this.elem = this;
-        this.zoom=1;
+        this.dataZoom=0.5;
 
         this.inputP ="";
         this.outputP="";
@@ -58,18 +58,19 @@
         - output
         */
 
-        console.log("Position jack input / output : ");
-        console.log(this.elem);
-        console.log(this.elem.getBoundingClientRect());
+        // console.log("Position jack input / output : ");
+        // console.log(this.elem);
+        // console.log(this.elem.getBoundingClientRect());
+        // console.log(this.elem.pedalboard);
 
         // - input
         this.inputP = document.createElement("div");
-        // this.inputP.style.transform='scale('+this.zoom+')';
+        this.inputP.style.transform='scale('+this.dataZoom+')';
         this.inputP.classList.add("input");
 
         // - output
         this.outputP = document.createElement("div");
-        // this.outputP.style.transform='scale('+this.zoom+')';
+        this.outputP.style.transform='scale('+this.dataZoom+')';
         this.outputP.classList.add("output");
 
         // - output
