@@ -14,7 +14,7 @@
       root.GlobalContext = GlobalContext;
 
     var AudioContext = root.AudioContext || root.webkitAudioContext;
-    GlobalContext.context = new AudioContext;
+    GlobalContext.context = new AudioContext();
 
     return GlobalContext;
   })(typeof window !== "undefined" ? window : global);

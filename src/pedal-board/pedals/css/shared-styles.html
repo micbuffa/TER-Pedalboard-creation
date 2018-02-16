@@ -16,11 +16,13 @@
         user-select: none;
         cursor: move;
         z-index: 9;
-      }
-
-      :host {
+        
         border-bottom-left-radius: 8px;
         border-bottom-right-radius: 8px;
+      }
+      
+      *:focus {
+        outline: 0;
       }
 
       .pedalLabel,
@@ -31,10 +33,6 @@
       .div_menuPanel {
         /* border-top-left-radius: 8px;
         border-top-right-radius: 8px; */
-      }
-
-      .laPedale {
-        /* box-shadow: inset 0px 3px 10px #111; */
       }
 
       webaudio-switch {

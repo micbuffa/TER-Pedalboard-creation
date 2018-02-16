@@ -16,6 +16,9 @@
 <link rel="import" href="./pedals/pedal-lowpass.html">
 <link rel="import" href="./pedals/pedal-quadrafuzz.html">-->
 <link rel="import" href="./pedals/pedal-faust-zitaRev.html">
+
+<link rel="import" href="./webaudio-tinysynthetizer/webaudio-tinysynthetizer.html">
+
 <link rel="import" href="./amp-sim/amp-sim.html">
 <link rel="import" href="./pedals/js/GlobalContext.html">
 <script src="./pedals/js/volume-meter.js"></script>
@@ -34,6 +37,7 @@
 
         border-collapse: collapse;
         box-sizing: border-box;
+        vertical-align: top;
       }
 
       *:focus {
@@ -80,10 +84,6 @@
 
       /***** header *****/
 
-      header:hover {
-        background: #333;
-      }
-
       header,
       .div_app_tabs {
         /* background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.5)); */
@@ -99,7 +99,6 @@
         right: 0px;
 
         z-index: 1;
-        padding: 2px;
 
         display: flex;
         flex-direction: row;
@@ -134,6 +133,7 @@
         justify-content: flex-start;
         align-content: center;
         align-items: center;
+        text-align: center;
         flex: 1;
       }
 
@@ -148,12 +148,6 @@
 
         padding: 0px 2px;
         font-size: 10px;
-      }
-
-      header div {
-        flex: 1;
-
-        text-align: center;
       }
 
       header .div_audio {
@@ -280,6 +274,12 @@
         background-image: url("../../img/noisemaker.png");
       }
 
+      #webaudiotinysynthetizer {
+        width: 380px;
+        height: 130px;
+        background-image: url("../../img/tinysynth.png");
+        background-size: cover;
+      }
 
       #zita_rev {
         width: 260px;
@@ -367,6 +367,7 @@
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
+        overflow-x: scroll;
       }
 
       .div_app_tabs [id^="content-"] {
@@ -491,6 +492,85 @@
         display: flex;
         flex-direction: row;
       }
+
+      .hidden {
+        display: none ! important;
+      }
+
+      #divSoundIn {
+        background: #222;
+
+        position: absolute;
+        top: 42px;
+        right: 0px;
+        padding: 10px 50px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-content: center;
+        align-items: stretch;
+      }
+
+      .select_devices {
+        border: 1px solid #555;
+        padding: 5px;
+        margin-bottom: 5px;
+
+        display: flex;
+        flex-direction: row;
+      }
+
+      #bt_learn:hover {
+        background: #B71C1C;
+      }
+
+      #bt_learn {
+        background: #841919;
+        color: #eee;
+        border-radius: 50px;
+        width: 10px;
+        margin: 0px 10px;
+        padding: 8px;
+
+        text-transform: capitalize;
+        cursor: pointer;
+      }
+
+      #meter3 {
+        background: #000;
+        /* border-radius: 10px; */
+      }
+
+      #divSoundIn span {
+        color: #eee;
+
+        padding: 5px;
+        font-size: 14px;
+      }
+
+      #divSoundIn select {}
+
+      #microDevices:hover {
+        background: #222;
+      }
+
+      #microDevices {
+        padding: 10px;
+        cursor: pointer;
+      }
+
+      .mic_open {
+        background: #222;
+      }
+
+      .span_level {
+        padding: 0px 10px;
+      }
+
+      #divSoundIn span#span_time {
+        color: tomato;
+      }
     </style>
 
     <header>
@@ -522,15 +602,34 @@
       <!-- MICRO + I/O LEVEL -->
       <div>
         <div>
-          <span title="Micro">
-            <iron-icon icon="icons:settings-voice"></iron-icon>
-          </span>
           <webaudio-switch src="img/switch_toggle.png" class="id" id="mic" height="28" width="40" alt="Press to record" title="Press to record"></webaudio-switch>
         </div>
-        <span>input level</span>
+
+        <!-- <webaudio-knob id="knob_In" class="knob" sprites="99" value="0" step="1" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
+          width="40" height="40" data-role="time" diameter="24"></webaudio-knob> -->
+        <span class="span_level">input level</span>
         <canvas id="meter1" width="100" height="20"></canvas>
-        <span>output level</span>
+
+        <!-- <webaudio-knob id="knob_Out" class="knob" sprites="99" value="0" step="1" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
+          width="40" height="40" data-role="time" diameter="24"></webaudio-knob> -->
+        <span class="span_level">output level</span>
         <canvas id="meter2" width="100" height="20"></canvas>
+
+        <!-- <span id="microDevices" title="Micro" on-click="openMediaDevices">
+          <iron-icon icon="icons:settings-voice"></iron-icon>
+        </span> -->
+      </div>
+
+      <div id="divSoundIn" class="hidden">
+        <div class="select_devices">
+          <!-- <webaudio-knob id="knobIn" class="knob" sprites="99" value="0" step="1" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
+            width="40" height="40" data-role="time" diameter="24"></webaudio-knob> -->
+          <span id="span_time" class="span_time">4s</span>
+          <button id="bt_learn"></button>
+          <span>Device:</span>
+          <select id="select_audioinput"></select>
+        </div>
+        <canvas id="meter3" width="100" height="10"></canvas>
       </div>
     </header>
 
@@ -550,13 +649,13 @@
 
         <input id="tab-1" type="radio" name="input-tab">
         <label for="tab-1">delay</label>
-        <input id="tab-2" type="radio" name="input-tab" checked>
+        <input id="tab-2" type="radio" name="input-tab">
         <label for="tab-2">chorus</label>
         <input id="tab-3" type="radio" name="input-tab">
         <label for="tab-3">overdrive</label>
         <input id="tab-4" type="radio" name="input-tab">
         <label for="tab-4">analyse</label>
-        <input id="tab-5" type="radio" name="input-tab">
+        <input id="tab-5" type="radio" name="input-tab" checked>
         <label for="tab-5">Synths</label>
         <input id="tab-6" type="radio" name="input-tab">
         <label for="tab-6">ampsim</label>
@@ -610,6 +709,11 @@
               <div id="alike-noisemaker" class="pedal" draggable="true"></div>
               <span>alike-noisemaker</span>
             </div>
+            <div class="pedals">
+              <div id="webaudiotinysynthetizer" class="pedal" draggable="true"></div>
+              <span>webaudiotinysynthetizer</span>
+            </div>
+
           </div>
 
           <div id="content-6">
@@ -677,8 +781,8 @@
             type: Object,
             value: function () {
               return {
-                label: "V.1.4 Centralised",
-                dateLastChange: "31/01/2018"
+                label: "V.1.6 Centralized",
+                dateLastChange: "16/02/2018"
               }
             }
           }
@@ -690,6 +794,7 @@
 
         this.pedals = [];
         this.elem = document.querySelector("pedal-board");
+
         this.pIn;
         this.pOut;
 
@@ -701,8 +806,10 @@
         // clip detector
         this.meter1;
         this.meter2;
+        this.meter3;
         this.canvasInputContext1;
         this.canvasInputContext2;
+        this.canvasInputContext3;
         // this.inputVisualization;
         // this.outputVisualization;
 
@@ -733,7 +840,7 @@
           state: 0
         }
 
-        console.log("dataZoom : ", this.dataZoom);
+        //console.log("dataZoom : ", this.dataZoom);
       }
 
       connectedCallback() {
@@ -765,8 +872,10 @@
         // clip detector  
         this.meter1 = createAudioMeter(GlobalContext.context);
         this.meter2 = createAudioMeter(GlobalContext.context);
+        this.meter3 = createAudioMeter(GlobalContext.context);
         this.canvasInputContext1 = this.$["meter1"].getContext("2d");
         this.canvasInputContext2 = this.$["meter2"].getContext("2d");
+        this.canvasInputContext3 = this.$["meter3"].getContext("2d");
 
         // Handles the WebAudio graph initialization
         this.soundHandler();
@@ -829,6 +938,70 @@
         this.resizeListener();
 
         this.addChangeAudioListeners();
+
+        // setMediadevicesToSoundIn()
+        this.setMediadevicesToSoundIn();
+      }
+
+      openMediaDevices() {
+        if (this.$.divSoundIn.classList.contains("hidden")) {
+          this.$.divSoundIn.classList.remove("hidden");
+          this.$.microDevices.classList.add("mic_open");
+          this.$.microDevices.onclick = "closeMediaDevices";
+        } else {
+          this.$.microDevices.classList.remove("mic_open");
+          this.$.divSoundIn.classList.add("hidden");
+          this.$.microDevices.onclick = "openMediaDevices";
+        }
+      }
+
+      setMediadevicesToSoundIn() {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+          console.log("enumerateDevices() not supported.");
+          return;
+        }
+
+        // List cameras and microphones.
+
+        navigator.mediaDevices.enumerateDevices().then((devices) => {
+          let deviceInfos = "";
+          let label = "";
+
+          let select_audioinput = this.$.select_audioinput;
+          let audioinputDevices = [];
+          let microphone = 1;
+
+          // let select_audiooutput=document.querySelector('#select_audiooutput');
+          // let audiooutputDevices=[];
+          // let speaker=1;
+
+
+          devices.forEach(function (device) {
+            deviceInfos = device.kind + ": " + device.label + " id = " + device.deviceId;
+            //console.log(deviceInfos);
+            if (device.kind == "audioinput") {
+              if (device.deviceId == "default") {
+                label = "Par défaut";
+              } else {
+                label = "microphone " + (microphone++);
+              }
+              audioinputDevices.push("<option>" + label + "</option>");
+            }
+            // else if (device.kind=="audiooutput"){
+            // 	if (device.deviceId=="default"){
+            // 		label="Par défaut";
+            // 	}else{
+            // 		label="speaker "+(speaker++);
+            // 	}
+            // 	audiooutputDevices.push("<option>"+label+"</option>");
+            // }
+
+          });
+          select_audioinput.insertAdjacentHTML('beforeEnd', audioinputDevices);
+          // select_audiooutput.insertAdjacentHTML('beforeEnd',audiooutputDevices);
+        }).catch(function (err) {
+          console.log(err.name + ": " + err.message);
+        });
       }
 
       addChangeAudioListeners() {
@@ -1422,6 +1595,7 @@
       }
 
       pedalDragStart(event) {
+        console.log("pedalDragStart", event.target.id);
         event.dataTransfer.setData("pedalId", event.target.id);
       }
 
@@ -1465,6 +1639,9 @@
       }
 
 
+      micListening() {
+
+      }
 
       /***** SOUND *****/
       soundHandler() {
@@ -1474,7 +1651,8 @@
         this.sound.mediaSource = this.sound.context.createMediaElementSource(this.soundSample);
         this.sound.audioDestination = this.sound.context.destination;
         this.sound.mediaSource.connect(this.meter1);
-        console.log(this.nbPedalsAdded);
+        this.sound.mediaSource.connect(this.meter3);
+        //console.log(this.nbPedalsAdded);
 
         if (navigator.mediaDevices.getUserMedia) {
           var constraints = {
@@ -1505,6 +1683,7 @@
         var mic = this.$.mic;
         mic.addEventListener("change", (e) => {
           if (this.sound.state == 0) {
+            console.log('mic connected');
             if (this.pedals[0].outputJacks.length != 0) {
               this.pedals[0].outputJacks.forEach((j) => {
                 this.soundNodeDisconnection(j.p1, j.p2);
@@ -1515,8 +1694,10 @@
               })
             }
             this.monoMediaSourceM.connect(this.meter1);
+            this.monoMediaSourceM.connect(this.meter3);
             this.sound.state = 1;
           } else {
+            console.log('mic disconnected');
             if (this.pedals[0].outputJacks.length != 0) {
               this.pedals[0].outputJacks.forEach((j) => {
                 this.soundNodeDisconnection(j.p1, j.p2);
@@ -1528,7 +1709,32 @@
             }
             this.sound.state = 0;
             this.monoMediaSourceM.disconnect(this.meter1);
+            this.monoMediaSourceM.disconnect(this.meter3);
           }
+        })
+
+
+        var bt_learn = this.$.bt_learn;
+        var span_time = this.$.span_time;
+        let _tabVolume = [];
+        let i = 4000;
+        let _interval = null;
+        let volumeMax = 0;
+        bt_learn.addEventListener("click", (e) => {
+          _tabVolume = [];
+          i = 4000;
+          _interval = setInterval(() => {
+            _tabVolume.push(this.meter3.volume);
+            i -= 100;
+            if (i == 3000 || i == 2000 || i == 1000) span_time.textContent = (i / 1000) + "s";
+            if (i == 0) {
+              span_time.textContent = "4s";
+              console.log(_tabVolume);
+              volumeMax = Math.max(..._tabVolume);
+              alert('Gain max : (' + _tabVolume.indexOf(volumeMax) + ') ' + volumeMax);
+              window.clearInterval(_interval);
+            }
+          }, 100);
         })
       }
 
@@ -1536,6 +1742,7 @@
       drawLoop() {
         this.canvasInputContext1.clearRect(0, 0, 100, 20);
         this.canvasInputContext2.clearRect(0, 0, 100, 20);
+        this.canvasInputContext3.clearRect(0, 0, 100, 20);
 
         // check if we're currently clipping
         if (this.meter1.checkClipping())
@@ -1543,15 +1750,23 @@
         else
           this.canvasInputContext1.fillStyle = "green";
 
+
         if (this.meter2.checkClipping())
           this.canvasInputContext2.fillStyle = "red";
         else
           this.canvasInputContext2.fillStyle = "green";
 
+        if (this.meter3.checkClipping())
+          this.canvasInputContext3.fillStyle = "red";
+        else
+          this.canvasInputContext3.fillStyle = "green";
+
 
         // draw a bar based on the current volume
         this.canvasInputContext1.fillRect(0, 0, this.meter1.volume * 100 * 1.4, 20);
         this.canvasInputContext2.fillRect(0, 0, this.meter2.volume * 100 * 1.4, 20);
+        this.canvasInputContext3.fillRect(0, 0, this.meter3.volume * 100 * 1.4, 20);
+        //console.log('knobIn',this.meter3.volume * 100 * 1.4, 20);
 
         // set up the next visual callback
         let rafID = window.requestAnimationFrame(this.drawLoop.bind(this));
@@ -1567,10 +1782,13 @@
         } else if (p1.id == "pedalIn") {
           if (this.sound.state == 0) {
             this.sound.mediaSource.connect(p2.elem.soundNodeIn);
+            console.log(p2.elem.soundNodeIn);
+            console.log(p2.soundNodeIn);
           } else {
             this.monoMediaSourceM.connect(p2.elem.soundNodeIn);
           }
         } else if (p2.id == "pedalOut") {
+          console.log("p1.elem.soundNodeOut : ", p1.elem.soundNodeOut);
           p1.elem.soundNodeOut.connect(this.meter2);
           p1.elem.soundNodeOut.connect(this.sound.audioDestination);
         } else {
@@ -1606,6 +1824,7 @@
       }
 
       dropPedalHandler(e) {
+        console.log(e);
         let id = e.dataTransfer.getData("pedalId");
         let _id;
         // Generate a unique id for the pedal, handle case for multiple instances of the same pedal
@@ -1613,7 +1832,10 @@
           _id = "pedal-" + id;
         } else if (id == "ampsim") {
           _id = "amp-sim";
+        } else if (id == "webaudiotinysynthetizer") {
+          _id = "webaudio-tinysynthetizer";
         }
+        console.log("_id", _id);
         let p = document.createElement(_id);
         console.log(p);
         //if (id == "ampsim") p.showEqualizer = true;
@@ -1765,6 +1987,7 @@
           // Main colored mid wire
           this.shape2.setAttributeNS(null, "fill", "none");
           this.shape2.setAttributeNS(null, "stroke", "#8e457d");
+          // midi : 2196F3
           this.shape2.setAttributeNS(null, "stroke-width", 6 * this.dataZoom);
           this.shape2.setAttributeNS(null, "class", "wire");
           this.shape2.setAttributeNS(null, "id", _id + "_2");
@@ -1779,8 +2002,8 @@
           // Jack ends are images (embout) 
           this.end = this.makeSVG('image', {
             class: 'map-tile',
-            'xlink:href': '../pedalboard/img/rightJack.png',
-            //'xlink:href': '../img/rightJack.png',
+            //'xlink:href': '../pedalboard/img/rightJack.png',
+            'xlink:href': '../img/rightJack.png',
             width: 100 * this.dataZoom + 'px',
             height: 20 * this.dataZoom + 'px',
             //transform:'scale('+this.dataZoom +')',
