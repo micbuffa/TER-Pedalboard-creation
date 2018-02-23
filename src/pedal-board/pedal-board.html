@@ -38,6 +38,8 @@
         border-collapse: collapse;
         box-sizing: border-box;
         vertical-align: top;
+
+        font-weight: 300;
       }
 
       *:focus {
@@ -501,7 +503,7 @@
         background: #222;
 
         position: absolute;
-        top: 42px;
+        top: 44px;
         right: 0px;
         padding: 10px 50px;
 
@@ -542,11 +544,12 @@
         /* border-radius: 10px; */
       }
 
-      #divSoundIn span {
-        color: #eee;
 
-        padding: 5px;
-        font-size: 14px;
+      #divSoundIn span.span_tuto {
+        color: #777;
+
+        font-size: 12px;
+        padding: 10px;
       }
 
       #divSoundIn select {}
@@ -564,12 +567,62 @@
         background: #222;
       }
 
-      .span_level {
-        padding: 0px 10px;
+      header div.column {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        padding: 5px;
       }
 
       #divSoundIn span#span_time {
         color: tomato;
+      }
+
+      input[type=range] {
+        -webkit-appearance: none;
+        background: #ccc;
+        height: 2px;
+        width: 50px;
+        border-radius: 8px;
+      }
+
+      input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        background: dodgerblue;
+        height: 12px;
+        width: 12px;
+        border-radius: 50%;
+        cursor: ew-resize;
+      }
+
+      input[type=range]::-ms-tooltip {
+        display: none;
+      }
+
+      input[type=range]::-moz-range-track {
+        height: 0;
+      }
+
+      input[type=range]::-moz-range-thumb {
+        background: dodgerblue;
+        height: 12px;
+        width: 12px;
+        border: none;
+        border-radius: 50%;
+        cursor: ew-resize;
+      }
+
+      canvas {
+        background: #000;
+      }
+
+      .span_level {
+        color: #ccc;
+
+        font-size: 12px;
+
+        text-align: left;
       }
     </style>
 
@@ -600,36 +653,52 @@
       </div>
 
       <!-- MICRO + I/O LEVEL -->
-      <div>
+      <div class="div_settings">
         <div>
-          <webaudio-switch src="img/switch_toggle.png" class="id" id="mic" height="28" width="40" alt="Press to record" title="Press to record"></webaudio-switch>
+          <webaudio-knob id="knob_In" class="knob" min="0" max="100" sprites="99" value="100" step="1" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
+            width="40" height="40" data-role="time" diameter="24"></webaudio-knob>
+          <!-- <input id="knob_In" type="range" min=0 max=100 value=100 step=1> -->
+          <div class="column">
+            <span class="span_level">input level</span>
+            <canvas id="meter1" width="100" height="10"></canvas>
+          </div>
         </div>
-
-        <!-- <webaudio-knob id="knob_In" class="knob" sprites="99" value="0" step="1" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
-          width="40" height="40" data-role="time" diameter="24"></webaudio-knob> -->
-        <span class="span_level">input level</span>
-        <canvas id="meter1" width="100" height="20"></canvas>
-
-        <!-- <webaudio-knob id="knob_Out" class="knob" sprites="99" value="0" step="1" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
-          width="40" height="40" data-role="time" diameter="24"></webaudio-knob> -->
-        <span class="span_level">output level</span>
-        <canvas id="meter2" width="100" height="20"></canvas>
-
-        <!-- <span id="microDevices" title="Micro" on-click="openMediaDevices">
-          <iron-icon icon="icons:settings-voice"></iron-icon>
-        </span> -->
+        <div>
+          <webaudio-knob id="knob_Out" class="knob" min="0" max="100" sprites="99" value="100" step="1" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
+            width="40" height="40" data-role="time" diameter="24"></webaudio-knob>
+          <!-- <input id="knob_Out" type="range" min=0 max=100 value=100 step=1> -->
+          <div class="column">
+            <span class="span_level">output level</span>
+            <canvas id="meter2" width="100" height="10"></canvas>
+          </div>
+        </div>
+        <div>
+          <span id="microDevices" title="Micro" on-click="openMediaDevices">
+            <iron-icon icon="icons:settings-voice"></iron-icon>
+          </span>
+        </div>
       </div>
 
       <div id="divSoundIn" class="hidden">
+        <span class="span_tuto">Play your instrument, input gain will be adjusted</span>
         <div class="select_devices">
-          <!-- <webaudio-knob id="knobIn" class="knob" sprites="99" value="0" step="1" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
-            width="40" height="40" data-role="time" diameter="24"></webaudio-knob> -->
+          <webaudio-switch src="img/switch_toggle.png" class="id" id="mic" height="28" width="40" alt="Press to record" title="Press to record"></webaudio-switch>
+
+
           <span id="span_time" class="span_time">4s</span>
           <button id="bt_learn"></button>
           <span>Device:</span>
           <select id="select_audioinput"></select>
         </div>
-        <canvas id="meter3" width="100" height="10"></canvas>
+
+        <div>
+          <webaudio-knob id="knob_In_midi" class="knob" min="0" max="100" sprites="99" value="100" step="1" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
+            width="40" height="40" data-role="time" diameter="24"></webaudio-knob>
+          <div class="column">
+            <span class="span_level">input midi level</span>
+            <canvas id="meter3" width="100" height="10"></canvas>
+          </div>
+        </div>
       </div>
     </header>
 
@@ -781,8 +850,8 @@
             type: Object,
             value: function () {
               return {
-                label: "V.1.6 Centralized",
-                dateLastChange: "16/02/2018"
+                label: "V.1.8 Centralized",
+                dateLastChange: "23/02/2018"
               }
             }
           }
@@ -833,6 +902,8 @@
         // ===== ===== SOUND ===== ===== 
         this.sound = {
           context: null,
+          gainNodeIn: null,
+          gainNodeOut: null,
           mediaSource: null,
           audioDestination: null,
           mediaSourceM: null,
@@ -850,6 +921,7 @@
       ready() {
         super.ready();
 
+        this.tabsAnimation = null;
         this.soundSample = this.$.soundSample;
         this.w = this.offsetWidth;
         this.wO = this.w;
@@ -963,6 +1035,7 @@
 
         // List cameras and microphones.
 
+        //console.log("2 : navigator.mediaDevices",navigator.mediaDevices)
         navigator.mediaDevices.enumerateDevices().then((devices) => {
           let deviceInfos = "";
           let label = "";
@@ -1013,6 +1086,26 @@
           this.soundSample.play();
           console.log(e.target.value);
         })
+
+        // soundNodeIn ? soundNodeOut ? (régler les gains entrée et sortie)
+        this.$.knob_In.addEventListener('change', (e) => {
+          console.log("knob_In=gainNodeIn", e.target.value / 100);
+          this.$.knob_In.title = e.target.value / 100;
+          this.sound.gainNodeIn.gain.value = e.target.value / 100;
+        });
+
+        this.$.knob_Out.addEventListener('change', (e) => {
+          console.log("knob_Out=gainNodeOut", e.target.value / 100);
+          this.$.knob_Out.title = e.target.value / 100;
+          this.sound.gainNodeOut.gain.value = e.target.value / 100;
+        });
+
+        this.$.knob_In_midi.addEventListener('change', (e) => {
+          console.log("knob_In_midi=gainNodeInMid", e.target.value / 100);
+          this.$.knob_In_midi.title = e.target.value / 100;
+          this.sound.gainNodeInMid.gain.value = e.target.value / 100;
+        });
+
       }
 
       addPedal(p) {
@@ -1037,9 +1130,22 @@
         if (confirm("Souhaitez-vous vraiment supprimer cette pédale ?")) {
           let jacksIn = p.inputJacks;
           let jacksOut = p.outputJacks;
-
-          for (let i = jacksIn.length - 1; i >= 0; i--) this.disconnect(jacksIn[i].p1, jacksIn[i].p2);
-          for (let i = jacksOut.length - 1; i >= 0; i--) this.disconnect(jacksOut[i].p1, jacksOut[i].p2);
+          console.log("jacksIn : ", jacksIn);
+          console.log("jacksOut : ", jacksOut);
+          if (jacksIn.length > 0) {
+            for (let i = jacksIn.length - 1; i >= 0; i--) {
+              console.log("jacksIn[i].p1", jacksIn[i].p1);
+              console.log("jacksIn[i].p2", jacksIn[i].p2);
+              this.disconnect(jacksIn[i].p1, jacksIn[i].p2);
+            }
+          }
+          if (jacksOut.length > 0) {
+            for (let i = jacksOut.length - 1; i >= 0; i--) {
+              console.log("jacksOut[i].p1", jacksOut[i].p1);
+              console.log("jacksOut[i].p2", jacksOut[i].p2);
+              this.disconnect(jacksOut[i].p1, jacksOut[i].p2);
+            }
+          }
 
           var index = this.pedals.indexOf(p);
           if (index > -1) this.pedals.splice(index, 1);
@@ -1047,13 +1153,20 @@
         }
       }
 
-      connect(p1, p2) {
-        let j = new Jack();
-        j.connexion(p1, p2);
 
-        p1.addJackAtOutput(j);
-        p2.addJackAtInput(j);
-        this.soundNodeConnection(p1, p2);
+      isConnexionPossible(_nbNodeOut, _nbNodeIn) {
+        return ((typeof _nbNodeOut == "undefined" || (_nbNodeOut > 0)) && (typeof _nbNodeIn == "undefined" || (_nbNodeIn > 0)));
+      }
+
+      connect(p1, p2) {
+        // si p1_Out && p2_In existent (>1) alors la connexion est possible
+        if (this.isConnexionPossible(p1.nbNodeOut, p2.nbNodeIn)) {
+          let j = new Jack();
+          j.connexion(p1, p2);
+          p1.addJackAtOutput(j);
+          p2.addJackAtInput(j);
+          this.soundNodeConnection(p1, p2);
+        }
       }
 
       disconnect(p1, p2) {
@@ -1645,13 +1758,26 @@
 
       /***** SOUND *****/
       soundHandler() {
+        this.gc = GlobalContext;
+        this.sound.context = this.gc.context;
 
+        this.sound.gainNodeIn = this.sound.context.createGain();
+        this.sound.gainNodeOut = this.sound.context.createGain();
+        this.sound.gainNodeInMid = this.sound.context.createGain();
 
-        this.sound.context = GlobalContext.context;
         this.sound.mediaSource = this.sound.context.createMediaElementSource(this.soundSample);
         this.sound.audioDestination = this.sound.context.destination;
-        this.sound.mediaSource.connect(this.meter1);
-        this.sound.mediaSource.connect(this.meter3);
+
+        //connexion (reste le midi à faire !)
+        this.sound.mediaSource.connect(this.sound.gainNodeIn);
+        //this.monoMediaSourceM.connect(this.sound.gainNodeIn);
+        this.sound.gainNodeOut.connect(this.sound.audioDestination);
+        //
+        this.sound.gainNodeIn.connect(this.meter1);
+        this.sound.gainNodeInMid.connect(this.meter3);
+        // this.sound.mediaSource.connect(this.meter1);
+        // this.sound.mediaSource.connect(this.meter3);
+
         //console.log(this.nbPedalsAdded);
 
         if (navigator.mediaDevices.getUserMedia) {
@@ -1662,11 +1788,16 @@
               mozAutoGainControl: false
             }
           };
+          console.log("1 : navigator.mediaDevices", navigator.mediaDevices);
           navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
             this.sound.mediaSourceM = this.sound.context.createMediaStreamSource(stream);
+
             this.splitter = this.sound.context.createChannelSplitter(2);
             this.monoMediaSourceM = this.sound.context.createChannelMerger(2);
-            this.sound.mediaSourceM.connect(this.splitter);
+
+            //connexion monoMediaSourceM Midi
+            this.sound.mediaSourceM.connect(this.sound.gainNodeInMid);
+            this.sound.gainNodeInMid.connect(this.splitter);
             this.splitter.connect(this.monoMediaSourceM, 0, 0);
             this.splitter.connect(this.monoMediaSourceM, 0, 1);
 
@@ -1680,36 +1811,41 @@
         this.drawLoop();
 
         // CHANGE STATE MIC(1) -> DEMO SOUND (0)
-        var mic = this.$.mic;
-        mic.addEventListener("change", (e) => {
-          if (this.sound.state == 0) {
+        this.$.mic.addEventListener("change", (e) => {
+          //console.log(e.target.value);
+          // 1 : connected
+          if (e.target.value) {
             console.log('mic connected');
+
             if (this.pedals[0].outputJacks.length != 0) {
               this.pedals[0].outputJacks.forEach((j) => {
-                this.soundNodeDisconnection(j.p1, j.p2);
-                this.sound.state = 1;
-                this.soundNodeConnection(j.p1, j.p2);
                 // this.sound.state goes back to 0 for the next disconnect
                 this.sound.state = 0;
+                this.soundNodeDisconnection(j.p1, j.p2);
+
+                this.sound.state = 1;
+                this.soundNodeConnection(j.p1, j.p2);
               })
             }
             this.monoMediaSourceM.connect(this.meter1);
-            this.monoMediaSourceM.connect(this.meter3);
             this.sound.state = 1;
+
+            // 0 : disconnected
           } else {
             console.log('mic disconnected');
+
             if (this.pedals[0].outputJacks.length != 0) {
               this.pedals[0].outputJacks.forEach((j) => {
-                this.soundNodeDisconnection(j.p1, j.p2);
-                this.sound.state = 0;
-                this.soundNodeConnection(j.p1, j.p2);
                 // this.sound.state goes back to 1 for the next disconnect
                 this.sound.state = 1;
+                this.soundNodeDisconnection(j.p1, j.p2);
+
+                this.sound.state = 0;
+                this.soundNodeConnection(j.p1, j.p2);
               })
             }
             this.sound.state = 0;
             this.monoMediaSourceM.disconnect(this.meter1);
-            this.monoMediaSourceM.disconnect(this.meter3);
           }
         })
 
@@ -1720,18 +1856,50 @@
         let i = 4000;
         let _interval = null;
         let volumeMax = 0;
+        // lorsque le guitariste joue pendant 4 secondes, le gain d'entrée midi se réajuste en prenant pour valeur max le son max récupéré
         bt_learn.addEventListener("click", (e) => {
+          this.sound.gainNodeInMid.gain.value = 1;
+          // this.$.knob_In_midi.value = 100;
+          // this.$.knob_In_midi.max = 100;
+          // this.$.knob_In_midi.setAttribute("max", 100);
+
           _tabVolume = [];
           i = 4000;
           _interval = setInterval(() => {
             _tabVolume.push(this.meter3.volume);
+            console.log("this.meter3.volume", this.meter3.volume);
             i -= 100;
             if (i == 3000 || i == 2000 || i == 1000) span_time.textContent = (i / 1000) + "s";
+
+            //this.$.knob_In_midi.value = (this.meter3.volume * 100);
+            //this.$.knob_In_midi.setAttribute("value", this.meter3.volume * 100);
             if (i == 0) {
               span_time.textContent = "4s";
-              console.log(_tabVolume);
+              //console.log(_tabVolume);
               volumeMax = Math.max(..._tabVolume);
-              alert('Gain max : (' + _tabVolume.indexOf(volumeMax) + ') ' + volumeMax);
+              alert('Gain max pour gainNodeInMid: (' + _tabVolume.indexOf(volumeMax) + ') ' + volumeMax.toFixed(2));
+
+
+              console.log("volumeMax", volumeMax);
+              console.log("this.meter3", this.meter3);
+
+              // this.$.knob_In_midi.value = (volumeMax * 100);
+              // this.$.knob_In_midi.setAttribute("value", volumeMax * 100);
+              // this.$.knob_In_midi.max = (volumeMax * 100);
+              // this.$.knob_In_midi.setAttribute("max", volumeMax * 100);
+
+              this.sound.gainNodeInMid.gain.value = volumeMax;
+              this.$.knob_In_midi.setAttribute("value", volumeMax * 100);
+
+              //this.$.knob_In.value = (volumeMax * 100);
+              //this.gc.soundNodeIn.gain.value = (volumeMax * 100);
+
+              // console.log("this.gc.soundNodeIn.gain.value",this.gc.soundNodeIn.gain.value);
+              // console.log("this.gc.soundNodeIn.gain",this.gc.soundNodeIn.gain);
+              // console.log("this.meter1.volume",this.meter1.volume);
+              // this.gc.soundNodeIn.gain.value=this.meter1.volume;
+              // console.log("this.gc.soundNodeIn.gain",this.gc.soundNodeIn.gain);
+
               window.clearInterval(_interval);
             }
           }, 100);
@@ -1775,46 +1943,62 @@
       soundNodeConnection(p1, p2) {
         if (p1.id == "pedalIn" && p2.id == "pedalOut") {
           if (this.sound.state == 0) {
-            this.sound.mediaSource.connect(this.sound.audioDestination);
+            //this.sound.mediaSource.connect(this.sound.gainNodeIn);
+            this.sound.gainNodeIn.connect(this.sound.gainNodeOut);
+            //this.sound.gainNodeOut.connect(this.sound.audioDestination);
           } else {
-            this.monoMediaSourceM.connect(this.sound.audioDestination);
+            //this.monoMediaSourceM.connect(this.sound.gainNodeIn);
+            this.sound.gainNodeInMid.connect(this.sound.gainNodeOut);
+            //this.sound.gainNodeOut.connect(this.sound.audioDestination);
           }
         } else if (p1.id == "pedalIn") {
           if (this.sound.state == 0) {
-            this.sound.mediaSource.connect(p2.elem.soundNodeIn);
-            console.log(p2.elem.soundNodeIn);
-            console.log(p2.soundNodeIn);
+            //this.sound.mediaSource.connect(this.sound.gainNodeIn);
+            this.sound.gainNodeIn.connect(p2.soundNodeIn);
+            // console.log(p2.elem.soundNodeIn);
+            // console.log(p2.soundNodeIn);
           } else {
-            this.monoMediaSourceM.connect(p2.elem.soundNodeIn);
+            //his.monoMediaSourceM.connect(this.sound.gainNodeIn);
+            this.sound.gainNodeInMid.connect(p2.soundNodeIn);
           }
         } else if (p2.id == "pedalOut") {
-          console.log("p1.elem.soundNodeOut : ", p1.elem.soundNodeOut);
-          p1.elem.soundNodeOut.connect(this.meter2);
-          p1.elem.soundNodeOut.connect(this.sound.audioDestination);
+          //console.log("p1.elem.soundNodeOut : ", p1.elem.soundNodeOut);
+          p1.soundNodeOut.connect(this.meter2);
+          p1.soundNodeOut.connect(this.sound.gainNodeOut);
+          //this.sound.gainNodeOut.connect(this.sound.audioDestination);
         } else {
-          p1.elem.soundNodeOut.connect(p2.elem.soundNodeIn);
+          p1.soundNodeOut.connect(p2.soundNodeIn);
         }
       }
 
       soundNodeDisconnection(p1, p2) {
         if (p1.id == "pedalIn" && p2.id == "pedalOut") {
           if (this.sound.state == 0) {
-            this.sound.mediaSource.disconnect(this.sound.audioDestination);
+            //this.sound.mediaSource.disconnect(this.sound.gainNodeIn);
+            this.sound.gainNodeIn.disconnect(this.sound.gainNodeOut);
+            //this.sound.gainNodeOut.disconnect(this.sound.audioDestination);
           } else {
             //this.sound.mediaSourceM.disconnect(this.sound.audioDestination);
-            this.monoMediaSourceM.disconnect(this.sound.audioDestination);
+
+            this.sound.gainNodeInMid.disconnect(this.sound.gainNodeOut);
+            // this.monoMediaSourceM.disconnect(this.sound.gainNodeIn);
+            // this.sound.gainNodeIn.disconnect(this.sound.gainNodeOut);
+            // this.sound.gainNodeOut.disconnect(this.sound.audioDestination);
           }
         } else if (p1.id == "pedalIn") {
           if (this.sound.state == 0) {
-            this.sound.mediaSource.disconnect(p2.elem.soundNodeIn);
+            //this.sound.mediaSource.disconnect(this.sound.gainNodeIn);
+            this.sound.gainNodeIn.disconnect(p2.soundNodeIn);
           } else {
             //this.sound.mediaSourceM.disconnect(p2.elem.soundNodeIn);
-            this.monoMediaSourceM.disconnect(p2.elem.soundNodeIn);
+            //this.monoMediaSourceM.disconnect(this.sound.gainNodeIn);
+            this.sound.gainNodeInMid.disconnect(p2.soundNodeIn);
           }
         } else if (p2.id == "pedalOut") {
-          p1.elem.soundNodeOut.disconnect(this.sound.audioDestination);
+          p1.soundNodeOut.disconnect(this.sound.gainNodeOut);
+          //this.sound.gainNodeOut.disconnect(this.sound.audioDestination);
         } else {
-          p1.elem.soundNodeOut.disconnect(p2.elem.soundNodeIn);
+          p1.soundNodeOut.disconnect(p2.soundNodeIn);
         }
       }
 
@@ -1846,10 +2030,11 @@
 
       // view hide tabs pedals
       viewTabs() {
+        clearTimeout(this.tabsAnimation);
         this.$.div_app_tabs.classList.remove("bottomTabs");
       }
       hideTabs() {
-        this.$.div_app_tabs.classList.add("bottomTabs");
+        this.tabsAnimation = setTimeout(() => { this.$.div_app_tabs.classList.add("bottomTabs"); }, 1000);
       }
     }
 
@@ -1870,7 +2055,7 @@
         let x2 = iPos.x,
           y2 = iPos.y;
 
-        this.id = "jack_" + pedal1.elem.id + "_" + pedal2.elem.id;
+        this.id = "jack_" + pedal1.id + "_" + pedal2.id;
 
         this.shape1 = "";
         this.shape2 = "";
