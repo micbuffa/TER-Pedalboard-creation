@@ -624,6 +624,24 @@
 
         text-align: left;
       }
+
+      .bt_pinViewTabs {
+        background: rgba(0, 0, 0, 0.7);
+
+        position: absolute;
+        top: 0px;
+        right: 0px;
+
+        cursor: pointer;
+      }
+      .bt_pinViewTabs > iron-icon {
+        color: #ccc;
+
+        height: 28px;
+        width: 40px;
+        vertical-align: middle;
+        font-weight: bold;
+      }
     </style>
 
     <header>
@@ -713,7 +731,8 @@
     <slot id="slot" ondragover="[[dragPedalHandler]]" ondrop="[[dropPedalHandler]]"></slot>
     -->
 
-    <footer id="div_app_tabs" class="div_app_tabs bottomTabs" on-mouseover="viewTabs" on-mouseout="hideTabs">
+    <!-- <footer id="div_app_tabs" class="div_app_tabs bottomTabs" on-mouseover="viewTabs" on-mouseout="hideTabs"> -->
+    <footer id="div_app_tabs" class="div_app_tabs bottomTabs">
       <div class="div_tabs" id="div_tabs">
 
         <input id="tab-1" type="radio" name="input-tab">
@@ -731,6 +750,7 @@
         <input id="tab-7" type="radio" name="input-tab">
         <label for="tab-7">FAUST</label>
 
+        <button on-click="viewTabs" class="bt_pinViewTabs"><iron-icon id="icon_view" icon="icons:expand-less"></iron-icon></button>
         <div class="div_container">
 
           <div id="content-1">
@@ -904,6 +924,7 @@
           context: null,
           gainNodeIn: null,
           gainNodeOut: null,
+          gainNodeInMid: null,
           mediaSource: null,
           audioDestination: null,
           mediaSourceM: null,
@@ -2030,12 +2051,19 @@
 
       // view hide tabs pedals
       viewTabs() {
-        clearTimeout(this.tabsAnimation);
-        this.$.div_app_tabs.classList.remove("bottomTabs");
+        //clearTimeout(this.tabsAnimation);
+        if (this.$.div_app_tabs.classList.contains("bottomTabs")) {
+          this.$.div_app_tabs.classList.remove("bottomTabs");
+          this.$.icon_view.setAttribute("icon","icons:expand-more");
+        } else {
+          this.$.div_app_tabs.classList.add("bottomTabs");
+          this.$.icon_view.setAttribute("icon","icons:expand-less");
+        }
       }
-      hideTabs() {
-        this.tabsAnimation = setTimeout(() => { this.$.div_app_tabs.classList.add("bottomTabs"); }, 1000);
-      }
+
+      // hideTabs() {
+      //   this.tabsAnimation = setTimeout(() => { this.$.div_app_tabs.classList.add("bottomTabs"); }, 1000);
+      // }
     }
 
     class Jack {
