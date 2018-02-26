@@ -531,9 +531,8 @@
         background: #841919;
         color: #eee;
         border-radius: 50px;
-        width: 10px;
+        width: 40px;
         margin: 0px 10px;
-        padding: 8px;
 
         text-transform: capitalize;
         cursor: pointer;
@@ -673,20 +672,20 @@
       <!-- MICRO + I/O LEVEL -->
       <div class="div_settings">
         <div>
-          <webaudio-knob id="knob_In" class="knob" min="0" max="100" sprites="99" value="100" step="1" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
+          <webaudio-knob id="knob_In" class="knob" min="0" max="1" sprites="99" value="100" step="0.01" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
             width="40" height="40" data-role="time" diameter="24"></webaudio-knob>
           <!-- <input id="knob_In" type="range" min=0 max=100 value=100 step=1> -->
           <div class="column">
-            <span class="span_level">input level</span>
+            <span class="span_level">Input gain</span>
             <canvas id="meter1" width="100" height="10"></canvas>
           </div>
         </div>
         <div>
-          <webaudio-knob id="knob_Out" class="knob" min="0" max="100" sprites="99" value="100" step="1" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
+          <webaudio-knob id="knob_Out" class="knob" min="0" max="1" value="0.25" sprites="99" value="100" step="0.01" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
             width="40" height="40" data-role="time" diameter="24"></webaudio-knob>
           <!-- <input id="knob_Out" type="range" min=0 max=100 value=100 step=1> -->
           <div class="column">
-            <span class="span_level">output level</span>
+            <span class="span_level">Output gain</span>
             <canvas id="meter2" width="100" height="10"></canvas>
           </div>
         </div>
@@ -698,22 +697,22 @@
       </div>
 
       <div id="divSoundIn" class="hidden">
-        <span class="span_tuto">Play your instrument, input gain will be adjusted</span>
+        <span class="span_tuto">Click learn, play loudly, gain will be adjusted</span>
         <div class="select_devices">
-          <webaudio-switch src="img/switch_toggle.png" class="id" id="mic" height="28" width="40" alt="Press to record" title="Press to record"></webaudio-switch>
+          <webaudio-switch src="img/switch_toggle.png" class="id" id="mic" height="28" width="40" alt="Activate sound input" title="Click to enable sound input"></webaudio-switch>
 
 
           <span id="span_time" class="span_time">4s</span>
-          <button id="bt_learn"></button>
+          <button id="bt_learn">Learn</button>
           <span>Device:</span>
           <select id="select_audioinput"></select>
         </div>
 
         <div>
-          <webaudio-knob id="knob_In_midi" class="knob" min="0" max="100" sprites="99" value="100" step="1" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
+          <webaudio-knob id="knob_In_midi" class="knob" min="0" max="1" sprites="99" value="1" step="0.01" midilearn="true" src="./img/knobs/nux_black_white_stripe.png"
             width="40" height="40" data-role="time" diameter="24"></webaudio-knob>
           <div class="column">
-            <span class="span_level">input midi level</span>
+            <span class="span_level">Input gain</span>
             <canvas id="meter3" width="100" height="10"></canvas>
           </div>
         </div>
@@ -736,19 +735,19 @@
       <div class="div_tabs" id="div_tabs">
 
         <input id="tab-1" type="radio" name="input-tab">
-        <label for="tab-1">delay</label>
+        <label for="tab-1" on-click="viewTabs">delay</label>
         <input id="tab-2" type="radio" name="input-tab">
-        <label for="tab-2">chorus</label>
+        <label for="tab-2" on-click="viewTabs">chorus</label>
         <input id="tab-3" type="radio" name="input-tab">
-        <label for="tab-3">overdrive</label>
+        <label for="tab-3" on-click="viewTabs">overdrive</label>
         <input id="tab-4" type="radio" name="input-tab">
-        <label for="tab-4">analyse</label>
+        <label for="tab-4" on-click="viewTabs">analyse</label>
         <input id="tab-5" type="radio" name="input-tab" checked>
-        <label for="tab-5">Synths</label>
+        <label for="tab-5" on-click="viewTabs">Synths</label>
         <input id="tab-6" type="radio" name="input-tab">
-        <label for="tab-6">ampsim</label>
+        <label for="tab-6" on-click="viewTabs">ampsim</label>
         <input id="tab-7" type="radio" name="input-tab">
-        <label for="tab-7">FAUST</label>
+        <label for="tab-7" on-click="viewTabs">FAUST</label>
 
         <button on-click="viewTabs" class="bt_pinViewTabs"><iron-icon id="icon_view" icon="icons:expand-less"></iron-icon></button>
         <div class="div_container">
@@ -870,8 +869,8 @@
             type: Object,
             value: function () {
               return {
-                label: "V.1.8 Centralized",
-                dateLastChange: "23/02/2018"
+                label: "V.1.9 Dev",
+                dateLastChange: "26/02/2018"
               }
             }
           }
@@ -1062,7 +1061,6 @@
           let label = "";
 
           let select_audioinput = this.$.select_audioinput;
-          let audioinputDevices = [];
           let microphone = 1;
 
           // let select_audiooutput=document.querySelector('#select_audiooutput');
@@ -1070,17 +1068,22 @@
           // let speaker=1;
 
 
-          devices.forEach(function (device) {
+          devices.forEach(function (device, index) {
             deviceInfos = device.kind + ": " + device.label + " id = " + device.deviceId;
             //console.log(deviceInfos);
             if (device.kind == "audioinput") {
               if (device.deviceId == "default") {
-                label = "Par défaut";
+                label = "Default input";
               } else {
-                label = "microphone " + (microphone++);
+                label = device.label ||
+                "microphone " + (microphone++);
               }
-              audioinputDevices.push("<option>" + label + "</option>");
-            }
+              var option = document.createElement('option');
+              option.value = device.deviceId;
+              option.text = label;
+              select_audioinput.appendChild(option);
+ 
+             }
             // else if (device.kind=="audiooutput"){
             // 	if (device.deviceId=="default"){
             // 		label="Par défaut";
@@ -1091,7 +1094,14 @@
             // }
 
           });
-          select_audioinput.insertAdjacentHTML('beforeEnd', audioinputDevices);
+          select_audioinput.onchange = (e) =>  {
+            var index = e.target.selectedIndex;
+            var id = e.target[index].value;
+            var label = e.target[index].text;
+
+            console.dir("Audio input selected : " +  label + " id = " + id);
+            this.changeStreamAsInputInGraph(id);
+          }
           // select_audiooutput.insertAdjacentHTML('beforeEnd',audiooutputDevices);
         }).catch(function (err) {
           console.log(err.name + ": " + err.message);
@@ -1105,26 +1115,34 @@
           this.soundSample.src = "./audio/" + e.target.value;
           this.soundSample.load();
           this.soundSample.play();
+          this.soundSample.onplay = function(e) {
+            GlobalContext.context.resume();
+          }
           console.log(e.target.value);
         })
 
         // soundNodeIn ? soundNodeOut ? (régler les gains entrée et sortie)
         this.$.knob_In.addEventListener('change', (e) => {
-          console.log("knob_In=gainNodeIn", e.target.value / 100);
-          this.$.knob_In.title = e.target.value / 100;
-          this.sound.gainNodeIn.gain.value = e.target.value / 100;
+          //console.log("knob_In=gainNodeIn", e.target.value);
+          this.$.knob_In.title = ""+e.target.value;
+          this.sound.gainNodeIn.gain.value = e.target.value;
+          this.sound.gainNodeInMid.gain.value = e.target.value;
+          this.$.knob_In_midi.setValue(e.target.value)
         });
 
         this.$.knob_Out.addEventListener('change', (e) => {
-          console.log("knob_Out=gainNodeOut", e.target.value / 100);
-          this.$.knob_Out.title = e.target.value / 100;
-          this.sound.gainNodeOut.gain.value = e.target.value / 100;
+          //console.log("knob_Out=gainNodeOut", e.target.value);
+          this.$.knob_Out.title = ""+e.target.value;
+          this.sound.gainNodeOut.gain.value = e.target.value ;
         });
 
         this.$.knob_In_midi.addEventListener('change', (e) => {
-          console.log("knob_In_midi=gainNodeInMid", e.target.value / 100);
-          this.$.knob_In_midi.title = e.target.value / 100;
-          this.sound.gainNodeInMid.gain.value = e.target.value / 100;
+          //console.log("knob_In_midi=gainNodeInMid", e.target.value );
+          this.$.knob_In_midi.title = ""+e.target.value;
+          //this.sound.gainNodeInMid.gain.value = e.target.value / 100;
+          this.sound.gainNodeInMid.gain.value = e.target.value;
+          this.sound.gainNodeIn.gain.value = e.target.value;
+          this.$.knob_In.setValue(e.target.value);
         });
 
       }
@@ -1784,6 +1802,7 @@
 
         this.sound.gainNodeIn = this.sound.context.createGain();
         this.sound.gainNodeOut = this.sound.context.createGain();
+        this.sound.gainNodeOut.gain.value = 0.25;
         this.sound.gainNodeInMid = this.sound.context.createGain();
 
         this.sound.mediaSource = this.sound.context.createMediaElementSource(this.soundSample);
@@ -1791,6 +1810,8 @@
 
         //connexion (reste le midi à faire !)
         this.sound.mediaSource.connect(this.sound.gainNodeIn);
+        this.sound.mediaSource.connect(this.sound.gainNodeInMid);
+        
         //this.monoMediaSourceM.connect(this.sound.gainNodeIn);
         this.sound.gainNodeOut.connect(this.sound.audioDestination);
         //
@@ -1811,6 +1832,7 @@
           };
           console.log("1 : navigator.mediaDevices", navigator.mediaDevices);
           navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+            window.stream = stream;
             this.sound.mediaSourceM = this.sound.context.createMediaStreamSource(stream);
 
             this.splitter = this.sound.context.createChannelSplitter(2);
@@ -1837,7 +1859,7 @@
           //console.log(e.target.value);
           // 1 : connected
           if (e.target.value) {
-            console.log('mic connected');
+            console.log('audio input enabled');
 
             if (this.pedals[0].outputJacks.length != 0) {
               this.pedals[0].outputJacks.forEach((j) => {
@@ -1854,7 +1876,7 @@
 
             // 0 : disconnected
           } else {
-            console.log('mic disconnected');
+            console.log('mic disabled');
 
             if (this.pedals[0].outputJacks.length != 0) {
               this.pedals[0].outputJacks.forEach((j) => {
@@ -1878,7 +1900,7 @@
         let i = 4000;
         let _interval = null;
         let volumeMax = 0;
-        // lorsque le guitariste joue pendant 4 secondes, le gain d'entrée midi se réajuste en prenant pour valeur max le son max récupéré
+        // When you play for 4 seconds, the input gain is adjusted depending on the max measured value 
         bt_learn.addEventListener("click", (e) => {
           this.sound.gainNodeInMid.gain.value = 1;
           // this.$.knob_In_midi.value = 100;
@@ -1899,7 +1921,7 @@
               span_time.textContent = "4s";
               //console.log(_tabVolume);
               volumeMax = Math.max(..._tabVolume);
-              alert('Max gain for gainNodeInMid: (' + _tabVolume.indexOf(volumeMax) + ') ' + volumeMax.toFixed(2));
+              //alert('Max gain for gainNodeInMid: (' + _tabVolume.indexOf(volumeMax) + ') ' + volumeMax.toFixed(2));
 
 
               console.log("volumeMax", volumeMax);
@@ -1908,10 +1930,22 @@
               // this.$.knob_In_midi.value = (volumeMax * 100);
               // this.$.knob_In_midi.setAttribute("value", volumeMax * 100);
               // this.$.knob_In_midi.max = (volumeMax * 100);
-              // this.$.knob_In_midi.setAttribute("max", volumeMax * 100);
+              //this.$.knob_In_midi.max = 5;
+              //this.$.knob_In_midi.step = 0.1;
 
-              this.sound.gainNodeInMid.gain.value = volumeMax;
-              this.$.knob_In_midi.setAttribute("value", volumeMax * 100);
+              //this.sound.gainNodeInMid.gain.value = volumeMax;
+              this.sound.gainNodeInMid.gain.value = (1/volumeMax)/2.;
+              this.sound.gainNodeIn.gain.value = this.sound.gainNodeInMid.gain.value;
+              this.maxInputGain = this.sound.gainNodeInMid.gain.value;
+              console.log("this.maxInputGain = " + this.maxInputGain);
+              //if(this.maxInputGain > 1) {
+                this.$.knob_In_midi.max = 2 * this.maxInputGain;
+                this.$.knob_In_midi.setValue(this.maxInputGain, true);
+                this.$.knob_In.max = 2 * this.maxInputGain;
+                this.$.knob_In.setValue(this.maxInputGain, true);
+                console.log("changed max and value of this.$.knob_In_midi to " + this.$.knob_In_midi.max + " and " + this.$.knob_In_midi.value);
+              //}
+
 
               //this.$.knob_In.value = (volumeMax * 100);
               //this.gc.soundNodeIn.gain.value = (volumeMax * 100);
@@ -1925,8 +1959,42 @@
               window.clearInterval(_interval);
             }
           }, 100);
-        })
+        });
       }
+
+    eventFire(el, etype){
+      if (el.fireEvent) {
+        el.fireEvent('on' + etype);
+      } else {
+        var evObj = document.createEvent('Events');
+        evObj.initEvent(etype, true, false);
+        el.dispatchEvent(evObj);
+      }
+    }
+      changeStreamAsInputInGraph(id) {
+        if (window.stream) {
+        window.stream.getTracks().forEach(function (track) {
+            track.stop();
+            console.log("changeStreamAsInputInGraph : stopped track");
+        });
+    }
+        var constraints = {
+            audio: {
+              echoCancellation: false,
+              mozNoiseSuppression: false,
+              mozAutoGainControl: false,
+              deviceId: id ? {exact: id} : undefined
+            }
+          };
+
+          navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+            this.sound.mediaSourceM = this.sound.context.createMediaStreamSource(stream);
+            this.sound.mediaSourceM.connect(this.sound.gainNodeInMid);
+            //alert("changed input stream in graph");
+            window.stream = stream;
+          });
+      }
+
 
       // drawloop method for clip meter canvas
       drawLoop() {
@@ -1962,15 +2030,20 @@
         let rafID = window.requestAnimationFrame(this.drawLoop.bind(this));
       }
 
+      // Michel BUFFA : somme comments would be welcomed here!
       soundNodeConnection(p1, p2) {
         if (p1.id == "pedalIn" && p2.id == "pedalOut") {
           if (this.sound.state == 0) {
             //this.sound.mediaSource.connect(this.sound.gainNodeIn);
             this.sound.gainNodeIn.connect(this.sound.gainNodeOut);
+            this.sound.gainNodeOut.connect(this.meter2); // M.BUFFA
+
             //this.sound.gainNodeOut.connect(this.sound.audioDestination);
           } else {
             //this.monoMediaSourceM.connect(this.sound.gainNodeIn);
             this.sound.gainNodeInMid.connect(this.sound.gainNodeOut);
+            this.sound.gainNodeOut.connect(this.meter2); // M.BUFFA
+
             //this.sound.gainNodeOut.connect(this.sound.audioDestination);
           }
         } else if (p1.id == "pedalIn") {
