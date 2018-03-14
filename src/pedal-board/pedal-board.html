@@ -870,7 +870,7 @@
             value: function () {
               return {
                 label: "V.1.9 Dev",
-                dateLastChange: "26/02/2018"
+                dateLastChange: "14/03/2018"
               }
             }
           }
@@ -879,7 +879,7 @@
 
       constructor() {
         super();
-
+        this.currentOpenedTab = {};
         this.pedals = [];
         this.elem = document.querySelector("pedal-board");
 
@@ -1834,16 +1834,21 @@
           navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
             window.stream = stream;
             this.sound.mediaSourceM = this.sound.context.createMediaStreamSource(stream);
-
+            
             this.splitter = this.sound.context.createChannelSplitter(2);
+            this.sound.mediaSourceM.connect(this.splitter);
+
             this.monoMediaSourceM = this.sound.context.createChannelMerger(2);
 
             //connexion monoMediaSourceM Midi
             this.sound.mediaSourceM.connect(this.sound.gainNodeInMid);
-            this.sound.gainNodeInMid.connect(this.splitter);
+            //this.sound.gainNodeInMid.connect(this.splitter);
             this.splitter.connect(this.monoMediaSourceM, 0, 0);
             this.splitter.connect(this.monoMediaSourceM, 0, 1);
-
+            //this.monoMediaSourceM.connect(GlobalContext.context.destination)
+            this.splitter.connect(this.monoMediaSourceM, 1, 0);
+            this.splitter.connect(this.monoMediaSourceM, 1, 1);
+            this.monoMediaSourceM.connect(this.sound.gainNodeInMid);
           }).catch(function (err) {
             // handle the error
             console.log(err.name + ": " + err.message);
@@ -1989,7 +1994,7 @@
 
           navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
             this.sound.mediaSourceM = this.sound.context.createMediaStreamSource(stream);
-            this.sound.mediaSourceM.connect(this.sound.gainNodeInMid);
+            this.sound.mediaSourceM.connect(this.splitter);
             //alert("changed input stream in graph");
             window.stream = stream;
           });
@@ -2126,14 +2131,45 @@
       }
 
       // view hide tabs pedals
-      viewTabs() {
+      viewTabs(event) {
+        // Ckick on the small icon on the right
+        if(event.target.textContent === "") {
+          if(this.currentOpenedTab.status === "opened") {
+            this.$.div_app_tabs.classList.add("bottomTabs");
+            this.currentOpenedTab.status = "closed";
+            // change character ^ to reverse
+            this.$.icon_view.setAttribute("icon","icons:expand-less");
+          } else {
+            this.$.div_app_tabs.classList.remove("bottomTabs");
+            this.currentOpenedTab.status = "opened";
+            this.$.icon_view.setAttribute("icon","icons:expand-more");
+          }
+          return;
+        }
+
         //clearTimeout(this.tabsAnimation);
         if (this.$.div_app_tabs.classList.contains("bottomTabs")) {
+          this.currentOpenedTab.name = event.target.textContent;
+          console.log(this.currentOpenedTab.name)
+
+          // the clicked tab corresponds to a closed dashaboard
+          // Let's open it by removing the CSS class bottomTabs
           this.$.div_app_tabs.classList.remove("bottomTabs");
           this.$.icon_view.setAttribute("icon","icons:expand-more");
+          this.currentOpenedTab.status = "opened";
         } else {
-          this.$.div_app_tabs.classList.add("bottomTabs");
-          this.$.icon_view.setAttribute("icon","icons:expand-less");
+          // The clicked tab corresponds to an opened dashboard. We close it only if it's a click
+          // on the current opened tab
+          if(this.currentOpenedTab.name === event.target.textContent) {
+            
+            this.$.div_app_tabs.classList.add("bottomTabs");
+            this.$.icon_view.setAttribute("icon","icons:expand-less");
+            this.currentOpenedTab.status = "closed";
+          } else {
+            // We clicked on an oped tab that is different than the current one
+            // We do not close, but we need to set the new current opened tab
+            this.currentOpenedTab.name = event.target.textContent;
+          }
         }
       }
 
